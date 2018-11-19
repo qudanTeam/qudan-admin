@@ -2,9 +2,12 @@ import React from 'react';
 import classNames from 'classnames';
 import styles from './index.less';
 
-const GlobalFooter = ({ className, style, links, copyright }) => {
+const GlobalFooter = ({ className, style, links, copyright, theme }) => {
   
-  const clsString = classNames(styles.globalFooter, className);
+  let clsString = classNames(styles.globalFooter, className);
+  if (theme === 'dark') {
+    clsString = classNames(styles.dark, clsString);
+  }
   return (
     <footer className={clsString} style={style}>
       {links && (

@@ -37,26 +37,26 @@ export default {
   lessLoaderOptions: {
     javascriptEnabled: true,
   },
-  // cssLoaderOptions: {
-  //   modules: true,
-  //   getLocalIdent: (context, localIdentName, localName) => {
-  //     if (
-  //       context.resourcePath.includes('node_modules') ||
-  //       context.resourcePath.includes('ant.design.pro.less') ||
-  //       context.resourcePath.includes('global.less')
-  //     ) {
-  //       return localName;
-  //     }
-  //     const match = context.resourcePath.match(/src(.*)/);
-  //     if (match && match[1]) {
-  //       const ironicAdminPath = match[1].replace('.less', '');
-  //       const arr = ironicAdminPath
-  //         .split('/')
-  //         .map(a => a.replace(/([A-Z])/g, '-$1'))
-  //         .map(a => a.toLowerCase());
-  //       return `ironic-admin${arr.join('-')}-${localName}`.replace(/--/g, '-');
-  //     }
-  //     return localName;
-  //   },
-  // },
+  cssLoaderOptions: {
+    modules: true,
+    getLocalIdent: (context, localIdentName, localName) => {
+      if (
+        context.resourcePath.includes('node_modules') ||
+        context.resourcePath.includes('ant.design.pro.less') ||
+        context.resourcePath.includes('global.less')
+      ) {
+        return localName;
+      }
+      const match = context.resourcePath.match(/src(.*)/);
+      if (match && match[1]) {
+        const ironicAdminPath = match[1].replace('.less', '');
+        const arr = ironicAdminPath
+          .split('/')
+          .map(a => a.replace(/([A-Z])/g, '-$1'))
+          .map(a => a.toLowerCase());
+        return `ironic-admin${arr.join('-')}-${localName}`.replace(/--/g, '-');
+      }
+      return localName;
+    },
+  },
 }

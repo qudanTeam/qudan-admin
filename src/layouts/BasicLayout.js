@@ -12,7 +12,9 @@ import { connect } from 'dva';
 import { formatMessage } from 'umi/locale';
 import memoizeOne from 'memoize-one';
 import isEqual from 'lodash/isEqual';
-
+import Footer from './Footer';
+import withRouter from 'umi/withRouter';
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 const { Content } = Layout;
 
@@ -110,7 +112,8 @@ class BasicLayout extends React.Component {
   }
 
   getLayoutMinHeight = () => {
-    return 'calc(100vh - 64px)'
+    // return 'calc(100vh - 64px)'
+    return '100vh';
   }
 
   getContentLayoutStyle = () => {
@@ -118,6 +121,7 @@ class BasicLayout extends React.Component {
 
     return {
       // margin: '24px 24px 0',
+      minHeight: 'calc(100vh - 64px)',
       paddingLeft: collapsed ? '80px' : '256px',
     };
   }
@@ -125,6 +129,7 @@ class BasicLayout extends React.Component {
   getContentStyle = () => {
     return {
       margin: '24px 24px 0',
+      minHeight: 'unset',
       // paddingLeft: collapsed ? '80px' : '256px',
     };
   }
@@ -183,10 +188,21 @@ class BasicLayout extends React.Component {
             }}
           >
             <Content style={this.getContentStyle()}>
-              {children}
+              <TransitionGroup>
+                <CSSTransition 
+                  key={pathname} 
+                  classNames="fade" 
+                  timeout={{
+                    enter: 500,
+                    exit: 300,
+                    }}
+                >
+                  { children }
+                </CSSTransition>
+              </TransitionGroup>
             </Content>
+            <Footer />
           </Layout>
-          
         </Layout>
       </Layout>
     )
@@ -207,4 +223,4 @@ class BasicLayout extends React.Component {
   }
 }
 
-export default BasicLayout;
+export default withRouter(BasicLayout);

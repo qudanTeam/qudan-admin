@@ -32,3 +32,20 @@ ul,
 ol {
   list-style: none;
 }
+
+.fade-enter {
+  opacity: 0.01;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: all 500ms ease-in;
+}
+.fade-exit {
+  opacity: 1;
+  // transform: translateX(-1200px);
+  // transition: all 500ms ease-out;
+}
+.fade-exit-active {
+  opacity: 0.01;
+  // transition: all 500ms ease-in;
+}

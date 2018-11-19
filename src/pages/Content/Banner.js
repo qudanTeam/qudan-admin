@@ -1,3 +1,7 @@
+/**
+ * name: 轮播图管理
+ */
+
 import styles from './index.css';
 
 export default function() {

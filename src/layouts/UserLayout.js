@@ -48,7 +48,7 @@ class UserLayout extends React.Component {
           </div>
           {children}
         </div>
-        <GlobalFooter style={{ color: '#fff' }} links={links} copyright={copyright} />
+        <GlobalFooter theme="dark" copyright={copyright} />
       </div>
     )
   }

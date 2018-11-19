@@ -1,6 +1,6 @@
 /**
- * name: Goods Manager
- * icon: goods
+ * name: 商品管理
+ * icon: appstore
  */
 
 import React from 'react';

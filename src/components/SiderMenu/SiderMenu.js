@@ -134,8 +134,10 @@ export default class SiderMenu extends PureComponent {
 
         <div className={styles.bottom} onClick={this.toggle}>
           <Icon 
-            style={{ color: '#fff'}}
-            type={collapsed ? 'menu-unfold' : 'menu-fold'}
+            // theme="filled"
+            size="large"
+            className={styles.gray}
+            type={collapsed ? 'right-circle' : 'left-circle'}
           />
         </div>
         

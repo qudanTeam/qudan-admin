@@ -1,13 +1,13 @@
 /**
- * name: User Manager
+ * name: 账户管理
  */
 
-import styles from './index.css';
+import styles from './Account.css';
 
 export default function() {
   return (
     <div className={styles.normal}>
-      <h1>Page index</h1>
+      <h1>Page Account</h1>
     </div>
   );
 }

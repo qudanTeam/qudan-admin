@@ -19,6 +19,10 @@ const LoadingIcon = props => (
   <Icon type="clock-circle" theme="twoTone" {...props} />    
 )
 
+export {
+  LoadingIcon,
+}
+
 export default (props) => {
   const icon = <LoadingIcon spin />;
   return <Spin indicator={icon} />

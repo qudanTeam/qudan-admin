@@ -1,5 +1,5 @@
 /**
- * name: Member Manager
+ * name: 用户管理
  * icon: user
  */
 

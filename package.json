@@ -37,11 +37,13 @@
     "lodash": "^4.17.11",
     "lodash-decorators": "^6.0.0",
     "memoize-one": "^4.0.3",
+    "mockjs": "^1.0.1-beta3",
     "nzh": "^1.0.3",
     "path-to-regexp": "^2.4.0",
     "qs": "^6.5.2",
     "rc-animate": "^2.5.4",
     "react-container-query": "^0.11.0",
-    "react-document-title": "^2.0.3"
+    "react-document-title": "^2.0.3",
+    "react-transition-group": "^2.5.0"
   }
 }

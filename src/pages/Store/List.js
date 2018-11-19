@@ -1,3 +1,7 @@
+/**
+ * name: 店铺列表
+ */
+
 import styles from './index.css';
 
 export default function() {
