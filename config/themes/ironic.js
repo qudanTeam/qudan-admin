@@ -2,6 +2,7 @@
 
 
 export default {
+  "@primary-color": "#1cae6e",
   '@irondark-bg': '#323843',
   '@irondark-deeply': '#21242C',
   '@irondark-active1': '#23272E',
