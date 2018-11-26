@@ -9,7 +9,6 @@ import StandardTable from '@/components/StandardTable';
 import DescriptionList from '@/components/DescriptionList';
 import config from './_config';
 import { 
-  DatePicker, 
   Avatar, 
   Card, 
   Button, 
@@ -21,9 +20,8 @@ import {
   Input, 
   Select, 
   Skeleton,
-  InputNumber, 
   Drawer,
-  Modal} from 'antd';
+} from 'antd';
 import { connect } from 'dva';
 
 const { UserType } = config;
@@ -46,7 +44,7 @@ class UsersView extends PureComponent {
 
   state = {
     expandForm: false,
-    preLoading: true,
+    preLoading: false,
     profileVisible: false,
     realNameAuthVisible: false,
     createFormVisible: false,
@@ -256,6 +254,9 @@ class UsersView extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
+    this.setState({
+      preLoading: true,
+    });
     dispatch({
       type: 'users/fetch',
     }).then(() => {

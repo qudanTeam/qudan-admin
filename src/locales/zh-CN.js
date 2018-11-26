@@ -1,5 +1,10 @@
 export default {
   'navBar.lang': '语言',
+
+  'app.doublecheck.delete': '本次删除操作将是不可逆的，您是否要继续删除',
+  'app.doublecheck.delete.btn.okText': '删除',
+  'app.doublecheck.delete.btn.cancelText': '取消',
+
   'layout.user.link.help': '帮助',
   'layout.user.link.privacy': '隐私',
   'layout.user.link.terms': '条款',
@@ -23,6 +28,7 @@ export default {
   'form.captcha.second': '秒',
   'form.optional': '（选填）',
   'form.submit': '提交',
+  'form.cancel': '取消',
   'form.save': '保存',
   'form.email.placeholder': '邮箱',
   'form.password.placeholder': '至少6位密码，区分大小写',

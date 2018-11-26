@@ -2,10 +2,13 @@ import mockjs from 'mockjs';
 
 const idCardRegexp = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
 const mobileRegexp = /^1[23456789]\d{9}$/
+const rateRegexp = /^\d{1}\.\d{4}/
+const priceRegexp = /^\d{2}\.\d{2}/
 
 const Random = mockjs.Random;
 
 let userListDataSource = [];
+let vipsDataSource = [];
 
 userListDataSource = mockjs.mock({
   'list|20-100': [
@@ -28,8 +31,24 @@ userListDataSource = mockjs.mock({
   ]
 }).list || [];
 
+vipsDataSource = mockjs.mock({
+  'list|20-100': [
+    {
+      'id': '@ID',
+      'name': '@FIRST',
+      'addition_rate': /^0\.\d{4}/,
+      'price': priceRegexp,
+      'promotion_price': priceRegexp,
+      'start_time': () => Random.datetime(),
+      'end_time': () => Random.datetime(),
+      'vip_image': () => Random.image('100x100'),
+    }
+  ]
+}).list || [];
+
 export {
   userListDataSource,
+  vipsDataSource,
 }
 
 // for (let i = 0; i < 46; i += 1) {
