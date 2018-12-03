@@ -83,9 +83,9 @@ class ListView extends PureComponent {
               })(
                 <Select>
                   <Option value="all">全部</Option>
-                  <Option value="qingtong">青铜</Option>
-                  <Option value="baiyin">白银</Option>
-                  <Option value="zhuanshi">砖石</Option>
+                  <Option value="0">青铜</Option>
+                  <Option value="1">白银</Option>
+                  <Option value="2">钻石</Option>
                 </Select>
               )}
             </FormItem>

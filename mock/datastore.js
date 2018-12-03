@@ -9,6 +9,7 @@ const Random = mockjs.Random;
 
 let userListDataSource = [];
 let vipsDataSource = [];
+let agencyDataSource = [];
 
 userListDataSource = mockjs.mock({
   'list|20-100': [
@@ -46,9 +47,25 @@ vipsDataSource = mockjs.mock({
   ]
 }).list || [];
 
+
+agencyDataSource = mockjs.mock({
+  'list|20-100': [
+    {
+      'id': '@ID', // 流水号
+      'userID': '@ID', // 用户编号
+      'inviteCode': /^\d{4}$/, // 邀请码
+      'agencyLevel': /^[012]$/, // 代理等级
+      'rate': /^0\.\d{4}/, // 分佣比例
+      'indirect': /^0\.\d{4}/, // 间接分佣比例
+      'beAgencyTime': () => Random.datetime(), // 成为代理时间
+    }
+  ]
+}).list || [];
+
 export {
   userListDataSource,
   vipsDataSource,
+  agencyDataSource,
 }
 
 // for (let i = 0; i < 46; i += 1) {
