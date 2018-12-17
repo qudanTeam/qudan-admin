@@ -15,7 +15,7 @@ const plugins = [
       default: 'zh-CN', // default zh-CN
       baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
     },
-    dynamicImport: false,
+    dynamicImport: true,
     title: 'ironic-admin',
     dll: false,
     routes: {
