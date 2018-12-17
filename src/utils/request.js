@@ -3,6 +3,7 @@ import { notification } from 'antd';
 import router from 'umi/router';
 import hash from 'hash.js';
 import { isAntdPro } from './utils';
+import { AccessToken } from './Authorized';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -82,6 +83,10 @@ export default function request(url, option) {
     credentials: 'include',
   };
   const newOptions = { ...defaultOptions, ...options };
+  newOptions.headers = {
+    Authorization: `Bearer ${AccessToken}`,
+    ...newOptions.headers,
+  };
   if (
     newOptions.method === 'POST' ||
     newOptions.method === 'PUT' ||
@@ -101,6 +106,8 @@ export default function request(url, option) {
         ...newOptions.headers,
       };
     }
+
+    
   }
 
   const expirys = options.expirys && 60;

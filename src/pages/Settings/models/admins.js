@@ -1,17 +1,9 @@
-
-import { 
-  queryVips,
-  queryVipDetails,
-  // queryUserProfile,
-  // queryUserVipProfile,
- } from '@/services/api';
-import { queryVipConfigs, addVipConfig, updateVipConfig, deleteVipConfig } from '@/services/vip';
-import { requestDataToPageResult } from '@/utils/utils';
-import { message } from 'antd';
-
+import { requestDataToPageResult } from "@/utils/utils";
+import { message } from "antd";
+import { queryAdmins, createAdmins, updateAdmins, deleteAdmins, updateAdminPassword } from "@/services/admins";
 
 export default {
-  namespace: 'vips',
+  namespace: 'admins',
 
   state: {
     data: {
@@ -24,34 +16,17 @@ export default {
 
   effects: {
     *fetch({ payload }, { call, put }) {
-
-      const resp = yield call(queryVipConfigs, payload);
-
-      // console.log(resp, 'resp ====');
-      // const response = yield call(queryVips, payload);
-      // const { status, result } = response;
-
+      const resp = yield call(queryAdmins, payload);
       yield put({
         type: 'save',
         payload: requestDataToPageResult(resp),
       });
     },
 
-    *fetchDetails({ payload }, { call, put }) {
-      const response = yield call(queryVipDetails, payload.id);
-      const { reply } = response;
-
-      yield put({
-        type: 'saveDetails',
-        payload: reply,
-      });
-    },
-
     *create({ payload }, { call, put }) {
-      const response = yield call(addVipConfig, payload);
+      const resp = yield call(createAdmins, payload);
 
-      const { id } = response;
-      if (id) {
+      if (resp.id) {
         message.success('创建成功');
         yield put({
           type: 'fetch',
@@ -64,8 +39,9 @@ export default {
     },
 
     *update({ payload }, { call, put }) {
-      const response = yield call(updateVipConfig, payload);
-      if (response.id) {
+      const resp = yield call(updateAdmins, payload);
+
+      if (resp.id) {
         message.success('修改成功');
         yield put({
           type: 'fetch',
@@ -77,11 +53,11 @@ export default {
       }
     },
 
-    *delete({ payload}, { call, put }) {
-      const response = yield call(deleteVipConfig, payload.id);
+    *updatePassword({ payload }, { call, put }) {
+      const resp = yield call(updateAdminPassword, payload);
 
-      if (response) {
-        message.success('删除成功');
+      if (resp.id) {
+        message.success('修改成功');
         yield put({
           type: 'fetch',
           payload: {
@@ -90,8 +66,20 @@ export default {
           },
         });
       }
+    },
+
+    *delete({ payload }, { call, put }) {
+      const { id } = payload;
+      yield call(deleteAdmins, id);
+      message.success('删除成功');
+      yield put({
+        type: 'fetch',
+        payload: {
+          page: 1,
+          pageSize: 15,
+        },
+      });
     }
-    
   },
 
   reducers: {

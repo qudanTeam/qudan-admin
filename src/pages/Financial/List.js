@@ -7,7 +7,7 @@ import styles from './List.css';
 export default function() {
   return (
     <div className={styles.normal}>
-      <h1>Page List</h1>
+      <h1>联调中</h1>
     </div>
   );
 }

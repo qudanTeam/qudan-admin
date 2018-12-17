@@ -1,28 +1,28 @@
 
 import request from '@/utils/request';
 import { stringify } from 'qs';
+import pathConfig from './pathConfig';
 
 /**
  * POST Account Login
  */
 export const fakeAccountLogin = async (params) => {
-  return request('/api/login/account', {
+  return request('/apis/login', {
     method: 'POST',
     body: params,
   });
 }
 
-
-export async function queryUsers(params) {
-  return request(`/api/users?${stringify(params)}`);
+export async function queryUsers(params = {}) {
+  return request(`${pathConfig.QueryUserList}?${stringify(params)}`);
 }
 
 export async function queryUserProfile(id) {
-  return request(`/api/users/${id}`);
+  return request(`/apis/users/${id}`);
 }
 
 export async function queryUserVipProfile(id) {
-  return request(`/api/users/${id}/vip`);
+  return request(`/apis/users/${id}/vipInfo`);
 }
 
 export async function queryVips(params) {
@@ -30,5 +30,5 @@ export async function queryVips(params) {
 }
 
 export async function queryVipDetails(id) {
-  return request(`/api/vips/${id}`)
+  return request(`${pathConfig.QueryVipConfigs}/${id}`)
 }

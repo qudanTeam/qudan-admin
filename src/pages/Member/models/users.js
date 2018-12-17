@@ -4,6 +4,8 @@ import {
   queryUserProfile,
   queryUserVipProfile,
  } from '@/services/api';
+import { requestDataToPageResult } from '@/utils/utils';
+
 
 
 export default {
@@ -24,19 +26,20 @@ export default {
   effects: {
     *fetch({ payload }, { call, put }) {
       const response = yield call(queryUsers, payload);
-      const { status, result } = response;
-
+      // console.log(response, "==========0000");
+      // console.log(response, "=====");
+      const data = response;
       yield put({
         type: 'save',
-        payload: result,
+        payload: requestDataToPageResult(data),
       });
     },
 
     *fetchProfile({ payload }, { call, put }) {
-      const response = yield call(queryUserProfile, payload.id);
-      const vipResp = yield call(queryUserVipProfile, payload.id);
-      const { result } = response;
-      const { result: vipInfo } = vipResp;
+      const result = yield call(queryUserProfile, payload.id);
+      const vipInfo = yield call(queryUserVipProfile, payload.id);
+      // const { result } = response;
+      // const { result: vipInfo } = vipResp;
 
       yield put({
         type: 'saveProfile',

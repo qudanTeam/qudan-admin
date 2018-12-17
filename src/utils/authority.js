@@ -16,6 +16,16 @@ export function getAuthority(str) {
   return authority || ['guest']; // default is guest
 }
 
+export function getAccessToken(str) {
+  const token =  typeof str === 'undefined' ? localStorage.getItem('ironic-token') : str;
+
+  return token;
+}
+
+export function setAccessToken(token) {
+  return localStorage.setItem('ironic-token', token);
+}
+
 export function setAuthority(authority) {
   const theAuthority = typeof authority === 'string' ? [authority] : authority;
   return localStorage.setItem('ironic-authority', JSON.stringify(theAuthority));

@@ -1,9 +1,10 @@
-import { reloadAuthorized } from '@/utils/Authorized';
+import { reloadAuthorized, reloadAccessToken } from '@/utils/Authorized';
 import { fakeAccountLogin } from '@/services/api';
 import { routerRedux } from 'dva/router';
 import { getPageQuery } from '@/utils/utils';
-import { setAuthority } from '@/utils/authority';
+import { setAuthority, setAccessToken } from '@/utils/authority';
 import { stringify } from 'qs';
+import { message } from 'antd';
 
 export default {
   namespace: 'login',
@@ -15,13 +16,19 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
+      const { ok, message: msg, token } = response;
+      // console.log(response, 'response');
       yield put({
         type: 'changeLoginStatus',
-        payload: response,
+        payload: {
+          status: ok ? 'ok' : 'notok',
+          currentAuthority: 'admin',
+          token,
+        },
       });
 
-      if (response.status === 'ok') {
-        
+      if (ok) {
+        reloadAccessToken();
         reloadAuthorized();
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
@@ -39,6 +46,8 @@ export default {
           }
         }
         yield put(routerRedux.replace(redirect || '/'));
+      } else {
+        message.error(msg);
       }
     },
 
@@ -48,8 +57,10 @@ export default {
         payload: {
           status: false,
           currentAuthority: 'guest',
+          token: null,
         },
       });
+      reloadAccessToken();
       reloadAuthorized();
       yield put(
         routerRedux.push({
@@ -65,10 +76,12 @@ export default {
   reducers: {
     changeLoginStatus(state, { payload }) {
       setAuthority(payload.currentAuthority);
+      setAccessToken(payload.token);
       return {
         ...state,
         status: payload.status,
         type: 'account',
+        token: payload.token,
       };
     },
   },

@@ -182,3 +182,16 @@ export function formatWan(val) {
 export function isAntdPro() {
   return window.location.hostname === 'preview.pro.ant.design';
 }
+
+export function requestDataToPageResult(data) {
+  const { list, page, pageSize, total } = data;
+
+  return {
+    list,
+    pagination: {
+      total,
+      pageSize,
+      current: page,
+    },
+  }
+}

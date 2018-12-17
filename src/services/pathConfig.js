@@ -1,0 +1,16 @@
+export default {
+  QueryUserList: "/apis/users",
+  QueryVipConfigs: "/apis/vipconfigs",
+  AddVipConfig: '/apis/vipconfigs',
+  UpdateVipConfig: '/apis/vipconfigs',
+  QueryBanners: '/apis/banners',
+  QueryAgents: '/apis/agents',
+  QueryAgentChilds: '/apis/agents/childs',
+  QueryAgentRewards: '/apis/agents/rewards',
+  QueryAgentConfigs: '/apis/agent_config',
+  ShareManager: '/apis/share_manager',
+  Admins: '/apis/admins',
+  AdminPassword: '/apis/admins/password',
+  Messages: '/apis/message_store',
+  MessagePush: '/apis/message_store/push',
+}

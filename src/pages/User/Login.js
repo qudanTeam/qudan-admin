@@ -63,20 +63,20 @@ class Login extends React.Component {
                     rules: [
                       {
                         required: true,
-                        message: 'Please enter username',
+                        message: '请输入您的用户名',
                       },
                     ],
-                  })(<Input name="username" size="large" prefix={<Icon type="user" />} type="text" placeholder="Account" />)}
+                  })(<Input name="username" size="large" prefix={<Icon type="user" />} type="text" placeholder="账户" />)}
                 </Form.Item>
                 <Form.Item>
                   {getFieldDecorator('password', {
                     rules: [
                       {
                         required: true,
-                        message: 'Please enter password',
+                        message: '请输入您的密码',
                       },
                     ],
-                  })(<Input name="password" size="large" prefix={<Icon type="lock" />} type="password" placeholder="Password" />)}
+                  })(<Input name="password" size="large" prefix={<Icon type="lock" />} type="password" placeholder="密码" />)}
                 </Form.Item>
                 <Form.Item style={{ marginBottom: 0 }}>
                   <Button size="large" style={{ width: '100%'}} type="primary" htmlType="submit">

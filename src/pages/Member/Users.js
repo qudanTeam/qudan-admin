@@ -8,6 +8,9 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import StandardTable from '@/components/StandardTable';
 import DescriptionList from '@/components/DescriptionList';
 import config from './_config';
+import moment from 'moment';
+import sysConfig from '@/config';
+
 import { 
   Avatar, 
   Card, 
@@ -56,26 +59,26 @@ class UsersView extends PureComponent {
   columns = [
     {
       title: '头像',
-      dataIndex: 'avatar',
+      dataIndex: 'userface',
       width: 75,
       fixed: 'left',
       render: (val) => {
-        return <Avatar src={val} />
+        return <Avatar src={`${sysConfig.qiniu.host}/${val}`} />
       }
     },
     {
       title: '用户编号',
-      dataIndex: 'userNum',
+      dataIndex: 'id',
       width: 150,
     },
     {
       title: '手机号',
-      dataIndex: 'mobile',
+      dataIndex: 'register_mobile',
       width: 150,
     },
     {
       title: '微信号',
-      dataIndex: 'wechat',
+      dataIndex: 'wechat_name',
       width: 150,
     },
     {
@@ -85,47 +88,47 @@ class UsersView extends PureComponent {
     },
     {
       title: '用户类型',
-      dataIndex: 'userType',
+      dataIndex: 'user_type',
       width: 150,
-      filters: [
-        {
-          text: UserType[0],
-          value: 0,
-        },
-        {
-          text: UserType[1],
-          value: 1,
-        },
-        {
-          text: UserType[2],
-          value: 2,
-        },
-        {
-          text: UserType[3],
-          value: 3,
-        },
-        {
-          text: UserType[4],
-          value: 4,
-        },
-      ],
+      // filters: [
+      //   {
+      //     text: UserType[0],
+      //     value: 0,
+      //   },
+      //   {
+      //     text: UserType[1],
+      //     value: 1,
+      //   },
+      //   {
+      //     text: UserType[2],
+      //     value: 2,
+      //   },
+      //   {
+      //     text: UserType[3],
+      //     value: 3,
+      //   },
+      //   {
+      //     text: UserType[4],
+      //     value: 4,
+      //   },
+      // ],
       render(val) {
         return <span>{UserType[val]}</span>;
       },
     },
     {
       title: '真实姓名',
-      dataIndex: 'realName',
+      dataIndex: 'realname',
       width: 150,
     },
     {
       title: '身份证号码',
-      dataIndex: 'idCardNO',
+      dataIndex: 'id_no',
       width: 150,
     },
     {
       title: '支付宝账户',
-      dataIndex: 'alipayAccount',
+      dataIndex: 'alipay_no',
       width: 150,
     },
     // {
@@ -147,23 +150,29 @@ class UsersView extends PureComponent {
     // },
     {
       title: 'VIP等级',
-      dataIndex: 'vipLevel',
+      dataIndex: 'vipname',
       width: 150,
     },
     {
       title: '推荐人',
-      dataIndex: 'proposer',
+      dataIndex: 'recommend_username',
       width: 150,
     },
     {
       title: '注册时间',
-      dataIndex: 'registerTime',
-      width: 150,
+      dataIndex: 'register_time',
+      width: 200,
+      render: (val) => {
+        return (<span>{moment(val).format("YYYY-MM-DD HH:mm:ss")}</span>)
+      },
     },
     {
       title: '最近登录时间',
-      dataIndex: 'lastLoginTime',
-      width: 150,
+      dataIndex: 'last_login_time',
+      width: 200,
+      render: (val) => {
+        return (<span>{moment(val).format("YYYY-MM-DD HH:mm:ss")}</span>)
+      },
     },
     {
       title: '操作',
@@ -185,6 +194,43 @@ class UsersView extends PureComponent {
     const { expandForm } = this.state;
     this.setState({
       expandForm: !expandForm,
+    });
+  };
+
+  handleSearch = e => {
+    console.log('search');
+    e.preventDefault();
+
+    const { dispatch, form } = this.props;
+
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+
+      const values = {
+        ...fieldsValue,
+        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
+      };
+
+      this.setState({
+        formValues: values,
+      });
+
+      dispatch({
+        type: 'users/fetch',
+        payload: values,
+      });
+    });
+  };
+
+  handleFormReset = () => {
+    const { form, dispatch } = this.props;
+    form.resetFields();
+    this.setState({
+      formValues: {},
+    });
+    dispatch({
+      type: 'users/fetch',
+      payload: {},
     });
   };
 
@@ -275,12 +321,12 @@ class UsersView extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="用户编号">
-              {getFieldDecorator('userNum')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('id')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="手机号">
-              {getFieldDecorator('mobile')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('register_mobile')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -310,29 +356,29 @@ class UsersView extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="用户编号">
-              {getFieldDecorator('userNum')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('id')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="手机号">
-              {getFieldDecorator('mobile')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('register_mobile')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="身份证号码">
-              {getFieldDecorator('idCard')(<Input placeholder="请输入"/>)}
+              {getFieldDecorator('id_no')(<Input placeholder="请输入"/>)}
             </FormItem>
           </Col>
         </Row>
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="真实姓名">
-              {getFieldDecorator('realName')(<Input placeholder="请输入"/>)}
+              {getFieldDecorator('username')(<Input placeholder="请输入"/>)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="支付宝账号">
-              {getFieldDecorator('alipayAccount')(<Input placeholder="请输入"/>)}
+              {getFieldDecorator('alipay_no')(<Input placeholder="请输入"/>)}
             </FormItem>
           </Col>
           
@@ -360,13 +406,13 @@ class UsersView extends PureComponent {
   renderProfileDrawer = () => {
 
     const { users: { profile }, loadingProfile } = this.props;
-    const { basicInfo, vipInfo } = profile;
+    const { basicInfo, vipInfo = {} } = profile;
 
-    const titleText = basicInfo.realName || basicInfo.wechat || basicInfo.mobile;
+    const titleText = basicInfo.realname || basicInfo.wechat_name || basicInfo.username || basicInfo.register_mobile;
 
     const title = (
       <div>
-        <Avatar src={basicInfo.avatar} />
+        <Avatar src={`${sysConfig.qiniu.host}/${basicInfo.userface}`} />
         <span style={{marginLeft: '14px' }}>{`“${titleText}” 的个人信息`}</span>
       </div>
     );
@@ -387,24 +433,24 @@ class UsersView extends PureComponent {
         <Card bordered={false}>
           <Skeleton loading={loadingProfile}>
             <DescriptionList size="large" title="基本信息" style={{ marginBottom: 32 }}>
-              <Description term="用户编号">{basicInfo.userNum}</Description>
-              <Description term="手机号">{basicInfo.mobile}</Description>
-              <Description term="微信号">{basicInfo.wechat}</Description>
+              <Description term="用户编号">{basicInfo.id}</Description>
+              <Description term="手机号">{basicInfo.register_mobile}</Description>
+              <Description term="微信号">{basicInfo.wechat_name}</Description>
               <Description term="余额">{basicInfo.balance}</Description>
-              <Description term="用户类型">{basicInfo.userType}</Description>
-              <Description term="推荐人编号">{basicInfo.proposer}</Description>
+              <Description term="用户类型">{UserType[basicInfo.user_type]}</Description>
+              <Description term="推荐人编号">{basicInfo.recommend_invite_code}</Description>
             </DescriptionList>
           </Skeleton>
           <Divider style={{ marginBottom: 32 }} />
           <Skeleton loading={loadingProfile}>
             <DescriptionList size="large" title="VIP资料" style={{ marginBottom: 32 }}>
-              <Description term="VIP类型">VIP1</Description>
-              <Description term="开通时间">2018年8月1日</Description>
-              <Description term="结束时间">2018年12月31日</Description>
-              <Description term="已支付金额">¥ 200.00</Description>
-              <Description term="订单号">200000000012</Description>
-              <Description term="加成金额">300</Description>
-              <Description term="加成总金额">20000</Description>
+              <Description term="VIP类型">{vipInfo.vip_name}</Description>
+              <Description term="开通时间">{moment(vipInfo.start_time).format("YYYY年MM月DD日")}</Description>
+              <Description term="结束时间">{moment(vipInfo.end_time).format("YYYY年MM月DD日")}</Description>
+              <Description term="已支付金额">{vipInfo.trade_price}</Description>
+              <Description term="订单号">{vipInfo.trade_id}</Description>
+              <Description term="加成金额">{vipInfo.addRate}</Description>
+              <Description term="加成总金额">{vipInfo.total_vip_price}</Description>
             </DescriptionList>
           </Skeleton>
           <Divider style={{ marginBottom: 32 }} />
@@ -484,7 +530,7 @@ class UsersView extends PureComponent {
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
-              scroll={{ x: 1900 }}
+              scroll={{ x: 1990 }}
             />
           </div>
         </Card>

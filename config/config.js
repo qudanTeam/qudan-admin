@@ -37,6 +37,13 @@ export default {
   lessLoaderOptions: {
     javascriptEnabled: true,
   },
+  proxy: {
+    "/apis": {
+      "target": "http://localhost:7001/",
+      "changeOrigin": true,
+      "pathRewrite": { "^/apis" : "" }
+    },
+  },
   cssLoaderOptions: {
     modules: true,
     getLocalIdent: (context, localIdentName, localName) => {
