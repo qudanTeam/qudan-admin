@@ -278,7 +278,7 @@ class ResourceView extends PureComponent {
     {
       title: '是否展示',
       dataIndex: 'is_show',
-      width: 150,
+      // width: 150,
       render: (txt) => {
         return (
           <span>{txt === 1 ? '是' : '否'}</span>
@@ -412,7 +412,7 @@ class ResourceView extends PureComponent {
               data={data}
               columns={this.columns}
               onChange={this.handleTableChange}
-              scroll={{ x: 1000 }}
+              scroll={{ x: 1090 }}
             />
           </div>
           <CreateForm 

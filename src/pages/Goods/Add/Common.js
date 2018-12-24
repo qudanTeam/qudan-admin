@@ -7,6 +7,8 @@ import { connect } from 'dva';
 import { Form, Input, Button, Select, Divider, Icon, Switch, Tooltip } from 'antd';
 import router from 'umi/router';
 import styles from './style.less';
+import SelectAdvistor from '@/components/Select/SelectAdvistor';
+import SelectProductCategory from '@/components/Select/SelectProductCategory';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -48,24 +50,21 @@ class CommonForm extends React.PureComponent {
       <Fragment>
         <Form layout="horizontal" className={styles.stepForm} hideRequiredMark>
           <Form.Item {...formItemLayout} label="产品名称">
-            {getFieldDecorator('productName', {
-              initialValue: data.productName,
+            {getFieldDecorator('product_name', {
+              initialValue: data.product_name,
               rules: [{ required: true, message: '请填写产品名称' }],
             })(
               <Input placeholder="产品名称" />
-              // <Select placeholder="test@example.com">
-              //   <Option value="ant-design@alipay.com">ant-design@alipay.com</Option>
-              // </Select>
             )}
           </Form.Item>
           <Form.Item {...formItemLayout} label="产品类型">
-            {getFieldDecorator('productType', {
-              initialValue: data.productType,
+            {getFieldDecorator('product_type', {
+              initialValue: data.product_type,
               rules: [{ required: true, message: '请填写一个类型' }],
             })(
-              <Select defaultValue="loans" placeholder="loans">
-                <Option value="loans">贷款产品</Option>
-                <Option value="creditCard">信用卡产品</Option>
+              <Select placeholder="选择产品类型">
+                <Option value={2}>贷款产品</Option>
+                <Option value={1}>信用卡产品</Option>
               </Select>
             )}
           </Form.Item>
@@ -82,51 +81,50 @@ class CommonForm extends React.PureComponent {
               </span>
             }
           >
-            {getFieldDecorator('productType', {
-              initialValue: data.productCate,
+            {getFieldDecorator('product_category', {
+              initialValue: data.product_category,
               rules: [{ required: true, message: '请选择一个产品分类' }],
             })(
-              <Select defaultValue="cate1" placeholder="cate1">
-                <Option value="cate1">分类一</Option>
-                <Option value="cate2">分类二</Option>
-              </Select>
+              <SelectProductCategory ptype={data.product_type} />
+              // <Select placeholder="选择产品分类">
+              //   <Option value={1}>秒到账</Option>
+              //   <Option value={2}>大额度</Option>
+              //   <Option value={3}>秒办卡</Option>
+              // </Select>
             )}
           </Form.Item>
           <Form.Item {...formItemLayout} label="是否热门">
-            {getFieldDecorator('isHot', {
-              initialValue: data.isHot,
+            {getFieldDecorator('is_hot', {
+              initialValue: data.is_hot,
               rules: [{required: true, type: 'boolean'}]
             })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />)}
           </Form.Item>
           <Form.Item {...formItemLayout} label="是否展示">
-            {getFieldDecorator('isShow', {
-              initialValue: data.isShow,
+            {getFieldDecorator('is_show', {
+              initialValue: data.is_show,
               rules: [{required: true, type: 'boolean'}]
             })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />)}
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="广告主">
-            {getFieldDecorator('advertisers', {
+            {getFieldDecorator('advertisers_obj', {
               initialValue: data.advertisers,
               rules: [{ required: true, message: '请选择一个广告主' }],
             })(
-              <Select defaultValue="advertisers1" placeholder="cate1">
-                <Option value="advertisers1">广告主一</Option>
-                <Option value="advertisers2">广告主二</Option>
-              </Select>
+              <SelectAdvistor />
             )}
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="是否上店铺可选">
-            {getFieldDecorator('isStoreOption', {
-              initialValue: data.isStoreOption,
+            {getFieldDecorator('is_in_shop', {
+              initialValue: data.is_in_shop,
               rules: [{required: true, type: 'boolean'}]
             })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />)}
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="奖金">
-            {getFieldDecorator('bonus', {
-              initialValue: data.bonus,
+            {getFieldDecorator('commission', {
+              initialValue: data.commission,
               rules: [
                 { required: true, message: '请输入奖金金额' },
                 {
@@ -138,8 +136,8 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="排序">
-            {getFieldDecorator('sort', {
-              initialValue: data.sort,
+            {getFieldDecorator('sort_val', {
+              initialValue: data.sort_val,
               rules: [
                 { required: true, message: '请输入排序序号' },
                 {
@@ -151,21 +149,21 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="后台分类">
-            {getFieldDecorator('backEndCate', {
-              initialValue: data.backEndCate,
+            {getFieldDecorator('bg_category', {
+              initialValue: data.bg_category,
               rules: [{ required: true, message: '请选择后台分类' }],
             })(
-              <Select defaultValue="backEndCate1" placeholder="cate1">
-                <Option value="backEndCate1">秒到账</Option>
-                <Option value="backEndCate2">大额度</Option>
-                <Option value="backEndCate3">秒办卡</Option>
+              <Select>
+                <Option value={1}>秒到账</Option>
+                <Option value={2}>大额度</Option>
+                <Option value={3}>秒办卡</Option>
               </Select>
             )}
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="贷款最高额度">
-            {getFieldDecorator('topLoanLimit', {
-              initialValue: data.topLoanLimit,
+            {getFieldDecorator('amount_line', {
+              initialValue: data.amount_line,
               rules: [
                 { required: true, message: '请输入贷款最高额度' },
                 {
@@ -190,8 +188,8 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="月利率">
-            {getFieldDecorator('monthRate', {
-              initialValue: data.monthRate,
+            {getFieldDecorator('month_rate', {
+              initialValue: data.month_rate,
               rules: [
                 { required: true, message: '请输入月利率' },
                 {
@@ -203,8 +201,8 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="日利率">
-            {getFieldDecorator('dailyRate', {
-              initialValue: data.dailyRate,
+            {getFieldDecorator('day_rate', {
+              initialValue: data.day_rate,
               rules: [
                 { required: false, message: '请输入日利率' },
                 {
@@ -228,8 +226,8 @@ class CommonForm extends React.PureComponent {
               </span>
             } 
           >
-            {getFieldDecorator('specialLabel', {
-              initialValue: data.specialLabel,
+            {getFieldDecorator('special_tag', {
+              initialValue: data.special_tag,
               rules: [{ required: false, }],
             })(
               <Input placeholder="特色标签" />
@@ -237,8 +235,8 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="通过率">
-            {getFieldDecorator('passRate', {
-              initialValue: data.passRate,
+            {getFieldDecorator('allow_rate', {
+              initialValue: data.allow_rate,
               rules: [{ required: true, message: '请填写通过率' }],
             })(
               <Input placeholder="通过率" />
@@ -246,8 +244,8 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="申请人数">
-            {getFieldDecorator('monthRate', {
-              initialValue: data.monthRate,
+            {getFieldDecorator('apply_num', {
+              initialValue: data.apply_num,
               rules: [
                 { required: true, message: '请输入申请人数' },
                 {
@@ -259,8 +257,8 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="申请条件">
-            {getFieldDecorator('applyCondition', {
-              initialValue: data.applyCondition,
+            {getFieldDecorator('apply_condition', {
+              initialValue: data.apply_condition,
               rules: [
                 { required: false, message: '请输入申请条件' },
               ],
@@ -268,8 +266,8 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="基本工资">
-            {getFieldDecorator('baseSalary', {
-              initialValue: data.baseSalary,
+            {getFieldDecorator('base_salary', {
+              initialValue: data.base_salary,
               rules: [
                 { required: true, message: '请输入基本工资' },
                 {
@@ -290,8 +288,8 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="阶梯值奖励单位">
-            {getFieldDecorator('rewardUnite', {
-              initialValue: data.rewardUnite,
+            {getFieldDecorator('jl_unite', {
+              initialValue: data.jl_unite,
               rules: [
                 { required: true, message: '请输入阶梯值奖励单位' },
               ],
@@ -311,8 +309,8 @@ class CommonForm extends React.PureComponent {
               </span>
             }
           >
-            {getFieldDecorator('productProfitPrice', {
-              initialValue: data.productProfitPrice,
+            {getFieldDecorator('burundian', {
+              initialValue: data.burundian,
               rules: [
                 { required: false, message: '请输入商品利润价格' },
                 {
@@ -324,8 +322,8 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="期限开始">
-            {getFieldDecorator('durationStart', {
-              initialValue: data.durationStart,
+            {getFieldDecorator('expire_begin', {
+              initialValue: data.expire_begin,
               rules: [
                 { required: false, message: '请输入期限开始' },
                 {
@@ -337,8 +335,8 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="期限结束">
-            {getFieldDecorator('durationEnd', {
-              initialValue: data.durationStart,
+            {getFieldDecorator('expire_end', {
+              initialValue: data.expire_end,
               rules: [
                 { required: false, message: '请输入期限结束' },
                 {
@@ -350,8 +348,8 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="返佣标准">
-            {getFieldDecorator('rebateStandard', {
-              initialValue: data.rebateStandard,
+            {getFieldDecorator('commission_standard', {
+              initialValue: data.commission_standard,
               rules: [
                 { required: false, message: '返佣标准' },
               ],

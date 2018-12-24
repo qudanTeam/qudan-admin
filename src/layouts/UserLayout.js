@@ -41,10 +41,10 @@ class UserLayout extends React.Component {
             <div className={styles.header}>
               <Link to="/">
                 <img alt="logo" className={styles.logo} src={logo} />
-                <span className={styles.title}>Ironic Admin</span>
+                <span className={styles.title}>趣单运营管理中心</span>
               </Link>
             </div>
-            <div className={styles.desc}>Cloud Data Manager</div>
+            <div className={styles.desc}>QuDan Data Manager</div>
           </div>
           {children}
         </div>

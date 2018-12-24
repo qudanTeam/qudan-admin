@@ -287,7 +287,7 @@ class BannerView extends PureComponent {
     {
       title: '是否显示',
       dataIndex: 'is_show',
-      width: 150,
+      // width: 150,
       render: (txt) => {
         // return 
         

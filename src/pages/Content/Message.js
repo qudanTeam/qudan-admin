@@ -277,7 +277,7 @@ class MessageView extends PureComponent {
     {
       title: '消息链接',
       dataIndex: 'msg_link',
-      width: 150,
+      // width: 150,
     },
     {
       title: '操作',

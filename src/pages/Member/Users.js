@@ -169,7 +169,7 @@ class UsersView extends PureComponent {
     {
       title: '最近登录时间',
       dataIndex: 'last_login_time',
-      width: 200,
+      // width: 200,
       render: (val) => {
         return (<span>{moment(val).format("YYYY-MM-DD HH:mm:ss")}</span>)
       },
@@ -530,7 +530,7 @@ class UsersView extends PureComponent {
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
-              scroll={{ x: 1990 }}
+              scroll={{ x: 2190 }}
             />
           </div>
         </Card>

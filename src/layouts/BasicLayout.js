@@ -101,7 +101,7 @@ class BasicLayout extends React.Component {
 
   getPageTitle = pathname => {
     // const currentRouterDate = this
-    return `Ironic Admin`;
+    return `趣单运营管理中心`;
   }
 
   getLayoutStyle = () => {

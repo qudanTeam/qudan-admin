@@ -277,7 +277,7 @@ class SettingsView extends PureComponent {
     {
       title: 'VIP特权图片',
       dataIndex: 'vip_logo',
-      width: 150,
+      // width: 150,
       render: (imgURL) => {
         const url = `${config.qiniu.host}/${imgURL}`;
         return (<Avatar shape="square" size={100} src={url} />);
