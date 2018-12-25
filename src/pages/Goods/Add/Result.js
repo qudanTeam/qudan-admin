@@ -6,18 +6,34 @@ import React, { Fragment } from 'react';
 import { connect } from 'dva';
 import { Button, Row, Col } from 'antd';
 import router from 'umi/router';
-// import Result from '@/components/Result';
+import Result from '@/components/Result';
 import styles from './style.less';
 
 @connect(({ goodAdd }) => ({
-  data: goodAdd.step,
+  data: goodAdd.productInfo,
 }))
 class ResultView extends React.PureComponent {
+
+  handleAddNext = (e) => {
+    e.preventDefault();
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'goodAdd/clearProduct',
+    });
+    
+    router.push('/Goods/Add/Common');
+  }
+
+  toProductList = (e) => {
+    e.preventDefault();
+
+    router.push('/Goods/List');
+  }
+
   render() {
     const { data } = this.props;
-    const onFinish = () => {
-      router.push('/form/step-form/info');
-    };
+
     const information = (
       <div className={styles.information}>
         <Row>
@@ -56,22 +72,21 @@ class ResultView extends React.PureComponent {
     );
     const actions = (
       <Fragment>
-        <Button type="primary" onClick={onFinish}>
-          再转一笔
+        <Button type="primary" onClick={this.handleAddNext}>
+          再加一个
         </Button>
-        <Button>查看账单</Button>
+        <Button onClick={this.toProductList}>查看商品列表</Button>
       </Fragment>
     );
     return (
-      <div> success </div>
-      // <Result
-      //   type="success"
-      //   title="操作成功"
-      //   description="预计两小时内到账"
-      //   extra={information}
-      //   actions={actions}
-      //   className={styles.result}
-      // />
+      <Result
+        type="success"
+        title="商品添加成功"
+        description="快去商品列表上架商品吧！"
+        // extra={information}
+        actions={actions}
+        className={styles.result}
+      />
     );
   }
 }

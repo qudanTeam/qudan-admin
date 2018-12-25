@@ -53,13 +53,14 @@ class SelectUser extends PureComponent {
 
     return (<Select
       mode="multiple"
-      showArrow={false}
+      showArrow
       showSearch
       labelInValue
       value={value || valueProp}
       placeholder="输入产品名搜索"
       notFoundContent={fetching ? <LoadingIcon spin /> : null}
       filterOption={false}
+      onFocus={() => this.fetchUser('')}
       onSearch={this.fetchUser}
       style={{ width: '100%' }}
       onChange={this.handleChange}

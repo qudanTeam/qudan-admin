@@ -8,6 +8,7 @@ import { Form, Input, Button, Alert, Select, Divider } from 'antd';
 import router from 'umi/router';
 import { digitUppercase } from '@/utils/utils';
 import styles from './style.less';
+import config from '@/config';
 import Uploader from '@/components/Uploader';
 
 const { Option } = Select;
@@ -15,16 +16,16 @@ const { TextArea } = Input;
 
 const formItemLayout = {
   labelCol: {
-    span: 5,
+    span: 8,
   },
   wrapperCol: {
-    span: 19,
+    span: 16,
   },
 };
 
 @connect(({ goodAdd, loading }) => ({
   submitting: loading.effects['goodAdd/submitStepForm'],
-  data: goodAdd.step,
+  data: goodAdd.productInfo,
 }))
 @Form.create()
 class DetailsForm extends React.PureComponent {
@@ -32,19 +33,30 @@ class DetailsForm extends React.PureComponent {
     const { form, data, dispatch, submitting } = this.props;
     const { getFieldDecorator, validateFields } = form;
     const onPrev = () => {
-      router.push('/form/step-form/info');
+      router.push('/Goods/Add/Common');
     };
     const onValidateForm = e => {
       e.preventDefault();
       validateFields((err, values) => {
         if (!err) {
           dispatch({
-            type: 'form/submitStepForm',
-            payload: {
-              ...data,
-              ...values,
-            },
+            type: 'goodAdd/create',
+            payload: values,
+          }).then((val) => {
+            if (val) {
+              router.push('/Goods/Add/Result');
+            }
           });
+          // dispatch({
+          //   type: 'goodAdd/saveFormData',
+          //   payload: values,
+          // }).then(() => {
+          //   return dispatch({type: 'goodAdd/create'});
+          // }).then(val => {
+          //   if (val) {
+          //     router.push('/Goods/Add/Result');
+          //   }
+          // });
         }
       });
     };
@@ -53,7 +65,7 @@ class DetailsForm extends React.PureComponent {
         <Form.Item {...formItemLayout} label="特色文案">
           {getFieldDecorator('special_txt', {
             initialValue: data.special_txt,
-            rules: [{ required: true, message: '请填写产品名称' }],
+            rules: [{ required: true, max: 255, message: '请填写产品名称' }],
           })(
             <Input placeholder="特色文案" />
           )}
@@ -149,7 +161,7 @@ class DetailsForm extends React.PureComponent {
         <Form.Item {...formItemLayout} label="月度工资">
           {getFieldDecorator('month_salary', {
             initialValue: data.month_salary,
-            rules: [{ required: true, message: '请填写月度工资' }],
+            rules: [{ required: true, max: 100, message: '请填写月度工资' }],
           })(
             <Input placeholder="月度工资" />
           )}
@@ -158,7 +170,7 @@ class DetailsForm extends React.PureComponent {
         <Form.Item {...formItemLayout} label="实时工资">
           {getFieldDecorator('salary', {
             initialValue: data.salary,
-            rules: [{ required: true, message: '请填写实时工资' }],
+            rules: [{ required: true, max: 100, message: '请填写实时工资' }],
           })(
             <Input placeholder="实时工资" />
           )}
@@ -167,7 +179,7 @@ class DetailsForm extends React.PureComponent {
         <Form.Item {...formItemLayout} label="月度工资描述">
           {getFieldDecorator('month_salary_desc', {
             initialValue: data.month_salary_desc,
-            rules: [{ required: true, message: '请填写月度工资描述' }],
+            rules: [{ required: true, max: 500, message: '请填写月度工资描述' }],
           })(
             <Input placeholder="月度工资描述" />
           )}
@@ -176,7 +188,7 @@ class DetailsForm extends React.PureComponent {
         <Form.Item {...formItemLayout} label="实时工资描述">
           {getFieldDecorator('salary_desc', {
             initialValue: data.salary_desc,
-            rules: [{ required: true, message: '请填写实时工资描述' }],
+            rules: [{ required: true,  max: 500, message: '请填写实时工资描述' }],
           })(
             <Input placeholder="实时工资描述" />
           )}
@@ -185,7 +197,13 @@ class DetailsForm extends React.PureComponent {
         <Form.Item {...formItemLayout} label="阶梯A奖励">
           {getFieldDecorator('a_level_reward', {
             initialValue: data.a_level_reward,
-            rules: [{ required: true, message: '请填写阶梯A奖励' }],
+            rules: [
+              { required: true, message: '请填写阶梯A奖励' },
+              {
+                pattern: config.RateRegex,
+                message: '请输入正确的奖励值 例: 0.10',
+              },
+            ],
           })(
             <Input placeholder="阶梯A奖励" />
           )}
@@ -194,7 +212,13 @@ class DetailsForm extends React.PureComponent {
         <Form.Item {...formItemLayout} label="阶梯B奖励">
           {getFieldDecorator('b_level_reward', {
             initialValue: data.b_level_reward,
-            rules: [{ required: true, message: '请填写阶梯B奖励' }],
+            rules: [
+              { required: true, message: '请填写阶梯B奖励' },
+              {
+                pattern: config.RateRegex,
+                message: '请输入正确的奖励值 例: 0.10',
+              },
+            ],
           })(
             <Input placeholder="阶梯B奖励" />
           )}
@@ -203,7 +227,13 @@ class DetailsForm extends React.PureComponent {
         <Form.Item {...formItemLayout} label="阶梯C奖励">
           {getFieldDecorator('c_level_reward', {
             initialValue: data.c_level_reward,
-            rules: [{ required: true, message: '请填写阶梯C奖励' }],
+            rules: [
+              { required: true, message: '请填写阶梯C奖励' },
+              {
+                pattern: config.RateRegex,
+                message: '请输入正确的奖励值 例: 0.10',
+              },
+            ],
           })(
             <Input placeholder="阶梯C奖励" />
           )}
@@ -214,7 +244,7 @@ class DetailsForm extends React.PureComponent {
             initialValue: data.detail_header_img,
             rules: [{ required: true, message: '请上传详情页头部图片' }],
           })(
-            <Uploader />
+            <Uploader action={config.uploadPath} host={config.qiniu.host} />
           )}
         </Form.Item>
 
@@ -223,7 +253,7 @@ class DetailsForm extends React.PureComponent {
             initialValue: data.card_long_img,
             rules: [{ required: true, message: '请上传信用卡长图' }],
           })(
-            <Uploader />
+            <Uploader action={config.uploadPath} host={config.qiniu.host} />
           )}
         </Form.Item>
 
@@ -232,7 +262,7 @@ class DetailsForm extends React.PureComponent {
             initialValue: data.product_show_img,
             rules: [{ required: true, message: '请上传产品展示图' }],
           })(
-            <Uploader />
+            <Uploader action={config.uploadPath} host={config.qiniu.host} />
           )}
         </Form.Item>
 
@@ -260,7 +290,7 @@ class DetailsForm extends React.PureComponent {
         <Form.Item {...formItemLayout} label="如何结算奖金">
           {getFieldDecorator('how_settle', {
             initialValue: data.how_settle,
-            rules: [{ required: true, message: '请填写如何结算奖金' }],
+            rules: [{ required: true, max: 255, message: '请填写如何结算奖金' }],
           })(
             <TextArea rows={3} placeholder="如何结算奖金" />
           )}
@@ -269,7 +299,7 @@ class DetailsForm extends React.PureComponent {
         <Form.Item {...formItemLayout} label="分享内容(分享的标题)">
           {getFieldDecorator('share_title', {
             initialValue: data.share_title,
-            rules: [{ required: true, message: '请填写分享内容' }],
+            rules: [{ required: true, max: 200, message: '请填写分享内容' }],
           })(
             <Input placeholder="分享内容" />
           )}
@@ -280,14 +310,14 @@ class DetailsForm extends React.PureComponent {
             initialValue: data.card_progress_img,
             rules: [{ required: true, message: '请上传办卡流程图' }],
           })(
-            <Uploader />
+            <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
           )}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="基本权益">
           {getFieldDecorator('base_right', {
             initialValue: data.base_right,
-            rules: [{ required: true, message: '请填写基本权益' }],
+            rules: [{ required: true, max: 200, message: '请填写基本权益' }],
           })(
             <Input placeholder="基本权益" />
           )}
@@ -296,7 +326,7 @@ class DetailsForm extends React.PureComponent {
         <Form.Item {...formItemLayout} label="优惠活动">
           {getFieldDecorator('preferential', {
             initialValue: data.preferential,
-            rules: [{ required: true, message: '请填写优惠活动' }],
+            rules: [{ required: true, max: 200, message: '请填写优惠活动' }],
           })(
             <Input placeholder="优惠活动" />
           )}

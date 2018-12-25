@@ -21,7 +21,7 @@ class SelectAdvistor extends PureComponent {
     this.fetchUser = debounce(this.fetchUser, 600);
   }
 
-  fetchUser = (value) => {
+  fetchUser = (value = '') => {
     const { action = '/apis/advistors/search' } = this.props;
     this.setState({ data: [], fetching: true });
     request(`${action}?search=${value}`)
@@ -53,13 +53,14 @@ class SelectAdvistor extends PureComponent {
 
     return (<Select
       // mode="multiple"
-      showArrow={false}
+      showArrow
       showSearch
       labelInValue
       value={value || valueProp}
       placeholder="输入广告主名称搜索"
       notFoundContent={fetching ? <LoadingIcon spin /> : null}
       filterOption={false}
+      onFocus={this.fetchUser}
       onSearch={this.fetchUser}
       style={{ width: '100%' }}
       onChange={this.handleChange}

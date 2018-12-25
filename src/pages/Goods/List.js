@@ -12,6 +12,7 @@ import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import Uploader from '@/components/Uploader';
 import SelectProduct from '@/components/Select/SelectProduct';
+import router from 'umi/router';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -235,7 +236,7 @@ class ListView extends PureComponent {
     },
     {
       title: 'LOGO',
-      dataIndex: 'title',
+      dataIndex: 'logo',
       width: 150,
       render: (imgURL) => {
         const url = `${config.qiniu.host}/${imgURL}`;
@@ -323,6 +324,11 @@ class ListView extends PureComponent {
     });
   }
 
+  goToCreate = (e) => {
+    e.preventDefault();
+    router.push('/Goods/Add/Common');
+  }
+
   handleCreate = (values) => {
     const { dispatch } = this.props;
     
@@ -383,7 +389,7 @@ class ListView extends PureComponent {
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListOperator}>
-              <Button icon="plus" type="primary" onClick={this.toggleCreateForm}>
+              <Button icon="plus" type="primary" onClick={this.goToCreate}>
                 新增
               </Button>
             </div>

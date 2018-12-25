@@ -9,21 +9,23 @@ import router from 'umi/router';
 import styles from './style.less';
 import SelectAdvistor from '@/components/Select/SelectAdvistor';
 import SelectProductCategory from '@/components/Select/SelectProductCategory';
+import Uploader from '@/components/Uploader';
+import config from '@/config';
 
 const { Option } = Select;
 const { TextArea } = Input;
 
 const formItemLayout = {
   labelCol: {
-    span: 6,
+    span: 8,
   },
   wrapperCol: {
-    span: 18,
+    span: 16,
   },
 };
 
 @connect(({ goodAdd }) => ({
-  data: goodAdd.step,
+  data: goodAdd.productInfo,
 }))
 @Form.create()
 class CommonForm extends React.PureComponent {
@@ -39,7 +41,7 @@ class CommonForm extends React.PureComponent {
       validateFields((err, values) => {
         if (!err) {
           dispatch({
-            type: 'form/saveStepFormData',
+            type: 'goodAdd/saveFormData',
             payload: values,
           });
           router.push('/Goods/Add/Details');
@@ -52,11 +54,21 @@ class CommonForm extends React.PureComponent {
           <Form.Item {...formItemLayout} label="产品名称">
             {getFieldDecorator('product_name', {
               initialValue: data.product_name,
-              rules: [{ required: true, message: '请填写产品名称' }],
+              rules: [{ required: true, max: 100, message: '请填写产品名称' }],
             })(
               <Input placeholder="产品名称" />
             )}
           </Form.Item>
+
+          <Form.Item {...formItemLayout} label="产品LOGO">
+            {getFieldDecorator('logo', {
+              initialValue: data.logo,
+              rules: [{ required: true, message: '请上传产品LOGO' }],
+            })(
+              <Uploader action={config.uploadPath} host={config.qiniu.host} />
+            )}
+          </Form.Item>
+
           <Form.Item {...formItemLayout} label="产品类型">
             {getFieldDecorator('product_type', {
               initialValue: data.product_type,
@@ -153,7 +165,7 @@ class CommonForm extends React.PureComponent {
               initialValue: data.bg_category,
               rules: [{ required: true, message: '请选择后台分类' }],
             })(
-              <Select>
+              <Select placeholder="后台分类">
                 <Option value={1}>秒到账</Option>
                 <Option value={2}>大额度</Option>
                 <Option value={3}>秒办卡</Option>
@@ -193,8 +205,8 @@ class CommonForm extends React.PureComponent {
               rules: [
                 { required: true, message: '请输入月利率' },
                 {
-                  pattern: /^(\d+)((?:\.\d+)?)$/,
-                  message: '请输入月利率',
+                  pattern: config.RateRegex,
+                  message: '请输入正确的月利率 例: 0.10',
                 },
               ],
             })(<Input placeholder="请输入月利率" />)}
@@ -206,8 +218,8 @@ class CommonForm extends React.PureComponent {
               rules: [
                 { required: false, message: '请输入日利率' },
                 {
-                  pattern: /^(\d+)((?:\.\d+)?)$/,
-                  message: '请输入日利率',
+                  pattern: config.RateRegex,
+                  message: '请输入正确的日利率 例: 0.10',
                 },
               ],
             })(<Input placeholder="请输入日利率" />)}
@@ -237,7 +249,13 @@ class CommonForm extends React.PureComponent {
           <Form.Item {...formItemLayout} label="通过率">
             {getFieldDecorator('allow_rate', {
               initialValue: data.allow_rate,
-              rules: [{ required: true, message: '请填写通过率' }],
+              rules: [
+                { required: true, message: '请填写通过率' },
+                {
+                  pattern: config.RateRegex,
+                  message: '请输入正确的通过率 例: 0.10',
+                },
+              ],
             })(
               <Input placeholder="通过率" />
             )}
@@ -260,9 +278,18 @@ class CommonForm extends React.PureComponent {
             {getFieldDecorator('apply_condition', {
               initialValue: data.apply_condition,
               rules: [
-                { required: false, message: '请输入申请条件' },
+                { required: false, max: 200, message: '请输入申请条件' },
               ],
             })(<TextArea rows={3} placeholder="请输入申请条件" />)}
+          </Form.Item>
+
+          <Form.Item {...formItemLayout} label="申请流程图片">
+            {getFieldDecorator('apply_tp_img', {
+              initialValue: data.apply_tp_img,
+              rules: [{ required: true, message: '请上传申请流程图' }],
+            })(
+              <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
+            )}
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="基本工资">
@@ -271,18 +298,18 @@ class CommonForm extends React.PureComponent {
               rules: [
                 { required: true, message: '请输入基本工资' },
                 {
-                  pattern: /^(\d+)((?:\.\d+)?)$/,
-                  message: '请输入正确的贷款额度',
+                  pattern: config.RateRegex,
+                  message: '请输入正确的基本工资',
                 },
               ],
-            })(<Input placeholder="额度" />)}
+            })(<Input placeholder="基本工资" />)}
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="阶梯值单位">
             {getFieldDecorator('unite', {
               initialValue: data.unite,
               rules: [
-                { required: true, message: '请输入阶梯值单位' },
+                { required: true, max: 200, message: '请输入阶梯值单位' },
               ],
             })(<Input placeholder="张/万" />)}
           </Form.Item>
@@ -291,7 +318,7 @@ class CommonForm extends React.PureComponent {
             {getFieldDecorator('jl_unite', {
               initialValue: data.jl_unite,
               rules: [
-                { required: true, message: '请输入阶梯值奖励单位' },
+                { required: true, max: 200, message: '请输入阶梯值奖励单位' },
               ],
             })(<Input placeholder="元" />)}
           </Form.Item>
@@ -351,7 +378,7 @@ class CommonForm extends React.PureComponent {
             {getFieldDecorator('commission_standard', {
               initialValue: data.commission_standard,
               rules: [
-                { required: false, message: '返佣标准' },
+                { required: false, max: 100, message: '返佣标准' },
               ],
             })(<Input placeholder="输入返佣标准" />)}
           </Form.Item>

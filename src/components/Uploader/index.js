@@ -1,5 +1,6 @@
 import { Upload, Icon, message, Avatar } from 'antd';
-import React from 'react';
+import React, { PureComponent } from 'react';
+import { Promise } from 'es6-promise';
 // import config from '@/config';
 
 function getBase64(img, callback) {
@@ -20,10 +21,36 @@ function beforeUpload(file) {
   return isJPG && isLt2M;
 }
 
+function getKeyFromResponse(response) {
+  const { replys } = response;
+  if (!replys) {
+    return '';
+  }
+
+  if (!replys[0]) {
+    return '';
+  }
+  const urlKey = replys[0].key;
+  return urlKey
+}
+
+function getKeyFromFile(file) {
+  if (file && file.key) {
+    return file.key;
+  }
+  if (file && file.response) {
+    return getKeyFromResponse(file.response);
+  }
+  return '';
+}
+
 export default
-class Uploader extends React.Component {
+class Uploader extends PureComponent {
   state = {
     loading: false,
+    id: 0,
+    value: '',
+    showFileList: [],
   };
 
   onChangeCallback = (val = null) => {
@@ -39,48 +66,104 @@ class Uploader extends React.Component {
     }
   }
 
-  handleChange = (info) => {
-    if (info.file.status === 'uploading') {
-      this.setState({ loading: true });
-      return;
-    }
-    console.log(info);
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      console.log(info.file, 'file');
-      const { response } = info.file;
-      const { replys } = response;
-      // console.log(info.event);
-      // this.setState({
+  addID = () => {
+    const { id } = this.state;
 
-      // })
-      this.onChangeCallback(replys[0].key);
-      getBase64(info.file.originFileObj, imageUrl => this.setState({
-        imageUrl,
-        loading: false,
-      }));
-    }
+    this.setState({
+      id: id + 1,
+    });
   }
 
-  // static getDerivedStateFromProps(props, state) {
-  //   const { value } = state;
-  //   const { nextValue } = props;
+  handleBeforeUpload = (file) => {
+    const res = beforeUpload(file);
+    const fileList = this.state.showFileList.filter(f => f.status === 'done');
 
-  //   if (value !== nextValue) {
-  //     this.onChangeCallback(value);
-  //   }
-  // }
+    return new Promise((resolve, reject) => {
+      this.setState({
+        showFileList: [...fileList],
+      }, () => {
+        
+        this.onChangeCallback(fileList.map(getKeyFromFile).join(','));
+        
+        if (res) {
+          resolve(true);
+        } else {
+          reject(res);
+        }
+      });
+    })
+    
+
+    // return res;
+  }
+
+  handleChange = ({ file, fileList }) => {
+    // console.log(file, 'change');
+    // console.log(fileList, 'change2');
+    if (file.status === 'uploading') {
+      this.setState({ loading: true });
+    } else if (file.status === 'done') {
+      this.onChangeCallback(fileList.map(getKeyFromFile).join(','));
+      this.setState({ loading: false });
+    }
+    this.setState({
+      showFileList: [...fileList],
+    });
+  }
+
+  handleRemove = (file) => {
+
+    return new Promise((resolve, reject) => {
+
+      try {
+        const fileList = this.state.showFileList.filter(f => f.uid !== file.uid);
+    
+        this.setState({
+          showFileList: fileList,
+        }, () => {
+          this.onChangeCallback(fileList.map(getKeyFromFile).join(','));
+          resolve(true);
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    const { showFileList = [], value: stateValue } = state;
+    const { value = '', host } = props;
+
+    const genFileListItem = (key) => {
+      // const { host } = this.props;
+      
+      const res = {
+        uid: Date.now(),
+        key: key,
+        name: key,
+        status: 'done',
+        url: `${host}/${key}`,
+      }
+      return res;
+    }
+
+    if (value && !stateValue && showFileList.length <= 0) {
+      const fls = value.split(',');
+      return {
+        showFileList: fls.map(genFileListItem),
+        value: value,
+      };
+    }
+
+    return null;
+  }
+
   componentDidUpdate() {
     const { value } = this.state;
     const { value: nextValue } = this.props;
     if (value !== nextValue) {
       this.onChangeCallback(value);
     }
-  }
-
-  componentDidMount() {
-    const { value } = this.props;
-    this.onChangeCallback(value);
   }
 
   render() {
@@ -91,21 +174,23 @@ class Uploader extends React.Component {
         <div className="ant-upload-text">上传</div>
       </div>
     );
-    const { action, value, host } = this.props;
-    
-    const imageUrl = this.state.imageUrl || value ? `${host}/${value}` : null;
+    // mode is single or multi
+    const { action, isSingle = true } = this.props;
+    const { showFileList } = this.state;
     
     return (
       <Upload
         name="avatar"
         listType="picture-card"
         className="avatar-uploader"
-        showUploadList={false}
+        showUploadList={{showRemoveIcon: true, showPreviewIcon: false}}
+        fileList={showFileList}
         action={action}
-        beforeUpload={beforeUpload}
+        beforeUpload={this.handleBeforeUpload}
         onChange={this.handleChange}
+        onRemove={this.handleRemove}
       >
-        {imageUrl ? <Avatar shape="square" size={100} src={imageUrl} /> : uploadButton}
+        {(isSingle && showFileList.length >= 1) ? null : uploadButton}
       </Upload>
     );
   }
