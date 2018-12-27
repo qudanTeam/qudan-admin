@@ -1,5 +1,18 @@
 @import '~@/components/Themes/default.less';
 
+:global {
+  .fullscreen-able {
+    .ant-modal-content {
+      height: 100vh;
+      overflow: hidden;
+
+      .ant-modal-body {
+        height: ~'calc(100vh - 55px)';
+        overflow: auto;
+      }
+    }
+  }
+}
 
 .tableList {
   .tableListOperator {

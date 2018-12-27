@@ -47,6 +47,14 @@ class SelectProductCategory extends PureComponent {
       fetching: false,
     });
   }
+
+  handleBlur = () => {
+    this.setState({
+      value: '',
+      data: [],
+      fetching: false,
+    });
+  }
   
   render () {
     const { value, data, fetching } = this.state;
@@ -62,6 +70,7 @@ class SelectProductCategory extends PureComponent {
       notFoundContent={fetching ? <LoadingIcon spin /> : null}
       filterOption={false}
       onFocus={() => this.fetchUser('')}
+      onBlur={this.handleBlur}
       onSearch={this.fetchUser}
       style={{ width: '100%' }}
       onChange={this.handleChange}

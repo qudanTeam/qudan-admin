@@ -5,7 +5,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import styles from './List.less';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { Card, Divider, Form, Row, Icon, Col, Button, Input, Select, Avatar, Modal, Tag } from 'antd';
+import { Card, Divider, Form, Row, Icon, Col, Button, Input, Select, Avatar, Modal, Tag, Tooltip, Switch, Skeleton } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import config from '@/config';
 import { connect } from 'dva';
@@ -13,102 +13,13 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import Uploader from '@/components/Uploader';
 import SelectProduct from '@/components/Select/SelectProduct';
 import router from 'umi/router';
+import SelectProductCategory from '@/components/Select/SelectProductCategory';
+import SelectAdvistor from '@/components/Select/SelectAdvistor';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 const { confirm } = Modal;
 const { TextArea } = Input;
-
-const CreateForm = Form.create()(props => {
-  const { modalVisible, form, handleSubmit, handleModalVisible } = props;
-
-  const formItemLayout = {
-    labelCol: {
-      xs: { span: 24 },
-      sm: { span: 7 },
-    },
-    wrapperCol: {
-      xs: { span: 24 },
-      sm: { span: 13 },
-      md: { span: 10 },
-    },
-  };
-
-  const submitFormLayout = {
-    wrapperCol: {
-      xs: { span: 24, offset: 0 },
-      sm: { span: 10, offset: 7 },
-    },
-  };
-
-  const okHandle = (e) => {
-    if (typeof e !== 'undefined') {
-      e.preventDefault();
-    }
-    form.validateFields((err, fieldsValue) => {
-      if (err) return;
-      form.resetFields();
-      if (typeof handleSubmit === "function") {
-        handleSubmit(fieldsValue);
-      }
-    });
-  };
-  return (
-    <Modal
-      destroyOnClose
-      title="新增"
-      centered
-      visible={modalVisible}
-      // onOk={okHandle}
-      footer={null}
-      width={620}
-      onCancel={() => handleModalVisible()}
-    >
-      <Form
-        onSubmit={okHandle} 
-        hideRequiredMark 
-        style={{ marginTop: 8 }}
-      >
-        <FormItem {...formItemLayout} label="选择产品">
-          {form.getFieldDecorator('product_id_obj', {
-            rules: [{ required: true, message: '请选择产品' }],
-          })(
-            <SelectProduct />
-          )}
-        </FormItem>
-
-        <FormItem {...formItemLayout} label="配置标题">
-          {form.getFieldDecorator('title', {
-            initialValue: '结算标准',
-            rules: [{ required: true, message: '配置标题' }],
-          })(
-            <Select>
-              <Option value="结算标准">结算标准</Option>
-              <Option value="结算时间">结算时间</Option>
-            </Select>
-          )}
-        </FormItem>
-
-        <FormItem {...formItemLayout} label="配置内容">
-          {form.getFieldDecorator('content', {
-            rules: [{ required: true, message: '配置标题' }],
-          })(
-            <TextArea rows={3} />
-          )}
-        </FormItem>
-        
-        <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
-          <Button type="primary" htmlType="submit">
-            <FormattedMessage id="form.submit" />
-          </Button>
-          <Button style={{ marginLeft: 8 }} onClick={() => handleModalVisible()}>
-            <FormattedMessage id="form.cancel" />
-          </Button>
-        </FormItem>
-      </Form>
-    </Modal>
-  );
-});
 
 const UpdateForm = Form.create()(props => {
   const { 
@@ -116,6 +27,7 @@ const UpdateForm = Form.create()(props => {
     form,
     handleSubmit, 
     data,
+    loading,
     handleModalVisible } = props;
 
   const formItemLayout = {
@@ -137,6 +49,7 @@ const UpdateForm = Form.create()(props => {
     },
   };
 
+  const { getFieldDecorator } = form;
   const okHandle = (e) => {
     if (typeof e !== 'undefined') {
       e.preventDefault();
@@ -153,48 +66,630 @@ const UpdateForm = Form.create()(props => {
   };
   return (
     <Modal
+      wrapClassName="fullscreen-able"
       destroyOnClose
       title="修改"
       centered
       visible={modalVisible}
       footer={null}
-      width={620}
+      mask={false}
+      style={{height: '100%'}}
+      width="100%"
       onCancel={() => handleModalVisible()}
     >
+      <Skeleton
+        active
+        loading={loading}
+        paragraph={{
+          rows: 10,
+        }}
+      >
       <Form
         onSubmit={okHandle} 
         hideRequiredMark 
         style={{ marginTop: 8 }}
       >
-        <FormItem {...formItemLayout} label="选择产品">
-          {form.getFieldDecorator('product_id_obj', {
-            initialValue: { key: String(data.product_id), label: String(data.product_name) },
-            rules: [{ required: true, message: '请选择产品' }],
+        <Form.Item {...formItemLayout} label="产品名称">
+          {getFieldDecorator('product_name', {
+            initialValue: data.product_name,
+            rules: [{ required: true, max: 100, message: '请填写产品名称' }],
           })(
-            <SelectProduct />
+            <Input placeholder="产品名称" />
           )}
-        </FormItem>
+        </Form.Item>
 
-        <FormItem {...formItemLayout} label="配置标题">
-          {form.getFieldDecorator('title', {
-            initialValue: data.title,
-            rules: [{ required: true, message: '配置标题' }],
+        <Form.Item {...formItemLayout} label="产品LOGO">
+          {getFieldDecorator('logo', {
+            initialValue: data.logo,
+            rules: [{ required: true, message: '请上传产品LOGO' }],
           })(
-            <Select>
-              <Option value="结算标准">结算标准</Option>
-              <Option value="结算时间">结算时间</Option>
+            <Uploader action={config.uploadPath} host={config.qiniu.host} />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="产品类型">
+          {getFieldDecorator('product_type', {
+            initialValue: data.product_type,
+            rules: [{ required: true, message: '请填写一个类型' }],
+          })(
+            <Select placeholder="选择产品类型">
+              <Option value={2}>贷款产品</Option>
+              <Option value={1}>信用卡产品</Option>
             </Select>
           )}
-        </FormItem>
-
-        <FormItem {...formItemLayout} label="配置内容">
-          {form.getFieldDecorator('content', {
-            initialValue: data.content,
-            rules: [{ required: true, message: '配置标题' }],
+        </Form.Item>
+        <Form.Item 
+          {...formItemLayout} 
+          label={
+            <span>
+              产品分类 &nbsp;
+              <em className={styles.optional}>
+                <Tooltip title="信用卡为关联银行信息-影响进度查询，贷款关联贷款分类标签-影响商品列表标签显示">
+                  <Icon type="info-circle-o" style={{ marginRight: 4 }} />
+                </Tooltip>
+              </em>
+            </span>
+          }
+        >
+          {getFieldDecorator('product_category', {
+            initialValue: data.product_category,
+            rules: [{ required: true, message: '请选择一个产品分类' }],
           })(
-            <TextArea rows={3} />
+            <SelectProductCategory ptype={data.product_type} />
+            // <Select placeholder="选择产品分类">
+            //   <Option value={1}>秒到账</Option>
+            //   <Option value={2}>大额度</Option>
+            //   <Option value={3}>秒办卡</Option>
+            // </Select>
           )}
-        </FormItem>
+        </Form.Item>
+        <Form.Item {...formItemLayout} label="是否热门">
+          {getFieldDecorator('is_hot', {
+            initialValue: data.is_hot,
+            rules: [{required: true, type: 'boolean'}]
+          })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />)}
+        </Form.Item>
+        <Form.Item {...formItemLayout} label="是否展示">
+          {getFieldDecorator('is_show', {
+            initialValue: data.is_show,
+            rules: [{required: true, type: 'boolean'}]
+          })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="广告主">
+          {getFieldDecorator('advertisers_obj', {
+            initialValue: data.advertisers_obj,
+            rules: [{ required: true, message: '请选择一个广告主' }],
+          })(
+            <SelectAdvistor />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="是否上店铺可选">
+          {getFieldDecorator('is_in_shop', {
+            initialValue: data.is_in_shop,
+            rules: [{required: true, type: 'boolean'}]
+          })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="奖金">
+          {getFieldDecorator('commission', {
+            initialValue: data.commission,
+            rules: [
+              { required: true, message: '请输入奖金金额' },
+              {
+                pattern: /^(\d+)((?:\.\d+)?)$/,
+                message: '请输入合法金额数字',
+              },
+            ],
+          })(<Input prefix="￥" placeholder="请输入金额" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="排序">
+          {getFieldDecorator('sort_val', {
+            initialValue: data.sort_val,
+            rules: [
+              { required: true, message: '请输入排序序号' },
+              {
+                pattern: /^(\d+)((?:\.\d+)?)$/,
+                message: '请输入排序序号',
+              },
+            ],
+          })(<Input placeholder="序号" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="后台分类">
+          {getFieldDecorator('bg_category', {
+            initialValue: data.bg_category,
+            rules: [{ required: true, message: '请选择后台分类' }],
+          })(
+            <Select placeholder="后台分类">
+              <Option value={1}>秒到账</Option>
+              <Option value={2}>大额度</Option>
+              <Option value={3}>秒办卡</Option>
+            </Select>
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="贷款最高额度">
+          {getFieldDecorator('amount_line', {
+            initialValue: data.amount_line,
+            rules: [
+              { required: true, message: '请输入贷款最高额度' },
+              {
+                pattern: /^(\d+)((?:\.\d+)?)$/,
+                message: '请输入正确的贷款最高额度',
+              },
+            ],
+          })(<Input prefix="¥" placeholder="最高额度" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="贷款额度">
+          {getFieldDecorator('loanLimit', {
+            initialValue: data.loanLimit,
+            rules: [
+              { required: true, message: '请输入贷款额度' },
+              {
+                pattern: /^(\d+)((?:\.\d+)?)$/,
+                message: '请输入正确的贷款额度',
+              },
+            ],
+          })(<Input prefix="¥" placeholder="额度" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="月利率">
+          {getFieldDecorator('month_rate', {
+            initialValue: data.month_rate,
+            rules: [
+              { required: true, message: '请输入月利率' },
+              {
+                pattern: config.RateRegex,
+                message: '请输入正确的月利率 例: 0.10',
+              },
+            ],
+          })(<Input placeholder="请输入月利率" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="日利率">
+          {getFieldDecorator('day_rate', {
+            initialValue: data.day_rate,
+            rules: [
+              { required: false, message: '请输入日利率' },
+              {
+                pattern: config.RateRegex,
+                message: '请输入正确的日利率 例: 0.10',
+              },
+            ],
+          })(<Input placeholder="请输入日利率" />)}
+        </Form.Item>
+
+        <Form.Item 
+          {...formItemLayout} 
+          label={
+            <span>
+              特色标签&nbsp;
+              <em className={styles.optional}>
+                <Tooltip title="商品详情页-标题旁的标签显示">
+                  <Icon type="info-circle-o" style={{ marginRight: 4 }} />
+                </Tooltip>
+              </em>
+            </span>
+          } 
+        >
+          {getFieldDecorator('special_tag', {
+            initialValue: data.special_tag,
+            rules: [{ required: false, }],
+          })(
+            <Input placeholder="特色标签" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="通过率">
+          {getFieldDecorator('allow_rate', {
+            initialValue: data.allow_rate,
+            rules: [
+              { required: true, message: '请填写通过率' },
+              {
+                pattern: config.RateRegex,
+                message: '请输入正确的通过率 例: 0.10',
+              },
+            ],
+          })(
+            <Input placeholder="通过率" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="申请人数">
+          {getFieldDecorator('apply_num', {
+            initialValue: data.apply_num,
+            rules: [
+              { required: true, message: '请输入申请人数' },
+              {
+                pattern: /^(\d+)$/,
+                message: '请输入正确的申请人数',
+              },
+            ],
+          })(<Input placeholder="请输入申请人数" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="申请条件">
+          {getFieldDecorator('apply_condition', {
+            initialValue: data.apply_condition,
+            rules: [
+              { required: false, max: 200, message: '请输入申请条件' },
+            ],
+          })(<TextArea rows={3} placeholder="请输入申请条件" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="申请流程图片">
+          {getFieldDecorator('apply_tp_img', {
+            initialValue: data.apply_tp_img,
+            rules: [{ required: true, message: '请上传申请流程图' }],
+          })(
+            <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="基本工资">
+          {getFieldDecorator('base_salary', {
+            initialValue: data.base_salary,
+            rules: [
+              { required: true, message: '请输入基本工资' },
+              {
+                pattern: config.RateRegex,
+                message: '请输入正确的基本工资',
+              },
+            ],
+          })(<Input placeholder="基本工资" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="阶梯值单位">
+          {getFieldDecorator('unit', {
+            initialValue: data.unit,
+            rules: [
+              { required: true, max: 200, message: '请输入阶梯值单位' },
+            ],
+          })(<Input placeholder="张/万" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="阶梯值奖励单位">
+          {getFieldDecorator('jl_unite', {
+            initialValue: data.jl_unite,
+            rules: [
+              { required: true, max: 200, message: '请输入阶梯值奖励单位' },
+            ],
+          })(<Input placeholder="元" />)}
+        </Form.Item>
+
+        <Form.Item 
+          {...formItemLayout} 
+          label={
+            <span>
+              商品利润价格&nbsp;
+              <em className={styles.optional}>
+                <Tooltip title="用来计算此商品的总利润！">
+                  <Icon type="info-circle-o" style={{ marginRight: 4 }} />
+                </Tooltip>
+              </em>
+            </span>
+          }
+        >
+          {getFieldDecorator('burundian', {
+            initialValue: data.burundian,
+            rules: [
+              { required: false, message: '请输入商品利润价格' },
+              {
+                pattern: /^(\d+)((?:\.\d+)?)$/,
+                message: '请输入商品利润价格',
+              },
+            ],
+          })(<Input prefix="¥" placeholder="输入商品利润价格" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="期限开始">
+          {getFieldDecorator('expire_begin', {
+            initialValue: data.expire_begin,
+            rules: [
+              { required: false, message: '请输入期限开始' },
+              {
+                pattern: /^(\d+)$/,
+                message: '请输入正确的数值',
+              },
+            ],
+          })(<Input placeholder="期限开始" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="期限结束">
+          {getFieldDecorator('expire_end', {
+            initialValue: data.expire_end,
+            rules: [
+              { required: false, message: '请输入期限结束' },
+              {
+                pattern: /^(\d+)$/,
+                message: '请输入正确的数值',
+              },
+            ],
+          })(<Input placeholder="期限结束" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="返佣标准">
+          {getFieldDecorator('commission_standard', {
+            initialValue: data.commission_standard,
+            rules: [
+              { required: false, max: 100, message: '返佣标准' },
+            ],
+          })(<Input placeholder="输入返佣标准" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="特色文案">
+          {getFieldDecorator('special_txt', {
+            initialValue: data.special_txt,
+            rules: [{ required: true, max: 255, message: '请填写产品名称' }],
+          })(
+            <Input placeholder="特色文案" />
+          )}
+        </Form.Item>
+
+        {/* <Form.Item {...formItemLayout} label="产品海报">
+          {getFieldDecorator('product_show_img', {
+            initialValue: data.product_show_img,
+            rules: [{ required: true, message: '请填写产品名称' }],
+          })(
+            <Uploader />
+          )}
+        </Form.Item> */}
+
+        <Form.Item {...formItemLayout} label="阶梯A起始值">
+          {getFieldDecorator('a_begin', {
+            initialValue: data.a_begin,
+            rules: [
+              { required: true, message: '请输入阶梯A起始值' },
+              {
+                pattern: /^(\d+)((?:\.\d+)?)$/,
+                message: '请输入正确的阶梯A起始值',
+              },
+            ],
+          })(<Input prefix="¥" placeholder="阶梯A起始值" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="阶梯A结束值">
+          {getFieldDecorator('a_limit', {
+            initialValue: data.a_limit,
+            rules: [
+              { required: true, message: '请输入阶梯A结束值' },
+              {
+                pattern: /^(\d+)((?:\.\d+)?)$/,
+                message: '请输入正确的阶梯A结束值',
+              },
+            ],
+          })(<Input prefix="¥" placeholder="阶梯A结束值" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="阶梯B起始值">
+          {getFieldDecorator('b_begin', {
+            initialValue: data.b_begin,
+            rules: [
+              { required: true, message: '请输入阶梯B起始值' },
+              {
+                pattern: /^(\d+)((?:\.\d+)?)$/,
+                message: '请输入正确的阶梯B起始值',
+              },
+            ],
+          })(<Input prefix="¥" placeholder="阶梯B起始值" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="阶梯B结束值">
+          {getFieldDecorator('b_limit', {
+            initialValue: data.b_limit,
+            rules: [
+              { required: true, message: '请输入阶梯B结束值' },
+              {
+                pattern: /^(\d+)((?:\.\d+)?)$/,
+                message: '请输入正确的阶梯B结束值',
+              },
+            ],
+          })(<Input prefix="¥" placeholder="阶梯B结束值" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="阶梯C起始值">
+          {getFieldDecorator('c_start', {
+            initialValue: data.c_start,
+            rules: [
+              { required: true, message: '请输入阶梯C起始值' },
+              {
+                pattern: /^(\d+)((?:\.\d+)?)$/,
+                message: '请输入正确的阶梯C起始值',
+              },
+            ],
+          })(<Input prefix="¥" placeholder="阶梯C起始值" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="阶梯C结束值">
+          {getFieldDecorator('c_limit', {
+            initialValue: data.c_limit,
+            rules: [
+              { required: true, message: '请输入阶梯C结束值' },
+              {
+                pattern: /^(\d+)((?:\.\d+)?)$/,
+                message: '请输入正确的阶梯C结束值',
+              },
+            ],
+          })(<Input prefix="¥" placeholder="阶梯C结束值" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="月度工资">
+          {getFieldDecorator('month_salary', {
+            initialValue: data.month_salary,
+            rules: [{ required: true, max: 100, message: '请填写月度工资' }],
+          })(
+            <Input placeholder="月度工资" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="实时工资">
+          {getFieldDecorator('salary', {
+            initialValue: data.salary,
+            rules: [{ required: true, max: 100, message: '请填写实时工资' }],
+          })(
+            <Input placeholder="实时工资" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="月度工资描述">
+          {getFieldDecorator('month_salary_desc', {
+            initialValue: data.month_salary_desc,
+            rules: [{ required: true, max: 500, message: '请填写月度工资描述' }],
+          })(
+            <Input placeholder="月度工资描述" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="实时工资描述">
+          {getFieldDecorator('salary_desc', {
+            initialValue: data.salary_desc,
+            rules: [{ required: true,  max: 500, message: '请填写实时工资描述' }],
+          })(
+            <Input placeholder="实时工资描述" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="阶梯A奖励">
+          {getFieldDecorator('a_level_reward', {
+            initialValue: data.a_level_reward,
+            rules: [
+              { required: true, message: '请填写阶梯A奖励' },
+              {
+                pattern: config.RateRegex,
+                message: '请输入正确的奖励值 例: 0.10',
+              },
+            ],
+          })(
+            <Input placeholder="阶梯A奖励" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="阶梯B奖励">
+          {getFieldDecorator('b_level_reward', {
+            initialValue: data.b_level_reward,
+            rules: [
+              { required: true, message: '请填写阶梯B奖励' },
+              {
+                pattern: config.RateRegex,
+                message: '请输入正确的奖励值 例: 0.10',
+              },
+            ],
+          })(
+            <Input placeholder="阶梯B奖励" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="阶梯C奖励">
+          {getFieldDecorator('c_level_reward', {
+            initialValue: data.c_level_reward,
+            rules: [
+              { required: true, message: '请填写阶梯C奖励' },
+              {
+                pattern: config.RateRegex,
+                message: '请输入正确的奖励值 例: 0.10',
+              },
+            ],
+          })(
+            <Input placeholder="阶梯C奖励" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="详情页头部图片">
+          {getFieldDecorator('detail_header_img', {
+            initialValue: data.detail_header_img,
+            rules: [{ required: true, message: '请上传详情页头部图片' }],
+          })(
+            <Uploader action={config.uploadPath} host={config.qiniu.host} />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="信用卡长图">
+          {getFieldDecorator('card_long_img', {
+            initialValue: data.card_long_img,
+            rules: [{ required: true, message: '请上传信用卡长图' }],
+          })(
+            <Uploader action={config.uploadPath} host={config.qiniu.host} />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="产品展示图">
+          {getFieldDecorator('product_show_img', {
+            initialValue: data.product_show_img,
+            rules: [{ required: true, message: '请上传产品展示图' }],
+          })(
+            <Uploader action={config.uploadPath} host={config.qiniu.host} />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="结算内容显示">
+          {getFieldDecorator('settlement_type', {
+            initialValue: data.settlement_type,
+            rules: [{ required: true, message: '请填写一个类型' }],
+          })(
+            <Select >
+              <Option value={1}>实时结</Option>
+              <Option value={2}>T+1结</Option>
+              <Option value={3}>T+2结</Option>
+              <Option value={4}>T+3结</Option>
+              <Option value={5}>每周一结</Option>
+              <Option value={6}>每周二结</Option>
+              <Option value={7}>每周三结</Option>
+              <Option value={8}>每周四结</Option>
+              <Option value={9}>每周五结</Option>
+              <Option value={10}>次月5-15日结</Option>
+              <Option value={11}>次月20-25结</Option>
+            </Select>
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="如何结算奖金">
+          {getFieldDecorator('how_settle', {
+            initialValue: data.how_settle,
+            rules: [{ required: true, max: 255, message: '请填写如何结算奖金' }],
+          })(
+            <TextArea rows={3} placeholder="如何结算奖金" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="分享内容(分享的标题)">
+          {getFieldDecorator('share_title', {
+            initialValue: data.share_title,
+            rules: [{ required: true, max: 200, message: '请填写分享内容' }],
+          })(
+            <Input placeholder="分享内容" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="办卡流程图">
+          {getFieldDecorator('card_progress_img', {
+            initialValue: data.card_progress_img,
+            rules: [{ required: true, message: '请上传办卡流程图' }],
+          })(
+            <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="基本权益">
+          {getFieldDecorator('base_right', {
+            initialValue: data.base_right,
+            rules: [{ required: true, max: 200, message: '请填写基本权益' }],
+          })(
+            <Input placeholder="基本权益" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="优惠活动">
+          {getFieldDecorator('preferential', {
+            initialValue: data.preferential,
+            rules: [{ required: true, max: 200, message: '请填写优惠活动' }],
+          })(
+            <Input placeholder="优惠活动" />
+          )}
+        </Form.Item>
         
         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
           <Button type="primary" htmlType="submit">
@@ -205,6 +700,7 @@ const UpdateForm = Form.create()(props => {
           </Button>
         </FormItem>
       </Form>
+      </Skeleton>
     </Modal>
   );
 });
@@ -212,6 +708,7 @@ const UpdateForm = Form.create()(props => {
 @connect(({ products, loading}) => ({
   products,
   loading: loading.models.products,
+  loadingDetails: loading.effects['products/fetchDetails'],
   // loadingChilds: loading.effects['agents/fetchChilds'],
 }))
 @Form.create()
@@ -290,9 +787,9 @@ class ListView extends PureComponent {
       fixed: 'right',
       render: (text, record) => (
         <Fragment>
-          <a>编辑</a>
+          <a onClick={this.prepareUpdate(record)}>编辑</a>
           <Divider type="vertical" />
-          <a >{+record.is_shelf === 0 ? '上架' : '下架'}</a>
+          <a onClick={+record.is_shelf === 0 ? this.handleOnShelf(record.id) : this.handleDisableShelf(record.id)}>{+record.is_shelf === 0 ? '上架' : '下架'}</a>
         </Fragment>
       ),
     },
@@ -301,6 +798,28 @@ class ListView extends PureComponent {
   toggleUpdateForm = () => {
     this.setState({
       updateFormVisible: !this.state.updateFormVisible,
+    });
+  }
+
+  handleOnShelf = (id) => e => {
+    e.preventDefault();
+
+    this.props.dispatch({
+      type: 'products/onShelf',
+      payload: {
+        id,
+      },
+    });
+  }
+
+  handleDisableShelf = id => e => {
+    e.preventDefault();
+
+    this.props.dispatch({
+      type: 'products/disableShelf',
+      payload: {
+        id,
+      },
     });
   }
 
@@ -315,6 +834,14 @@ class ListView extends PureComponent {
       updateID: id,
       details: record,
     });
+
+    this.props.dispatch({
+      type: 'products/fetchDetails',
+      payload: {
+        id,
+      },
+    });
+
     this.toggleUpdateForm();
   }
 
@@ -343,9 +870,9 @@ class ListView extends PureComponent {
   handleUpdate = (values) => {
     const { dispatch } = this.props;
     values.id = this.state.updateID;
-    values.category_type = 2;
+    console.log(values, '=====');
     dispatch({
-      type: 'product_configs/update',
+      type: 'products/update',
       payload: values,
     }).then(() => {
       this.toggleUpdateForm();
@@ -381,8 +908,10 @@ class ListView extends PureComponent {
     const { 
       products: {
         data,
+        details,
       },
       loading,
+      loadingDetails,
     } = this.props
     return (
       <PageHeaderWrapper title="商品列表">
@@ -403,6 +932,13 @@ class ListView extends PureComponent {
             />
           </div>
         </Card>
+        <UpdateForm
+          modalVisible={this.state.updateFormVisible}
+          handleModalVisible={this.toggleUpdateForm}
+          handleSubmit={this.handleUpdate}
+          loading={loadingDetails}
+          data={details}
+        />
       </PageHeaderWrapper>
     );
   }

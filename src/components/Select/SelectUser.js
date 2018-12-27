@@ -46,6 +46,14 @@ class SelectUser extends PureComponent {
       fetching: false,
     });
   }
+
+  handleBlur = () => {
+    this.setState({
+      value: '',
+      data: [],
+      fetching: false,
+    });
+  }
   
   render () {
     const { value, data, fetching } = this.state;
@@ -60,6 +68,7 @@ class SelectUser extends PureComponent {
       placeholder="输入产品名搜索"
       notFoundContent={fetching ? <LoadingIcon spin /> : null}
       filterOption={false}
+      onBlur={this.handleBlur}
       onFocus={() => this.fetchUser('')}
       onSearch={this.fetchUser}
       style={{ width: '100%' }}

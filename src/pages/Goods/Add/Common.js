@@ -36,7 +36,7 @@ class CommonForm extends React.PureComponent {
 
   render() {
     const { form, dispatch, data } = this.props;
-    const { getFieldDecorator, validateFields } = form;
+    const { getFieldDecorator, validateFields, getFieldValue } = form;
     const onValidateForm = () => {
       validateFields((err, values) => {
         if (!err) {
@@ -97,7 +97,7 @@ class CommonForm extends React.PureComponent {
               initialValue: data.product_category,
               rules: [{ required: true, message: '请选择一个产品分类' }],
             })(
-              <SelectProductCategory ptype={data.product_type} />
+              <SelectProductCategory ptype={getFieldValue('product_type')} />
               // <Select placeholder="选择产品分类">
               //   <Option value={1}>秒到账</Option>
               //   <Option value={2}>大额度</Option>

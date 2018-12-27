@@ -12,3 +12,23 @@ export async function createProduct(params) {
     body: params,
   });
 }
+
+export async function queryProductDetails(id) {
+  return request(`${pathConfig.Products}/${id}`);
+}
+
+export async function updateProduct(params) {
+  const { id, ...rest } = params;
+  return request(`${pathConfig.Products}/${id}`, {
+    method: 'PUT',
+    body: rest,
+  });
+}
+
+export async function onShelf(id) {
+  return request(`${pathConfig.Products}/shelf/${id}/on`, { method: "PUT" });
+}
+
+export async function disableShelf(id) {
+  return request(`${pathConfig.Products}/shelf/${id}/disable`, { method: "PUT" });
+}

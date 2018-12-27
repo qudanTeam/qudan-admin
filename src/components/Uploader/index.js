@@ -1,5 +1,6 @@
 import { Upload, Icon, message, Avatar } from 'antd';
 import React, { PureComponent } from 'react';
+import uuid from 'uuid/v4';
 import { Promise } from 'es6-promise';
 // import config from '@/config';
 
@@ -138,7 +139,7 @@ class Uploader extends PureComponent {
       // const { host } = this.props;
       
       const res = {
-        uid: Date.now(),
+        uid: uuid(),
         key: key,
         name: key,
         status: 'done',
