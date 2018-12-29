@@ -49,7 +49,7 @@ export default {
     },
 
     *disableShelf({ payload }, { call, put }) {
-      const resp = yield call(disableShelf, payload);
+      const resp = yield call(disableShelf, payload.id);
       const { id } = resp;
 
       if (id) {
@@ -65,7 +65,7 @@ export default {
     },
 
     *onShelf({ payload }, { call, put }) {
-      const resp = yield call(onShelf, payload);
+      const resp = yield call(onShelf, payload.id);
       const { id } = resp;
 
       if (id) {
