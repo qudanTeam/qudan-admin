@@ -8,6 +8,7 @@ export default {
       is_show: true,
       is_hot: true,
       is_in_shop: true,
+      product_type: 2,
     }
   },
 
@@ -46,12 +47,16 @@ export default {
     },
 
     clearProduct(state, action) {
-      
-
       return {
         ...state,
-        productInfo: {},
+        productInfo: {
+          is_show: true,
+          is_hot: true,
+          is_in_shop: true,
+          product_type: 2,
+        },
       };
-    }
+    },
+
   }
 }

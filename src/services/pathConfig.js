@@ -19,4 +19,5 @@ export default {
   Categories: '/apis/categories', // 分类
   ProductConfig: '/apis/product_configs', // 产品配置
   Products: '/apis/products', // 产品配置
+  Users: '/apis/users', // 用户
 }

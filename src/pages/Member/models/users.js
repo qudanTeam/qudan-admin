@@ -5,6 +5,7 @@ import {
   queryUserVipProfile,
  } from '@/services/api';
 import { requestDataToPageResult } from '@/utils/utils';
+import { passRealnameAuth, refuseRealnameAuth, refuseFinanceAuth, passFinanceAuth } from '@/services/user';
 
 
 
@@ -48,6 +49,66 @@ export default {
           vipInfo,
         },
       });
+    },
+
+    *passRealnameAuth({ payload }, { call, put, select }) {
+      const result = yield call(passRealnameAuth, payload.id);
+      const { data: { pagination } = { pagination: { current: 1, pageSize: 15 }} } = yield select(_ => _.users);
+
+      if (result.id) {
+        yield put({
+          type: 'fetch',
+          payload: {
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+          },
+        });
+      }
+    },
+
+    *refuseRealnameAuth({ payload }, { call, put, select }) {
+      const result = yield call(refuseRealnameAuth, payload.id);
+      const { data: { pagination } = { pagination: { current: 1, pageSize: 15 }} } = yield select(_ => _.users);
+
+      if (result.id) {
+        yield put({
+          type: 'fetch',
+          payload: {
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+          },
+        });
+      }
+    },
+
+    *refuseFinanceAuth({ payload }, { call, put, select }) {
+      const result = yield call(refuseFinanceAuth, payload.id);
+      const { data: { pagination } = { pagination: { current: 1, pageSize: 15 }} } = yield select(_ => _.users);
+
+      if (result.id) {
+        yield put({
+          type: 'fetch',
+          payload: {
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+          },
+        });
+      }
+    },
+
+    *passFinanceAuth({ payload }, { call, put, select }) {
+      const result = yield call(passFinanceAuth, payload.id);
+      const { data: { pagination } = { pagination: { current: 1, pageSize: 15 }} } = yield select(_ => _.users);
+
+      if (result.id) {
+        yield put({
+          type: 'fetch',
+          payload: {
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+          },
+        });
+      }
     },
     
   },

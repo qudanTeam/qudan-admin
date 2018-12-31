@@ -24,10 +24,14 @@ import {
   Select, 
   Skeleton,
   Drawer,
+  Dropdown,
+  Menu,
+  Tag,
 } from 'antd';
 import { connect } from 'dva';
+import { findUserType, isRealnameAuth, isFinanceAuth } from '@/utils/helpers';
 
-const { UserType } = config;
+const { UserType, VipLevel } = config;
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { Description } = DescriptionList;
@@ -68,8 +72,11 @@ class UsersView extends PureComponent {
     },
     {
       title: '用户编号',
-      dataIndex: 'id',
+      dataIndex: 'invite_code',
       width: 150,
+      render: (val) => {
+        return (<span>{val || '--'}</span>)
+      }
     },
     {
       title: '手机号',
@@ -112,46 +119,53 @@ class UsersView extends PureComponent {
       //     value: 4,
       //   },
       // ],
-      render(val) {
-        return <span>{UserType[val]}</span>;
+      render(val, record) {
+        let color = 'magenta';
+        // const utype = +val;
+        if (+record.status === 3) {
+          val = 4; // 实名认证
+          color = 'gold';
+        }
+
+        if (+record.finance_status === 3) {
+          val = 5; // 财务认证
+          color = 'cyan';
+        }
+
+        return <Tag color={color}>{UserType[val]}</Tag>;
       },
     },
     {
       title: '真实姓名',
       dataIndex: 'realname',
       width: 150,
+      render: (val, record) => {
+        return (<span>{isRealnameAuth(record) ? val : '--'}</span>);
+      }
     },
     {
       title: '身份证号码',
       dataIndex: 'id_no',
       width: 150,
+      render: (val, record) => {
+        return (<span>{isRealnameAuth(record) ? val : '--'}</span>);
+      }
     },
     {
       title: '支付宝账户',
       dataIndex: 'alipay_no',
       width: 150,
+      render: (val, record) => {
+        return (<span>{isFinanceAuth(record) ? val : '--'}</span>);
+      }
     },
-    // {
-    //   title: '实名认证资料',
-    //   children: [
-    //     {
-    //       title: '真实姓名',
-    //       dataIndex: 'realName',
-    //     },
-    //     {
-    //       title: '身份证号码',
-    //       dataIndex: 'idCardNO',
-    //     },
-    //     {
-    //       title: '支付宝账户',
-    //       dataIndex: 'alipayAccount',
-    //     },
-    //   ]
-    // },
     {
       title: 'VIP等级',
-      dataIndex: 'vipname',
+      dataIndex: 'vip_level',
       width: 150,
+      render: (val) => {
+        return (<span>{VipLevel[+val]}</span>)
+      },
     },
     {
       title: '推荐人',
@@ -182,7 +196,7 @@ class UsersView extends PureComponent {
         <Fragment>
           <a onClick={this.showProfile(record.id)}>查看</a>
           <Divider type="vertical" />
-          <a onClick={this.toggleRealNameAuthDrawer} >实名审核</a>
+          <a onClick={this.showRealnameAuth(record.id)} >实名审核</a>
           <Divider type="vertical" />
           <a href="">编辑</a>
         </Fragment>
@@ -272,6 +286,18 @@ class UsersView extends PureComponent {
     });
   }
 
+  showRealnameAuth = (id) => (e) => {
+    e.preventDefault();
+    this.toggleRealNameAuthDrawer();
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'users/fetchProfile',
+      payload: {
+        id,
+      },
+    });
+  }
+
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -297,6 +323,54 @@ class UsersView extends PureComponent {
       payload: params,
     });
   };
+
+  handlePassRealnameAuth = (id) => e => {
+    e.preventDefault();
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'users/passRealnameAuth',
+      payload: {
+        id,
+      },
+    });
+    this.toggleRealNameAuthDrawer();
+  }
+
+  handleRefuseRealnameAuth = (id) => e => {
+    e.preventDefault();
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'users/refuseRealnameAuth',
+      payload: {
+        id,
+      },
+    });
+    this.toggleRealNameAuthDrawer();
+  }
+
+  handlePassFinanceAuth = (id) => e => {
+    e.preventDefault();
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'users/passFinanceAuth',
+      payload: {
+        id,
+      },
+    });
+    this.toggleRealNameAuthDrawer();
+  }
+
+  handleRefuseFinanceAuth = (id) => e => {
+    e.preventDefault();
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'users/refuseFinanceAuth',
+      payload: {
+        id,
+      },
+    });
+    this.toggleRealNameAuthDrawer();
+  }
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -433,18 +507,18 @@ class UsersView extends PureComponent {
         <Card bordered={false}>
           <Skeleton loading={loadingProfile}>
             <DescriptionList size="large" title="基本信息" style={{ marginBottom: 32 }}>
-              <Description term="用户编号">{basicInfo.id}</Description>
-              <Description term="手机号">{basicInfo.register_mobile}</Description>
-              <Description term="微信号">{basicInfo.wechat_name}</Description>
-              <Description term="余额">{basicInfo.balance}</Description>
-              <Description term="用户类型">{UserType[basicInfo.user_type]}</Description>
-              <Description term="推荐人编号">{basicInfo.recommend_invite_code}</Description>
+              <Description term="用户编号">{basicInfo.invite_code || '--'}</Description>
+              <Description term="手机号">{basicInfo.register_mobile || '--'}</Description>
+              <Description term="微信号">{basicInfo.wechat_name || '--'}</Description>
+              <Description term="余额">{basicInfo.balance || '--'}</Description>
+              <Description term="用户类型">{UserType[findUserType(basicInfo)] || '--'}</Description>
+              <Description term="推荐人编号">{basicInfo.recommend_invite_code || '--'}</Description>
             </DescriptionList>
           </Skeleton>
           <Divider style={{ marginBottom: 32 }} />
           <Skeleton loading={loadingProfile}>
             <DescriptionList size="large" title="VIP资料" style={{ marginBottom: 32 }}>
-              <Description term="VIP类型">{vipInfo.vip_name}</Description>
+              <Description term="VIP类型">{VipLevel[vipInfo.vip_level]}</Description>
               <Description term="开通时间">{moment(vipInfo.start_time).format("YYYY年MM月DD日")}</Description>
               <Description term="结束时间">{moment(vipInfo.end_time).format("YYYY年MM月DD日")}</Description>
               <Description term="已支付金额">{vipInfo.trade_price}</Description>
@@ -464,13 +538,54 @@ class UsersView extends PureComponent {
    * 实名认证
    */
   renderRealNameAuth = () => {
+    const { users: { profile }, loadingProfile } = this.props;
+    const { basicInfo, vipInfo = {} } = profile;
+
+    const isRealnameAuth = (info) => {
+      return !!info.realname && !!info.id_no && !isRealnameAuthed(info);
+    }
+
+    const isFinanceAuth = (info) => {
+      return !!info.alipay_no && !isFinanceAuthed(info);
+    }
+
+    const isRealnameAuthed = (info) => {
+      return +info.status === 3;
+    }
+
+    const isFinanceAuthed = (info) => {
+      return +info.finance_status === 3;
+    }
+
+    const refuseMenu = (
+      <Menu>
+        <Menu.Item disabled={!isRealnameAuth(basicInfo)}>
+          <a onClick={this.handleRefuseRealnameAuth(basicInfo.id || 0)} disabled={!isRealnameAuth(basicInfo)}>实名认证</a>
+        </Menu.Item>
+        <Menu.Item disabled={!isFinanceAuth(basicInfo)}>
+          <a onClick={this.handleRefuseFinanceAuth(basicInfo.id || 0)} disabled={!isFinanceAuth(basicInfo)}>财务认证</a>
+        </Menu.Item>
+      </Menu>
+    );
+
+    const passMenu = (
+      <Menu>
+        <Menu.Item disabled={!isRealnameAuth(basicInfo)}>
+          <a onClick={this.handlePassRealnameAuth(basicInfo.id || 0)} disabled={!isRealnameAuth(basicInfo)}>实名认证</a>
+        </Menu.Item>
+        <Menu.Item disabled={!isFinanceAuth(basicInfo)}>
+          <a onClick={this.handlePassFinanceAuth(basicInfo.id || 0)} disabled={!isFinanceAuth(basicInfo)}>财务认证</a>
+        </Menu.Item>
+      </Menu>
+    );
+
     return (
       <Drawer 
         title={'实名认证'}
         width={520}
         placement="right"
         // maskClosable={false}
-        closable={false}
+        closable
         onClose={this.toggleRealNameAuthDrawer}
         visible={this.state.realNameAuthVisible}
         style={{
@@ -479,29 +594,52 @@ class UsersView extends PureComponent {
           paddingBottom: 53,
         }}
       >
+        <Card bordered={false}>
+          <Skeleton loading={loadingProfile}>
+            <DescriptionList col={1} size="large" title="认证信息" style={{ marginBottom: 32 }}>
+              <Description term="真实姓名">{basicInfo.realname || '--'} {isRealnameAuthed(basicInfo) ? <Tag color={sysConfig.colors.success}>已认证</Tag> : <Tag color={sysConfig.colors.failed}>未认证</Tag>}</Description>
+              <Description term="身份证号码">{basicInfo.id_no || '--'} {isRealnameAuthed(basicInfo) ? <Tag color={sysConfig.colors.success}>已认证</Tag> : <Tag color={sysConfig.colors.failed}>未认证</Tag>}</Description>
+              <Description term="支付宝账户">{basicInfo.alipay_no || '--'} {isFinanceAuthed(basicInfo) ? <Tag color={sysConfig.colors.success}>已认证</Tag> : <Tag color={sysConfig.colors.failed}>未认证</Tag>}</Description>
+            </DescriptionList>
+          </Skeleton>
+          <Divider style={{ marginBottom: 32 }} />
+        </Card>
+
         <div
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              width: '100%',
-              borderTop: '1px solid #e8e8e8',
-              padding: '10px 16px',
-              textAlign: 'right',
-              left: 0,
-              background: '#fff',
-              borderRadius: '0 0 4px 4px',
-            }}
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            width: '100%',
+            borderTop: '1px solid #e8e8e8',
+            padding: '10px 16px',
+            textAlign: 'right',
+            left: 0,
+            background: '#fff',
+            borderRadius: '0 0 4px 4px',
+          }}
+        >
+          <Dropdown
+            
+            overlay={refuseMenu} 
+            placement="bottomCenter"
           >
             <Button
               style={{
                 marginRight: 8,
               }}
-              onClick={this.onClose}
             >
               不通过
             </Button>
-            <Button onClick={this.onClose} type="primary">通过</Button>
-          </div>
+          </Dropdown>
+
+          <Dropdown
+            overlay={passMenu}
+            placement="bottomCenter"
+          >
+            <Button type="primary">通过</Button>
+          </Dropdown>
+          
+        </div>
       </Drawer>
     );
   }

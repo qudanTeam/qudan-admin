@@ -34,6 +34,11 @@ class CommonForm extends React.PureComponent {
     productType: 'loans',
   }
 
+  get productType() {
+    const { getFieldValue } = this.props.form;
+    return getFieldValue('product_type');
+  }
+
   render() {
     const { form, dispatch, data } = this.props;
     const { getFieldDecorator, validateFields, getFieldValue } = form;
@@ -172,58 +177,74 @@ class CommonForm extends React.PureComponent {
               </Select>
             )}
           </Form.Item>
+          {
+            this.productType === 2 ? (
+              <Form.Item {...formItemLayout} label="贷款最高额度">
+                {getFieldDecorator('amount_line', {
+                  initialValue: data.amount_line,
+                  rules: [
+                    { required: true, message: '请输入贷款最高额度' },
+                    {
+                      pattern: /^(\d+)((?:\.\d+)?)$/,
+                      message: '请输入正确的贷款最高额度',
+                    },
+                  ],
+                })(<Input prefix="¥" placeholder="最高额度" />)}
+              </Form.Item>
+            ) : null
+          }
 
-          <Form.Item {...formItemLayout} label="贷款最高额度">
-            {getFieldDecorator('amount_line', {
-              initialValue: data.amount_line,
-              rules: [
-                { required: true, message: '请输入贷款最高额度' },
-                {
-                  pattern: /^(\d+)((?:\.\d+)?)$/,
-                  message: '请输入正确的贷款最高额度',
-                },
-              ],
-            })(<Input prefix="¥" placeholder="最高额度" />)}
-          </Form.Item>
+          {
+            this.productType === 2 ? (
+              <Form.Item {...formItemLayout} label="贷款额度">
+                {getFieldDecorator('loanLimit', {
+                  initialValue: data.loanLimit,
+                  rules: [
+                    { required: true, message: '请输入贷款额度' },
+                    {
+                      pattern: /^(\d+)((?:\.\d+)?)$/,
+                      message: '请输入正确的贷款额度',
+                    },
+                  ],
+                })(<Input prefix="¥" placeholder="额度" />)}
+              </Form.Item>
+            ) : null
+          }
 
-          <Form.Item {...formItemLayout} label="贷款额度">
-            {getFieldDecorator('loanLimit', {
-              initialValue: data.loanLimit,
-              rules: [
-                { required: true, message: '请输入贷款额度' },
-                {
-                  pattern: /^(\d+)((?:\.\d+)?)$/,
-                  message: '请输入正确的贷款额度',
-                },
-              ],
-            })(<Input prefix="¥" placeholder="额度" />)}
-          </Form.Item>
+          {
+            this.productType === 2 ? (
+              <Form.Item {...formItemLayout} label="月利率">
+                {getFieldDecorator('month_rate', {
+                  initialValue: data.month_rate,
+                  rules: [
+                    { required: true, message: '请输入月利率' },
+                    {
+                      pattern: config.RateRegex,
+                      message: '请输入正确的月利率 例: 0.10',
+                    },
+                  ],
+                })(<Input placeholder="请输入月利率" />)}
+              </Form.Item>
+            ) : null
+          }
 
-          <Form.Item {...formItemLayout} label="月利率">
-            {getFieldDecorator('month_rate', {
-              initialValue: data.month_rate,
-              rules: [
-                { required: true, message: '请输入月利率' },
-                {
-                  pattern: config.RateRegex,
-                  message: '请输入正确的月利率 例: 0.10',
-                },
-              ],
-            })(<Input placeholder="请输入月利率" />)}
-          </Form.Item>
-
-          <Form.Item {...formItemLayout} label="日利率">
-            {getFieldDecorator('day_rate', {
-              initialValue: data.day_rate,
-              rules: [
-                { required: false, message: '请输入日利率' },
-                {
-                  pattern: config.RateRegex,
-                  message: '请输入正确的日利率 例: 0.10',
-                },
-              ],
-            })(<Input placeholder="请输入日利率" />)}
-          </Form.Item>
+          {
+            this.productType === 2 ? (
+              <Form.Item {...formItemLayout} label="日利率">
+              {getFieldDecorator('day_rate', {
+                initialValue: data.day_rate,
+                rules: [
+                  { required: false, message: '请输入日利率' },
+                  {
+                    pattern: config.RateRegex,
+                    message: '请输入正确的日利率 例: 0.10',
+                  },
+                ],
+              })(<Input placeholder="请输入日利率" />)}
+            </Form.Item>
+            ) : null
+          }
+          
 
           <Form.Item 
             {...formItemLayout} 
@@ -274,23 +295,31 @@ class CommonForm extends React.PureComponent {
             })(<Input placeholder="请输入申请人数" />)}
           </Form.Item>
 
-          <Form.Item {...formItemLayout} label="申请条件">
-            {getFieldDecorator('apply_condition', {
-              initialValue: data.apply_condition,
-              rules: [
-                { required: false, max: 200, message: '请输入申请条件' },
-              ],
-            })(<TextArea rows={3} placeholder="请输入申请条件" />)}
-          </Form.Item>
-
-          <Form.Item {...formItemLayout} label="申请流程图片">
-            {getFieldDecorator('apply_tp_img', {
-              initialValue: data.apply_tp_img,
-              rules: [{ required: true, message: '请上传申请流程图' }],
-            })(
-              <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
-            )}
-          </Form.Item>
+          {
+            this.productType === 2 ? (
+              <Form.Item {...formItemLayout} label="申请条件">
+                {getFieldDecorator('apply_condition', {
+                  initialValue: data.apply_condition,
+                  rules: [
+                    { required: false, max: 200, message: '请输入申请条件' },
+                  ],
+                })(<TextArea rows={3} placeholder="请输入申请条件" />)}
+              </Form.Item>
+            ) : null
+          }
+          
+          {
+            this.productType === 2 ? (
+              <Form.Item {...formItemLayout} label="申请流程图片">
+                {getFieldDecorator('apply_tp_img', {
+                  initialValue: data.apply_tp_img,
+                  rules: [{ required: true, message: '请上传申请流程图' }],
+                })(
+                  <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
+                )}
+              </Form.Item>
+            ) : null
+          }
 
           <Form.Item {...formItemLayout} label="基本工资">
             {getFieldDecorator('base_salary', {

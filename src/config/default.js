@@ -3,7 +3,8 @@ export default {
 
   uploadPath: '/apis/upload',
 
-  UserType: ['vip', '代理', '实名认证', '财务认证', '内部账户'],
+  UserType: ['默认身份', 'vip', '代理', '混合身份', '实名认证', '财务认证', '内部账户'],
+  // UserType: ['vip', '代理', '实名认证', '财务认证', '内部账户'],
   AgentLevel: ['未知', '初级', '中级', '高级'],
   RewardStatus: ['未知', '未发放', '已发放'],
   TradeExecState: ['未知', '待审核', '已审核', '已拒绝'],
@@ -17,4 +18,12 @@ export default {
   // AgentLevel: ['未知', '钻石', '白银', '青铜'],
 
   RateRegex: /^(\d{1,3})((?:\.\d+)?)$/,
+  VipLevel: ['--', 'VIP1', 'VIP2', 'VIP3'],
+
+  colors: {
+    success: '#87d068',
+    active: '#2db7f5',
+    finished: '108ee9',
+    failed: '#f50',
+  }
 }
