@@ -49,20 +49,13 @@ class DetailsForm extends React.PureComponent {
             type: 'goodAdd/create',
             payload: values,
           }).then((val) => {
+            dispatch({
+              type: 'goodAdd/clearProduct',
+            });
             if (val) {
               router.push('/Goods/Add/Result');
             }
           });
-          // dispatch({
-          //   type: 'goodAdd/saveFormData',
-          //   payload: values,
-          // }).then(() => {
-          //   return dispatch({type: 'goodAdd/create'});
-          // }).then(val => {
-          //   if (val) {
-          //     router.push('/Goods/Add/Result');
-          //   }
-          // });
         }
       });
     };
