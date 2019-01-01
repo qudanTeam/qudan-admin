@@ -1,5 +1,5 @@
 /**
- * name: 素材管理
+ * name: resource
  */
 
 import React, { PureComponent, Fragment } from 'react';

@@ -1,5 +1,5 @@
 /**
- * name: 结果
+ * name: result
  */
 
 import React, { Fragment } from 'react';

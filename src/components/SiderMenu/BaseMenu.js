@@ -35,9 +35,9 @@ export default class BaseMenu extends PureComponent {
   constructor(props) {
     super(props);
     this.getSelectedMenuKeys = memoizeOne(this.getSelectedMenuKeys, isEqual);
-    this.flatMenuKeys = this.getFlatMenuKeys(props.menuData);
-    console.log(props.menuData, '----');
-    console.log(this.flatMenuKeys, '----')
+    this.flatMenuKeys = this.getFlatMenuKeys(props.menuData.sort((a,b) => a.sort - b.sort));
+    // console.log(props.menuData, '---- menu data');
+    // console.log(this.flatMenuKeys, '----')
   }
 
   /**
@@ -71,7 +71,8 @@ export default class BaseMenu extends PureComponent {
         const ItemDom = this.getSubMenuOrItem(item, parent);
         return this.checkPermissionItem(item.authority, ItemDom);
       })
-      .filter(item => item);
+      .filter(item => item)
+      .sort((a, b) => (a.sort || 0) - (b.sort || 0));
   };
 
   // Get the currently selected menu
@@ -169,7 +170,7 @@ export default class BaseMenu extends PureComponent {
       mode,
       location: { pathname },
     } = this.props;
-    console.log(pathname, 'pathname');
+    // console.log(pathname, 'pathname');
     // if pathname can't match, use the nearest parent's key
     let selectedKeys = this.getSelectedMenuKeys(pathname);
     if (!selectedKeys.length && openKeys) {

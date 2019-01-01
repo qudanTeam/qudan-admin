@@ -1,5 +1,5 @@
 /**
- * name: 配置
+ * name: settings
  */
 
 import React from 'react';

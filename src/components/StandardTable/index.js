@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { Table, Alert } from 'antd';
 import LoadingIcon from '@/components/IronSpin/LoadingIcon';
 import styles from './index.less';
+import uuidv4 from 'uuid/v4';
 
 function initTotalList(columns) {
   const totalList = [];
@@ -101,11 +102,19 @@ class StandardTable extends PureComponent {
     //   }),
     // };
 
+    const keyFunc = (record) => {
+      if (record) {
+        return record.id || record.key || uuidv4();
+      }
+
+      return uuidv4();
+    }
+
     return (
       <div className={styles.standardTable}>
         
         <Table
-          rowKey={rowKey || 'key'}
+          rowKey={rowKey || keyFunc}
           loading={restLoading}
           // rowSelection={rowSelection}
           dataSource={list}

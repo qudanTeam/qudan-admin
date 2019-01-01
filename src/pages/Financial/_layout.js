@@ -1,6 +1,7 @@
 /**
- * name: 财务管理
+ * name: financial_manager
  * icon: pay-circle
+ * sort: 1005
  */
 
 import React from 'react';

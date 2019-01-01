@@ -1,5 +1,5 @@
 /**
- * name: 提现审核
+ * name: withdraw_cash
  */
 
 import React, { PureComponent, Fragment } from 'react';

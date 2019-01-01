@@ -1,5 +1,5 @@
 /**
- * name: 账户管理
+ * name: account
  */
 
 import styles from './Account.less';

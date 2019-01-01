@@ -1,5 +1,5 @@
 /**
- * name: 订单列表
+ * name: list
  */
 
 import React, { PureComponent, Fragment } from 'react';

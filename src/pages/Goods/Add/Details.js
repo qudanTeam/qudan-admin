@@ -1,5 +1,5 @@
 /**
- * name: 第二步
+ * name: details
  */
 
 import React from 'react';
@@ -37,13 +37,13 @@ class DetailsForm extends React.PureComponent {
 
   render() {
     const { form, data, dispatch, submitting } = this.props;
-    const { getFieldDecorator, validateFields } = form;
+    const { getFieldDecorator, validateFieldsAndScroll } = form;
     const onPrev = () => {
       router.push('/Goods/Add/Common');
     };
     const onValidateForm = e => {
       e.preventDefault();
-      validateFields((err, values) => {
+      validateFieldsAndScroll((err, values) => {
         if (!err) {
           dispatch({
             type: 'goodAdd/create',

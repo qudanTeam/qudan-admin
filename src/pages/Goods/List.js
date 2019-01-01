@@ -1,5 +1,5 @@
 /**
- * name: 商品列表
+ * name: list
  */
 
 import React, { PureComponent, Fragment } from 'react';

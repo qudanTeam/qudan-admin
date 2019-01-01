@@ -1,5 +1,5 @@
 /**
- * name: 广告主
+ * name: advertisers
  */
 
 import React, { PureComponent } from 'react';

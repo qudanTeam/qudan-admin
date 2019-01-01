@@ -1,5 +1,5 @@
 /**
- * name: 商品奖金结算
+ * name: settle
  */
 
 
@@ -237,7 +237,7 @@ class SettleView extends PureComponent {
     {
       title: '配置内容',
       dataIndex: 'content',
-      width: 200,
+      // width: 200,
     },
     {
       title: '操作',

@@ -1,6 +1,7 @@
 /**
- * name: 订单管理
+ * name: order_manager
  * icon: ordered-list
+ * sort: 1002
  */
 
 import React from 'react';

@@ -1,5 +1,5 @@
 /**
- * name: 代理列表
+ * name: list
  */
 
 
@@ -32,13 +32,14 @@ class ListView extends PureComponent {
   columns = [
     {
       title: '用户编号',
-      dataIndex: 'user_id',
-      width: 150,
+      dataIndex: 'invite_code',
+      key: 'user_id',
+      width: 160,
     },
     {
       title: '专属邀请码',
       dataIndex: 'invite_code',
-      width: 150,
+      width: 160,
     },
     {
       title: '代理等级',
@@ -63,7 +64,7 @@ class ListView extends PureComponent {
     {
       title: '成为代理时间',
       dataIndex: 'beign_agent_time',
-      width: 150,
+      // width: 150,
       render: (txt, record) => {
         return (
           <span>{moment(txt).format("YYYY-MM-DD HH:mm:ss")}</span>
@@ -139,9 +140,9 @@ class ListView extends PureComponent {
               })(
                 <Select>
                   <Option value="all">全部</Option>
-                  <Option value="1">青铜</Option>
-                  <Option value="2">白银</Option>
-                  <Option value="3">钻石</Option>
+                  <Option value="1">{config.AgentLevel[1]}</Option>
+                  <Option value="2">{config.AgentLevel[2]}</Option>
+                  <Option value="3">{config.AgentLevel[3]}</Option>
                 </Select>
               )}
             </FormItem>
@@ -413,8 +414,12 @@ class ListView extends PureComponent {
       agents: { data },
       loading,
     } = this.props;
+
     return (
-      <PageHeaderWrapper title="代理列表">
+      <PageHeaderWrapper 
+        title="代理列表"
+        // tabList={tabList}
+      >
         <Skeleton active loading={this.state.preLoading}>
         <Card bordered={false}>
           <div className={styles.tableList}>
@@ -424,7 +429,7 @@ class ListView extends PureComponent {
               data={data}
               columns={this.columns}
               onChange={this.handleTableChange}
-              scroll={{ x: 1000 }}
+              scroll={{ x: 1200 }}
             />
           </div>
         </Card>

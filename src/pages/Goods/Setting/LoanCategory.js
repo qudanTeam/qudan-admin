@@ -1,5 +1,5 @@
 /**
- * name: 贷款分类
+ * name: loan_category
  */
 
 

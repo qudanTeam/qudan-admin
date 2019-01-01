@@ -146,7 +146,9 @@ class BasicLayout extends React.Component {
     const {
       route: { routes },
     } = this.props;
-    console.log(routes);
+    
+    // console.log(routes, '--- rrrr');
+    // console.log(routes);
     return memoizeOneFormatter(routes);
   }
 

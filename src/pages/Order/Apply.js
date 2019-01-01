@@ -1,5 +1,5 @@
 /**
- * name: 产品申请列表
+ * name: apply
  */
 
 import React, { PureComponent, Fragment } from 'react';

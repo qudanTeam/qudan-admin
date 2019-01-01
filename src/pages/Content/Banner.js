@@ -1,5 +1,5 @@
 /**
- * name: 轮播图管理
+ * name: banner
  */
 
 

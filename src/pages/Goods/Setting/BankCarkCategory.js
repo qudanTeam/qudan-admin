@@ -1,5 +1,5 @@
 /**
- * name: 银行卡分类
+ * name: bank_cark_category
  */
 
 

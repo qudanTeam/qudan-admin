@@ -1,5 +1,5 @@
 /**
- * name: 消息管理
+ * name: message
  */
 
 import React, { PureComponent, Fragment } from 'react';

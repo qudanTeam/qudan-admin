@@ -1,5 +1,5 @@
 /**
- * name: VIP 参数设置
+ * name: settings
  */
 
 import React, { PureComponent, Fragment } from 'react';

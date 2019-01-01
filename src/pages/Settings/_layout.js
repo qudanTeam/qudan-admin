@@ -1,6 +1,7 @@
 /**
- * name: 系统设置
+ * name: settings
  * icon: setting
+ * sort: 1008
  */
 
 import React from 'react';

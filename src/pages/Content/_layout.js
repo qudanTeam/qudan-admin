@@ -1,6 +1,7 @@
 /**
- * name: 内容管理
+ * name: content_manager
  * icon: layout
+ * sort: 1006
  */
 
 import React from 'react';

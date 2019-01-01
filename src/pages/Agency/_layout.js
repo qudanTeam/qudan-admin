@@ -1,6 +1,7 @@
 /**
- * name: 代理管理
+ * name: agency_manager
  * icon: team
+ * sort: 1004
  */
 
 import React from 'react';

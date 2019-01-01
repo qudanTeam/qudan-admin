@@ -1,5 +1,5 @@
 /**
- * name: 添加商品
+ * name: add
  * hideChildrenInMenu: true
  */
 

@@ -1,5 +1,5 @@
 /**
- * name: 第一步
+ * name: common
  */
 
 import React, { Fragment } from 'react';
@@ -41,9 +41,9 @@ class CommonForm extends React.PureComponent {
 
   render() {
     const { form, dispatch, data } = this.props;
-    const { getFieldDecorator, validateFields, getFieldValue } = form;
+    const { getFieldDecorator, validateFieldsAndScroll, getFieldValue } = form;
     const onValidateForm = () => {
-      validateFields((err, values) => {
+      validateFieldsAndScroll((err, values) => {
         if (!err) {
           dispatch({
             type: 'goodAdd/saveFormData',
