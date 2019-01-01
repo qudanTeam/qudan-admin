@@ -447,7 +447,7 @@ class UsersView extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="真实姓名">
-              {getFieldDecorator('username')(<Input placeholder="请输入"/>)}
+              {getFieldDecorator('realname')(<Input placeholder="请输入"/>)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>

@@ -377,6 +377,8 @@ class CommonForm extends React.PureComponent {
             })(<Input prefix="¥" placeholder="输入商品利润价格" />)}
           </Form.Item>
 
+        {
+          this.productType === 2 ? (
           <Form.Item {...formItemLayout} label="期限开始">
             {getFieldDecorator('expire_begin', {
               initialValue: data.expire_begin,
@@ -388,20 +390,25 @@ class CommonForm extends React.PureComponent {
                 },
               ],
             })(<Input placeholder="期限开始" />)}
-          </Form.Item>
+          </Form.Item>) : null
+        }
 
-          <Form.Item {...formItemLayout} label="期限结束">
-            {getFieldDecorator('expire_end', {
-              initialValue: data.expire_end,
-              rules: [
-                { required: false, message: '请输入期限结束' },
-                {
-                  pattern: /^(\d+)$/,
-                  message: '请输入正确的数值',
-                },
-              ],
-            })(<Input placeholder="期限结束" />)}
-          </Form.Item>
+        {
+          this.productType === 2 ? (
+            <Form.Item {...formItemLayout} label="期限结束">
+              {getFieldDecorator('expire_end', {
+                initialValue: data.expire_end,
+                rules: [
+                  { required: false, message: '请输入期限结束' },
+                  {
+                    pattern: /^(\d+)$/,
+                    message: '请输入正确的数值',
+                  },
+                ],
+              })(<Input placeholder="期限结束" />)}
+            </Form.Item>
+          ) : null
+        }
 
           <Form.Item {...formItemLayout} label="返佣标准">
             {getFieldDecorator('commission_standard', {
