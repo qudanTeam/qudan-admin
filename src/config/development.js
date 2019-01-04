@@ -2,6 +2,6 @@
 export default {
   showLog: true,
   qiniu: {
-    host: 'http://pj7lk9wjg.bkt.clouddn.com',
+    host: 'http://qudanmedia.myhshop.top',
   },
 }
