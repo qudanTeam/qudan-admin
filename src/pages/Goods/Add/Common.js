@@ -11,6 +11,7 @@ import SelectAdvistor from '@/components/Select/SelectAdvistor';
 import SelectProductCategory from '@/components/Select/SelectProductCategory';
 import Uploader from '@/components/Uploader';
 import config from '@/config';
+import SelectProductLink from '@/components/Select/SelectProductLink';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -417,6 +418,14 @@ class CommonForm extends React.PureComponent {
                 { required: false, max: 100, message: '返佣标准' },
               ],
             })(<Input placeholder="输入返佣标准" />)}
+          </Form.Item>
+
+          <Form.Item {...formItemLayout} label="绑定商品链接">
+            {getFieldDecorator('product_link_obj', {
+              initialValue: data.product_link_obj,
+            })(
+              <SelectProductLink ptype={getFieldValue('product_type')}  />
+            )}
           </Form.Item>
 
           

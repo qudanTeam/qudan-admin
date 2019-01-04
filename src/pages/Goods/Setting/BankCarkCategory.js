@@ -218,7 +218,7 @@ class BankCarkCategoryView extends PureComponent {
       width: 150,
     },
     {
-      title: '轮播图链接',
+      title: '查询链接',
       dataIndex: 'get_link',
       width: 150,
     },

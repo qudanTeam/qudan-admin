@@ -15,6 +15,7 @@ import SelectProduct from '@/components/Select/SelectProduct';
 import router from 'umi/router';
 import SelectProductCategory from '@/components/Select/SelectProductCategory';
 import SelectAdvistor from '@/components/Select/SelectAdvistor';
+import SelectProductLink from '@/components/Select/SelectProductLink';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -49,7 +50,14 @@ const UpdateForm = Form.create()(props => {
     },
   };
 
-  const { getFieldDecorator } = form;
+  const { getFieldDecorator, getFieldValue } = form;
+
+  const getProductType = () => {
+    return getFieldValue('product_type');
+
+    // return productType === 2;
+  }
+
   const okHandle = (e) => {
     if (typeof e !== 'undefined') {
       e.preventDefault();
@@ -135,7 +143,7 @@ const UpdateForm = Form.create()(props => {
             initialValue: data.product_category,
             rules: [{ required: true, message: '请选择一个产品分类' }],
           })(
-            <SelectProductCategory ptype={data.product_type} />
+            <SelectProductCategory ptype={getFieldValue('product_type')}  />
             // <Select placeholder="选择产品分类">
             //   <Option value={1}>秒到账</Option>
             //   <Option value={2}>大额度</Option>
@@ -211,57 +219,71 @@ const UpdateForm = Form.create()(props => {
           )}
         </Form.Item>
 
-        <Form.Item {...formItemLayout} label="贷款最高额度">
-          {getFieldDecorator('amount_line', {
-            initialValue: data.amount_line,
-            rules: [
-              { required: true, message: '请输入贷款最高额度' },
-              {
-                pattern: /^(\d+)((?:\.\d+)?)$/,
-                message: '请输入正确的贷款最高额度',
-              },
-            ],
-          })(<Input prefix="¥" placeholder="最高额度" />)}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="贷款额度">
-          {getFieldDecorator('loanLimit', {
-            initialValue: data.loanLimit,
-            rules: [
-              { required: true, message: '请输入贷款额度' },
-              {
-                pattern: /^(\d+)((?:\.\d+)?)$/,
-                message: '请输入正确的贷款额度',
-              },
-            ],
-          })(<Input prefix="¥" placeholder="额度" />)}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="月利率">
-          {getFieldDecorator('month_rate', {
-            initialValue: data.month_rate,
-            rules: [
-              { required: true, message: '请输入月利率' },
-              {
-                pattern: config.RateRegex,
-                message: '请输入正确的月利率 例: 0.10',
-              },
-            ],
-          })(<Input placeholder="请输入月利率" />)}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="日利率">
-          {getFieldDecorator('day_rate', {
-            initialValue: data.day_rate,
-            rules: [
-              { required: false, message: '请输入日利率' },
-              {
-                pattern: config.RateRegex,
-                message: '请输入正确的日利率 例: 0.10',
-              },
-            ],
-          })(<Input placeholder="请输入日利率" />)}
-        </Form.Item>
+        {
+          getProductType() === 2 ? (
+            <Form.Item {...formItemLayout} label="贷款最高额度">
+              {getFieldDecorator('amount_line', {
+                initialValue: data.amount_line,
+                rules: [
+                  { required: true, message: '请输入贷款最高额度' },
+                  {
+                    pattern: /^(\d+)((?:\.\d+)?)$/,
+                    message: '请输入正确的贷款最高额度',
+                  },
+                ],
+              })(<Input prefix="¥" placeholder="最高额度" />)}
+            </Form.Item>
+          ) : null
+        }
+        
+        {
+          getProductType() === 2 ? (
+            <Form.Item {...formItemLayout} label="贷款额度">
+              {getFieldDecorator('loanLimit', {
+                initialValue: data.loanLimit,
+                rules: [
+                  { required: true, message: '请输入贷款额度' },
+                  {
+                    pattern: /^(\d+)((?:\.\d+)?)$/,
+                    message: '请输入正确的贷款额度',
+                  },
+                ],
+              })(<Input prefix="¥" placeholder="额度" />)}
+            </Form.Item>
+          ) : null
+        }
+        {
+          getProductType() === 2 ? (
+            <Form.Item {...formItemLayout} label="月利率">
+              {getFieldDecorator('month_rate', {
+                initialValue: data.month_rate,
+                rules: [
+                  { required: true, message: '请输入月利率' },
+                  {
+                    pattern: config.RateRegex,
+                    message: '请输入正确的月利率 例: 0.10',
+                  },
+                ],
+              })(<Input placeholder="请输入月利率" />)}
+            </Form.Item>
+          ) : null
+        }
+        {
+          getProductType() === 2 ? (
+            <Form.Item {...formItemLayout} label="日利率">
+              {getFieldDecorator('day_rate', {
+                initialValue: data.day_rate,
+                rules: [
+                  { required: false, message: '请输入日利率' },
+                  {
+                    pattern: config.RateRegex,
+                    message: '请输入正确的日利率 例: 0.10',
+                  },
+                ],
+              })(<Input placeholder="请输入日利率" />)}
+            </Form.Item>
+          ) : null
+        }
 
         <Form.Item 
           {...formItemLayout} 
@@ -386,31 +408,39 @@ const UpdateForm = Form.create()(props => {
           })(<Input prefix="¥" placeholder="输入商品利润价格" />)}
         </Form.Item>
 
-        <Form.Item {...formItemLayout} label="期限开始">
-          {getFieldDecorator('expire_begin', {
-            initialValue: data.expire_begin,
-            rules: [
-              { required: false, message: '请输入期限开始' },
-              {
-                pattern: /^(\d+)$/,
-                message: '请输入正确的数值',
-              },
-            ],
-          })(<Input placeholder="期限开始" />)}
-        </Form.Item>
+        {
+          getProductType() === 2 ? (
+            <Form.Item {...formItemLayout} label="期限开始">
+              {getFieldDecorator('expire_begin', {
+                initialValue: data.expire_begin,
+                rules: [
+                  { required: false, message: '请输入期限开始' },
+                  {
+                    pattern: /^(\d+)$/,
+                    message: '请输入正确的数值',
+                  },
+                ],
+              })(<Input placeholder="期限开始" />)}
+            </Form.Item>
+          ) : null
+        }
 
-        <Form.Item {...formItemLayout} label="期限结束">
-          {getFieldDecorator('expire_end', {
-            initialValue: data.expire_end,
-            rules: [
-              { required: false, message: '请输入期限结束' },
-              {
-                pattern: /^(\d+)$/,
-                message: '请输入正确的数值',
-              },
-            ],
-          })(<Input placeholder="期限结束" />)}
-        </Form.Item>
+        {
+          getProductType() === 2 ? (
+            <Form.Item {...formItemLayout} label="期限结束">
+              {getFieldDecorator('expire_end', {
+                initialValue: data.expire_end,
+                rules: [
+                  { required: false, message: '请输入期限结束' },
+                  {
+                    pattern: /^(\d+)$/,
+                    message: '请输入正确的数值',
+                  },
+                ],
+              })(<Input placeholder="期限结束" />)}
+            </Form.Item>
+          ) : null
+        }
 
         <Form.Item {...formItemLayout} label="返佣标准">
           {getFieldDecorator('commission_standard', {
@@ -419,6 +449,14 @@ const UpdateForm = Form.create()(props => {
               { required: false, max: 100, message: '返佣标准' },
             ],
           })(<Input placeholder="输入返佣标准" />)}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="绑定商品链接">
+          {getFieldDecorator('product_link_obj', {
+            initialValue: data.product_link_obj,
+          })(
+            <SelectProductLink ptype={getFieldValue('product_type')}  />
+          )}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="特色文案">

@@ -18,7 +18,9 @@ export default {
   RateRegex: /^(\d{1,3})((?:\.\d+)?)$/,
   VipLevel: ['--', 'VIP1', 'VIP2', 'VIP3'],
 
+
   colors: {
+    
     success: '#87d068',
     active: '#2db7f5',
     finished: '108ee9',

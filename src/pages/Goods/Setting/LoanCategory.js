@@ -83,6 +83,12 @@ const CreateForm = Form.create()(props => {
             <Uploader action={config.uploadPath} host={config.qiniu.host} />
           )}
         </FormItem>
+
+        <FormItem {...formItemLayout} label="进度查询链接">
+          {form.getFieldDecorator('get_link', {
+            rules: [{ required: true, message: '请填写查询链接' }],
+          })(<Input placeholder="进度查询链接" />)}
+        </FormItem>
         
         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
           <Button type="primary" htmlType="submit">
@@ -170,6 +176,12 @@ const UpdateForm = Form.create()(props => {
             <Uploader action={config.uploadPath} host={config.qiniu.host} />
           )}
         </FormItem>
+
+        <FormItem {...formItemLayout} label="进度查询链接">
+          {form.getFieldDecorator('get_link', {
+            rules: [{ required: true, message: '请填写查询链接' }],
+          })(<Input placeholder="进度查询链接" />)}
+        </FormItem>
         
         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
           <Button type="primary" htmlType="submit">
@@ -202,6 +214,11 @@ class LoadCategoryView extends PureComponent {
     {
       title: '标签分类名称',
       dataIndex: 'name',
+      width: 150,
+    },
+    {
+      title: '查询链接',
+      dataIndex: 'get_link',
       width: 150,
     },
     {
