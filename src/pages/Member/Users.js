@@ -9,6 +9,7 @@ import StandardTable from '@/components/StandardTable';
 import DescriptionList from '@/components/DescriptionList';
 import config from './_config';
 import moment from 'moment';
+import { formatMessage, FormattedMessage } from 'umi/locale';
 import sysConfig from '@/config';
 
 import { 
@@ -27,6 +28,7 @@ import {
   Dropdown,
   Menu,
   Tag,
+  Modal,
 } from 'antd';
 import { connect } from 'dva';
 import { findUserType, isRealnameAuth, isFinanceAuth } from '@/utils/helpers';
@@ -41,20 +43,155 @@ const getValue = obj =>
     .map(key => obj[key])
     .join(',');
 
+
+const UpdateForm = Form.create()(props => {
+  const { 
+    modalVisible, 
+    form,
+    handleSubmit, 
+    data,
+    loading,
+    handleModalVisible } = props;
+
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 7 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 13 },
+      md: { span: 10 },
+    },
+  };
+
+  const submitFormLayout = {
+    wrapperCol: {
+      xs: { span: 24, offset: 0 },
+      sm: { span: 10, offset: 7 },
+    },
+  };
+
+  const { getFieldDecorator, getFieldValue } = form;
+
+  const okHandle = (e) => {
+    if (typeof e !== 'undefined') {
+      e.preventDefault();
+    }
+    
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      // console.log(fieldsValue, 'values');
+      form.resetFields();
+      if (typeof handleSubmit === 'function') {
+        handleSubmit(fieldsValue);
+      }
+    });
+  };
+  return (
+    <Modal
+      // wrapClassName="fullscreen-able"
+      destroyOnClose
+      title="编辑用户"
+      centered
+      visible={modalVisible}
+      footer={null}
+      // mask={false}
+      // style={{height: '100vh'}}
+      // width="100%"
+      onCancel={() => handleModalVisible()}
+    >
+      <Skeleton
+        active
+        loading={loading}
+        paragraph={{
+          rows: 10,
+        }}
+      >
+      <Form
+        onSubmit={okHandle} 
+        hideRequiredMark 
+        style={{ marginTop: 8 }}
+      >
+        <Form.Item {...formItemLayout} label="手机号">
+          {getFieldDecorator('register_mobile', {
+            initialValue: data.register_mobile,
+            rules: [{ required: true, max: 100, message: '请填写手机号' }],
+          })(
+            <Input placeholder="手机号" />
+          )}
+        </Form.Item>
+
+        {/* <Form.Item {...formItemLayout} label="账户余额">
+          {getFieldDecorator('balance', {
+            initialValue: data.balance,
+            rules: [{ required: true, max: 100, message: '请填写账户余额' }],
+          })(
+            <Input placeholder="账户余额" />
+          )}
+        </Form.Item> */}
+
+        <Form.Item {...formItemLayout} label="真实姓名">
+          {getFieldDecorator('realname', {
+            initialValue: data.realname,
+            rules: [{ required: true, max: 100, message: '请填写真实姓名' }],
+          })(
+            <Input placeholder="真实姓名" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="身份证号码">
+          {getFieldDecorator('id_no', {
+            initialValue: data.id_no,
+            rules: [{ required: true, max: 100, message: '请填写身份证号码' }],
+          })(
+            <Input placeholder="身份证号码" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="支付宝账户">
+          {getFieldDecorator('alipay_no', {
+            initialValue: data.alipay_no,
+            rules: [{ required: true, max: 100, message: '请填写支付宝账户' }],
+          })(
+            <Input placeholder="支付宝账户" />
+          )}
+        </Form.Item>
+        
+        <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
+          <Button type="primary" htmlType="submit">
+            <FormattedMessage id="form.submit" />
+          </Button>
+          <Button style={{ marginLeft: 8 }} onClick={() => handleModalVisible()}>
+            <FormattedMessage id="form.cancel" />
+          </Button>
+        </FormItem>
+      </Form>
+      </Skeleton>
+    </Modal>
+  );
+});
+
+
+
 @connect(({ users, loading}) => ({
   users,
   loading: loading.models.users,
   loadingProfile: loading.effects['users/fetchProfile'],
+  loadingChilds: loading.effects['users/fetchChilds'],
 }))
 @Form.create()
 class UsersView extends PureComponent {
 
   state = {
+    updateID: '',
+    parentUserID: null,
     expandForm: false,
     preLoading: false,
     profileVisible: false,
     realNameAuthVisible: false,
     createFormVisible: false,
+    updateVisible: false,
   }
 
   /**
@@ -198,10 +335,61 @@ class UsersView extends PureComponent {
           <Divider type="vertical" />
           <a onClick={this.showRealnameAuth(record.id)} >实名审核</a>
           <Divider type="vertical" />
-          <a href="">编辑</a>
+          <a onClick={this.prepareUpdate(record.id)}>编辑</a>
         </Fragment>
       ),
     },
+  ];
+
+  /**
+   * 
+   */
+  agentsColumns = [
+    {
+      title: '用户编号',
+      dataIndex: 'invite_code',
+      width: 150,
+    },
+    {
+      title: '下级类型',
+      width: 150,
+      key: "child_type",
+      dataIndex: 'user_id',
+      render: (_, record) => {
+        const { parent_user_id } = record;
+
+        console.log(this.state.parentUserID, '=======');
+        console.log(parent_user_id, '====++++===');
+
+        if (+this.state.parentUserID === +parent_user_id) {
+          return (
+            <span>直接下级</span>
+          )
+        }
+
+        return (
+          <span>间接下级</span>
+        );
+      }
+    },
+    {
+      title: '用户姓名',
+      dataIndex: 'realname',
+      width: 150,
+    },
+    {
+      title: '手机号',
+      dataIndex: 'register_mobile',
+      width: 150,
+    },
+    {
+      title: '注册时间',
+      dataIndex: 'register_time',
+      width: 200,
+      render: (val) => {
+        return (<span>{moment(val).format("YYYY-MM-DD HH:mm:ss")}</span>)
+      },
+    }
   ];
 
   toggleForm = () => {
@@ -265,6 +453,14 @@ class UsersView extends PureComponent {
     });
   }
 
+  toggleUpdateVisible = () => {
+    const { updateVisible } = this.state; 
+
+    this.setState({
+      updateVisible: !updateVisible,
+    });
+  }
+
   toggleRealNameAuthDrawer = () => {
     const { realNameAuthVisible } = this.state;
 
@@ -273,11 +469,54 @@ class UsersView extends PureComponent {
     });
   }
 
+  handleChildTableChange = (pagination) => {
+    const { dispatch } = this.props;
+
+    const params = {
+      pid: this.state.parentUserID,
+      page: pagination.current,
+      pageSize: pagination.pageSize,
+    };
+
+    dispatch({
+      type: 'users/fetchChilds',
+      payload: params,
+    });
+  }
+
   showProfile = (id) => (e) => {
     e.preventDefault();
     this.toggleProfileDrawer();
+
+    this.setState({
+      parentUserID: id,
+    });
+
     const { dispatch } = this.props;
 
+    dispatch({
+      type: 'users/fetchChilds',
+      payload: {
+        pid: id,
+        page: 1,
+        pageSize: 15,
+      },
+    });
+
+    dispatch({
+      type: 'users/fetchProfile',
+      payload: {
+        id,
+      },
+    });
+
+    
+  }
+
+  showRealnameAuth = (id) => (e) => {
+    e.preventDefault();
+    this.toggleRealNameAuthDrawer();
+    const { dispatch } = this.props;
     dispatch({
       type: 'users/fetchProfile',
       payload: {
@@ -286,10 +525,14 @@ class UsersView extends PureComponent {
     });
   }
 
-  showRealnameAuth = (id) => (e) => {
+  prepareUpdate = (id) => e => {
     e.preventDefault();
-    this.toggleRealNameAuthDrawer();
     const { dispatch } = this.props;
+    this.setState({
+      updateID: id,
+    });
+    this.toggleUpdateVisible();
+
     dispatch({
       type: 'users/fetchProfile',
       payload: {
@@ -345,6 +588,7 @@ class UsersView extends PureComponent {
         id,
       },
     });
+
     this.toggleRealNameAuthDrawer();
   }
 
@@ -395,7 +639,7 @@ class UsersView extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="用户编号">
-              {getFieldDecorator('id')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('invite_code')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -430,7 +674,7 @@ class UsersView extends PureComponent {
         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
             <FormItem label="用户编号">
-              {getFieldDecorator('id')(<Input placeholder="请输入" />)}
+              {getFieldDecorator('invite_code')(<Input placeholder="请输入" />)}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
@@ -479,7 +723,7 @@ class UsersView extends PureComponent {
    */
   renderProfileDrawer = () => {
 
-    const { users: { profile }, loadingProfile } = this.props;
+    const { users: { profile, childs }, loadingProfile, loadingChilds } = this.props;
     const { basicInfo, vipInfo = {} } = profile;
 
     const titleText = basicInfo.realname || basicInfo.wechat_name || basicInfo.username || basicInfo.register_mobile;
@@ -517,21 +761,52 @@ class UsersView extends PureComponent {
           </Skeleton>
           <Divider style={{ marginBottom: 32 }} />
           <Skeleton loading={loadingProfile}>
-            <DescriptionList size="large" title="VIP资料" style={{ marginBottom: 32 }}>
-              <Description term="VIP类型">{VipLevel[vipInfo.vip_level]}</Description>
-              <Description term="开通时间">{moment(vipInfo.start_time).format("YYYY年MM月DD日")}</Description>
-              <Description term="结束时间">{moment(vipInfo.end_time).format("YYYY年MM月DD日")}</Description>
-              <Description term="已支付金额">{vipInfo.trade_price}</Description>
-              <Description term="订单号">{vipInfo.trade_id}</Description>
-              <Description term="加成金额">{vipInfo.addRate}</Description>
-              <Description term="加成总金额">{vipInfo.total_vip_price}</Description>
-            </DescriptionList>
+          {
+            vipInfo.vip_level ? (
+              <DescriptionList size="large" title="VIP资料" style={{ marginBottom: 32 }}>
+                <Description term="VIP类型">{VipLevel[vipInfo.vip_level]}</Description>
+                <Description term="开通时间">{moment(vipInfo.start_time).format("YYYY年MM月DD日")}</Description>
+                <Description term="结束时间">{moment(vipInfo.end_time).format("YYYY年MM月DD日")}</Description>
+                <Description term="已支付金额">{vipInfo.trade_price}</Description>
+                <Description term="订单号">{vipInfo.trade_id}</Description>
+                <Description term="加成金额">{vipInfo.addRate}</Description>
+                <Description term="加成总金额">{vipInfo.total_vip_price}</Description>
+              </DescriptionList>
+            ) : null
+          }
+            
           </Skeleton>
-          <Divider style={{ marginBottom: 32 }} />
+          {
+            vipInfo.vip_level ? (
+              <Divider style={{ marginBottom: 32 }} />
+            ) : null
+          }
+
+          <Skeleton loading={loadingChilds}>
+            <StandardTable
+              size="small"
+              data={childs}
+              loading={loadingChilds}
+              columns={this.agentsColumns}
+              onChange={this.handleChildTableChange}
+            />
+          </Skeleton>
         </Card>
 
       </Drawer>
     )
+  }
+
+  handleUpdate = (values) => {
+    const { dispatch } = this.props;
+    values.id = this.state.updateID;
+    console.log(values, '=====');
+    dispatch({
+      type: 'users/update',
+      payload: values,
+    }).then(() => {
+      this.toggleUpdateVisible();
+    });
   }
 
   /**
@@ -651,7 +926,7 @@ class UsersView extends PureComponent {
 
   render() {
     const {
-      users: { data },
+      users: { data, profile },
       loading,
     } = this.props;
     
@@ -675,7 +950,13 @@ class UsersView extends PureComponent {
         </Skeleton>
         {this.renderProfileDrawer()}
         {this.renderRealNameAuth()}
-        
+        <UpdateForm
+          modalVisible={this.state.updateVisible}
+          handleModalVisible={this.toggleUpdateVisible}
+          handleSubmit={this.handleUpdate}
+          // loading={loadingDetails}
+          data={profile.basicInfo ? profile.basicInfo : null}
+        />
       </PageHeaderWrapper>
     );
   }

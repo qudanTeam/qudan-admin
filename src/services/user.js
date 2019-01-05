@@ -1,6 +1,7 @@
 
 import request from '@/utils/request';
 import pathConfig from './pathConfig';
+import { stringify } from 'qs';
 
 export function passRealnameAuth(id) {
   return request(`${pathConfig.Users}/${id}/passRealnameAuth`, {
@@ -14,6 +15,14 @@ export function refuseRealnameAuth(id) {
   });
 }
 
+export function updateUser(params) {
+  const { id } = params;
+  return request(`${pathConfig.Users}/${id}`, {
+    method: 'PUT',
+    body: params,
+  });
+}
+
 export function passFinanceAuth(id) {
   return request(`${pathConfig.Users}/${id}/passFinanceAuth`, {
     method: 'PUT',
@@ -24,4 +33,11 @@ export function refuseFinanceAuth(id) {
   return request(`${pathConfig.Users}/${id}/refuseFinanceAuth`, {
     method: 'PUT',
   });
+}
+export function queryChildUsers(params) {
+  const {
+    pid: id,
+    ...rest
+  } = params;
+  return request(`${pathConfig.Users}/${id}/childs?${stringify(rest)}`);
 }

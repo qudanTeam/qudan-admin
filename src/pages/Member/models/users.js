@@ -5,7 +5,7 @@ import {
   queryUserVipProfile,
  } from '@/services/api';
 import { requestDataToPageResult } from '@/utils/utils';
-import { passRealnameAuth, refuseRealnameAuth, refuseFinanceAuth, passFinanceAuth } from '@/services/user';
+import { passRealnameAuth, refuseRealnameAuth, refuseFinanceAuth, passFinanceAuth, queryChildUsers, updateUser } from '@/services/user';
 
 
 
@@ -21,7 +21,12 @@ export default {
     profile: {
       basicInfo: {},
       vipInfo: {},
-    }
+    },
+
+    childs: {
+      list: [],
+      pagination: {},
+    },
   },
 
   effects: {
@@ -41,6 +46,15 @@ export default {
       const vipInfo = yield call(queryUserVipProfile, payload.id);
       // const { result } = response;
       // const { result: vipInfo } = vipResp;
+      // console.log('fetch childs');
+      // yield put({
+      //   type: 'fetchChilds',
+      //   payload: {
+      //     pid: payload.id,
+      //     page: 1,
+      //     pageSize: 15,
+      //   },
+      // });
 
       yield put({
         type: 'saveProfile',
@@ -49,6 +63,32 @@ export default {
           vipInfo,
         },
       });
+    },
+
+    *fetchChilds({ payload }, { call, put }) {
+      const resp = yield call(queryChildUsers, payload);
+      yield put({
+        type: 'saveChilds',
+        payload: requestDataToPageResult(resp),
+      });
+    },
+
+    *update({ payload }, { call, put, select }) {
+      const { data: { pagination } = { pagination: { current: 1, pageSize: 15 }} } = yield select(_ => _.users);
+
+      const result = yield  call(updateUser, payload);
+
+      if (result) {
+        yield put({
+          type: 'fetch',
+          payload: {
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+          },
+        });
+      }
+
+      
     },
 
     *passRealnameAuth({ payload }, { call, put, select }) {
@@ -125,6 +165,13 @@ export default {
       return {
         ...state,
         profile: payload,
+      };
+    },
+
+    saveChilds(state, { payload }) {
+      return {
+        ...state,
+        childs: payload,
       };
     },
   },
