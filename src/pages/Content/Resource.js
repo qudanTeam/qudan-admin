@@ -199,8 +199,8 @@ const UpdateForm = Form.create()(props => {
         <FormItem {...formItemLayout} label="图片">
           {form.getFieldDecorator('share_img', {
             initialValue: data.share_img ? `${data.share_img}` : null,
-            rules: [{ required: true, message: '请选择轮播图位置' }],
-          })(<Uploader action={config.uploadPath} host={config.qiniu.host} />)}
+            
+          })(<Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />)}
         </FormItem>
 
         <FormItem {...formItemLayout} label="是否显示">
