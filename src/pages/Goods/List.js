@@ -239,8 +239,8 @@ const UpdateForm = Form.create()(props => {
         {
           getProductType() === 2 ? (
             <Form.Item {...formItemLayout} label="贷款额度">
-              {getFieldDecorator('loanLimit', {
-                initialValue: data.loanLimit,
+              {getFieldDecorator('loan_limit', {
+                initialValue: data.loan_limit,
                 rules: [
                   { required: true, message: '请输入贷款额度' },
                   {
@@ -334,23 +334,32 @@ const UpdateForm = Form.create()(props => {
           })(<Input placeholder="请输入申请人数" />)}
         </Form.Item>
 
-        <Form.Item {...formItemLayout} label="申请条件">
-          {getFieldDecorator('apply_condition', {
-            initialValue: data.apply_condition,
-            rules: [
-              { required: false, max: 200, message: '请输入申请条件' },
-            ],
-          })(<TextArea rows={3} placeholder="请输入申请条件" />)}
-        </Form.Item>
+        {
+          getProductType() === 2 ? (
+            <Form.Item {...formItemLayout} label="申请条件">
+              {getFieldDecorator('apply_condition', {
+                initialValue: data.apply_condition,
+                rules: [
+                  { required: false, max: 200, message: '请输入申请条件' },
+                ],
+              })(<TextArea rows={3} placeholder="请输入申请条件" />)}
+            </Form.Item>
+          ) : null
+        }
 
-        <Form.Item {...formItemLayout} label="申请流程图片">
-          {getFieldDecorator('apply_tp_img', {
-            initialValue: data.apply_tp_img,
-            rules: [{ required: true, message: '请上传申请流程图' }],
-          })(
-            <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
-          )}
-        </Form.Item>
+        {
+          getProductType() === 2 ? (
+            <Form.Item {...formItemLayout} label="申请流程图片">
+              {getFieldDecorator('apply_tp_img', {
+                initialValue: data.apply_tp_img,
+                rules: [{ required: true, message: '请上传申请流程图' }],
+              })(
+                <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
+              )}
+            </Form.Item>
+          ) : null
+        }
+        
 
         <Form.Item {...formItemLayout} label="基本工资">
           {getFieldDecorator('base_salary', {
@@ -376,7 +385,7 @@ const UpdateForm = Form.create()(props => {
 
         <Form.Item {...formItemLayout} label="阶梯值奖励单位">
           {getFieldDecorator('jl_unite', {
-            initialValue: data.jl_unite,
+            initialValue: data.jl_unite || '元',
             rules: [
               { required: true, max: 200, message: '请输入阶梯值奖励单位' },
             ],
@@ -442,14 +451,18 @@ const UpdateForm = Form.create()(props => {
           ) : null
         }
 
-        <Form.Item {...formItemLayout} label="返佣标准">
-          {getFieldDecorator('commission_standard', {
-            initialValue: data.commission_standard,
-            rules: [
-              { required: false, max: 100, message: '返佣标准' },
-            ],
-          })(<Input placeholder="输入返佣标准" />)}
-        </Form.Item>
+        {
+          getProductType() === 2 ? (
+            <Form.Item {...formItemLayout} label="返佣标准">
+              {getFieldDecorator('commission_standard', {
+                initialValue: data.commission_standard,
+                rules: [
+                  { required: false, max: 100, message: '返佣标准' },
+                ],
+              })(<Input placeholder="输入返佣标准" />)}
+            </Form.Item>
+          ) : null
+        }
 
         {/* <Form.Item {...formItemLayout} label="绑定商品链接">
           {getFieldDecorator('product_link_obj', {
@@ -563,7 +576,7 @@ const UpdateForm = Form.create()(props => {
           })(<Input prefix="¥" placeholder="阶梯C结束值" />)}
         </Form.Item>
 
-        <Form.Item {...formItemLayout} label="月度工资">
+        {/* <Form.Item {...formItemLayout} label="月度工资">
           {getFieldDecorator('month_salary', {
             initialValue: data.month_salary,
             rules: [{ required: true, max: 100, message: '请填写月度工资' }],
@@ -597,7 +610,7 @@ const UpdateForm = Form.create()(props => {
           })(
             <Input placeholder="实时工资描述" />
           )}
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item {...formItemLayout} label="阶梯A奖励">
           {getFieldDecorator('a_level_reward', {
@@ -662,10 +675,10 @@ const UpdateForm = Form.create()(props => {
           )}
         </Form.Item>
 
-        <Form.Item {...formItemLayout} label="产品展示图">
-          {getFieldDecorator('product_show_img', {
-            initialValue: data.product_show_img,
-            rules: [{ required: true, message: '请上传产品展示图' }],
+        <Form.Item {...formItemLayout} label="产品海报">
+          {getFieldDecorator('product_poster', {
+            initialValue: data.product_poster,
+            rules: [{ required: true, message: '请上传产品海报' }],
           })(
             <Uploader action={config.uploadPath} host={config.qiniu.host} />
           )}
@@ -724,7 +737,7 @@ const UpdateForm = Form.create()(props => {
             initialValue: data.base_right,
             rules: [{ required: true, max: 200, message: '请填写基本权益' }],
           })(
-            <Input placeholder="基本权益" />
+            <Input.TextArea placeholder="基本权益" rows={3} />
           )}
         </Form.Item>
 
@@ -733,7 +746,7 @@ const UpdateForm = Form.create()(props => {
             initialValue: data.preferential,
             rules: [{ required: true, max: 200, message: '请填写优惠活动' }],
           })(
-            <Input placeholder="优惠活动" />
+            <Input.TextArea placeholder="优惠活动" rows={3} />
           )}
         </Form.Item>
         

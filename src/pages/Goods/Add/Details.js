@@ -156,7 +156,7 @@ class DetailsForm extends React.PureComponent {
             ],
           })(<Input prefix="¥" placeholder="阶梯C结束值" />)}
         </Form.Item>
-
+{/* 
         <Form.Item {...formItemLayout} label="月度工资">
           {getFieldDecorator('month_salary', {
             initialValue: data.month_salary,
@@ -191,7 +191,7 @@ class DetailsForm extends React.PureComponent {
           })(
             <Input placeholder="实时工资描述" />
           )}
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item {...formItemLayout} label="阶梯A奖励">
           {getFieldDecorator('a_level_reward', {
@@ -256,10 +256,10 @@ class DetailsForm extends React.PureComponent {
           )}
         </Form.Item>
 
-        <Form.Item {...formItemLayout} label="产品展示图">
-          {getFieldDecorator('product_show_img', {
-            initialValue: data.product_show_img,
-            rules: [{ required: true, message: '请上传产品展示图' }],
+        <Form.Item {...formItemLayout} label="产品海报">
+          {getFieldDecorator('product_poster', {
+            initialValue: data.product_poster,
+            rules: [{ required: true, message: '请上传产品海报' }],
           })(
             <Uploader action={config.uploadPath} host={config.qiniu.host} />
           )}
@@ -324,7 +324,7 @@ class DetailsForm extends React.PureComponent {
                 initialValue: data.base_right,
                 rules: [{ required: true, max: 200, message: '请填写基本权益' }],
               })(
-                <Input placeholder="基本权益" />
+                <Input.TextArea placeholder="基本权益" rows={3} />
               )}
             </Form.Item>
           ) : null
@@ -337,7 +337,7 @@ class DetailsForm extends React.PureComponent {
                 initialValue: data.preferential,
                 rules: [{ required: true, max: 200, message: '请填写优惠活动' }],
               })(
-                <Input placeholder="优惠活动" />
+                <Input.TextArea placeholder="优惠活动" rwos={3} />
               )}
             </Form.Item>
           ) : null

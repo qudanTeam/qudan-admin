@@ -33,6 +33,7 @@ class CommonForm extends React.PureComponent {
 
   state = {
     productType: 'loans',
+    // unit: null,
   }
 
   get productType() {
@@ -337,7 +338,7 @@ class CommonForm extends React.PureComponent {
 
           <Form.Item {...formItemLayout} label="阶梯值单位">
             {getFieldDecorator('unit', {
-              initialValue: data.unit,
+              initialValue: this.productType === 2 ? '万' : '张',
               rules: [
                 { required: true, max: 200, message: '请输入阶梯值单位' },
               ],
@@ -346,7 +347,7 @@ class CommonForm extends React.PureComponent {
 
           <Form.Item {...formItemLayout} label="阶梯值奖励单位">
             {getFieldDecorator('jl_unite', {
-              initialValue: data.jl_unite,
+              initialValue: data.jl_unite || '元',
               rules: [
                 { required: true, max: 200, message: '请输入阶梯值奖励单位' },
               ],
@@ -411,14 +412,19 @@ class CommonForm extends React.PureComponent {
           ) : null
         }
 
-          <Form.Item {...formItemLayout} label="返佣标准">
-            {getFieldDecorator('commission_standard', {
-              initialValue: data.commission_standard,
-              rules: [
-                { required: false, max: 100, message: '返佣标准' },
-              ],
-            })(<Input placeholder="输入返佣标准" />)}
-          </Form.Item>
+        {
+          this.productType === 2 ? (
+            <Form.Item {...formItemLayout} label="返佣标准">
+              {getFieldDecorator('commission_standard', {
+                initialValue: data.commission_standard,
+                rules: [
+                  { required: false, max: 100, message: '返佣标准' },
+                ],
+              })(<Input placeholder="输入返佣标准" />)}
+            </Form.Item>
+          ) : null
+        }
+          
 
           {/* <Form.Item {...formItemLayout} label="绑定商品链接">
             {getFieldDecorator('product_link_obj', {
