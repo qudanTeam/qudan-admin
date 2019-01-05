@@ -210,7 +210,7 @@ class ListView extends PureComponent {
     const columns = [
       {
         title: '用户编号',
-        dataIndex: 'user_id',
+        dataIndex: 'invite_code',
         width: 150,
       },
       {
@@ -304,7 +304,7 @@ class ListView extends PureComponent {
     const columns = [
       {
         title: '用户编号',
-        dataIndex: 'user_id',
+        dataIndex: 'invite_code',
         width: 150,
       },
       {

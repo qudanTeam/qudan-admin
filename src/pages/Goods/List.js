@@ -723,32 +723,44 @@ const UpdateForm = Form.create()(props => {
           )}
         </Form.Item>
 
-        <Form.Item {...formItemLayout} label="办卡流程图">
-          {getFieldDecorator('card_progress_img', {
-            initialValue: data.card_progress_img,
-            rules: [{ required: true, message: '请上传办卡流程图' }],
-          })(
-            <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
-          )}
-        </Form.Item>
+        {
+          getProductType() === 1 ? (
+            <Form.Item {...formItemLayout} label="办卡流程图">
+              {getFieldDecorator('card_progress_img', {
+                initialValue: data.card_progress_img,
+                rules: [{ required: true, message: '请上传办卡流程图' }],
+              })(
+                <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
+              )}
+            </Form.Item>
+          ) : null
+        }
+        
+        {
+          getProductType() === 1 ? (
+            <Form.Item {...formItemLayout} label="基本权益">
+              {getFieldDecorator('base_right', {
+                initialValue: data.base_right,
+                rules: [{ required: true, max: 200, message: '请填写基本权益' }],
+              })(
+                <Input.TextArea placeholder="基本权益" rows={3} />
+              )}
+            </Form.Item>
+          ) : null
+        }
 
-        <Form.Item {...formItemLayout} label="基本权益">
-          {getFieldDecorator('base_right', {
-            initialValue: data.base_right,
-            rules: [{ required: true, max: 200, message: '请填写基本权益' }],
-          })(
-            <Input.TextArea placeholder="基本权益" rows={3} />
-          )}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="优惠活动">
-          {getFieldDecorator('preferential', {
-            initialValue: data.preferential,
-            rules: [{ required: true, max: 200, message: '请填写优惠活动' }],
-          })(
-            <Input.TextArea placeholder="优惠活动" rows={3} />
-          )}
-        </Form.Item>
+        {
+          getProductType() === 1 ? (
+            <Form.Item {...formItemLayout} label="优惠活动">
+              {getFieldDecorator('preferential', {
+                initialValue: data.preferential,
+                rules: [{ required: true, max: 200, message: '请填写优惠活动' }],
+              })(
+                <Input.TextArea placeholder="优惠活动" rows={3} />
+              )}
+            </Form.Item>
+          ) : null
+        }
         
         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
           <Button type="primary" htmlType="submit">
