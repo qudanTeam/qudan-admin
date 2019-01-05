@@ -93,8 +93,8 @@ const CreateForm = Form.create()(props => {
         <FormItem {...formItemLayout} label="图片">
           {form.getFieldDecorator('share_img', {
             
-            rules: [{ required: true, message: '请上传图片' }],
-          })(<Uploader action={config.uploadPath} host={config.qiniu.host} />)}
+            // rules: [{ required: true, message: '请上传图片' }],
+          })(<Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />)}
         </FormItem>
 
         <FormItem {...formItemLayout} label="是否显示">
@@ -199,7 +199,6 @@ const UpdateForm = Form.create()(props => {
         <FormItem {...formItemLayout} label="图片">
           {form.getFieldDecorator('share_img', {
             initialValue: data.share_img ? `${data.share_img}` : null,
-            
           })(<Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />)}
         </FormItem>
 
