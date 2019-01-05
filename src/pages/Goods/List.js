@@ -451,11 +451,19 @@ const UpdateForm = Form.create()(props => {
           })(<Input placeholder="输入返佣标准" />)}
         </Form.Item>
 
-        <Form.Item {...formItemLayout} label="绑定商品链接">
+        {/* <Form.Item {...formItemLayout} label="绑定商品链接">
           {getFieldDecorator('product_link_obj', {
             initialValue: data.product_link_obj,
           })(
             <SelectProductLink ptype={getFieldValue('product_type')}  />
+          )}
+        </Form.Item> */}
+
+        <Form.Item {...formItemLayout} label="绑定商品链接">
+          {getFieldDecorator('product_link', {
+            initialValue: data.product_link,
+          })(
+            <Input placeholder="请输入商品链接" />
           )}
         </Form.Item>
 

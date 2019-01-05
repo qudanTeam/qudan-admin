@@ -336,8 +336,8 @@ class CommonForm extends React.PureComponent {
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="阶梯值单位">
-            {getFieldDecorator('unite', {
-              initialValue: data.unite,
+            {getFieldDecorator('unit', {
+              initialValue: data.unit,
               rules: [
                 { required: true, max: 200, message: '请输入阶梯值单位' },
               ],
@@ -420,11 +420,19 @@ class CommonForm extends React.PureComponent {
             })(<Input placeholder="输入返佣标准" />)}
           </Form.Item>
 
-          <Form.Item {...formItemLayout} label="绑定商品链接">
+          {/* <Form.Item {...formItemLayout} label="绑定商品链接">
             {getFieldDecorator('product_link_obj', {
               initialValue: data.product_link_obj,
             })(
               <SelectProductLink ptype={getFieldValue('product_type')}  />
+            )}
+          </Form.Item> */}
+
+          <Form.Item {...formItemLayout} label="绑定商品链接">
+            {getFieldDecorator('product_link', {
+              initialValue: data.product_link,
+            })(
+              <Input placeholder="输入商品的链接"  />
             )}
           </Form.Item>
 
