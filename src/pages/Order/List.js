@@ -293,7 +293,7 @@ class OrderListView extends PureComponent {
           </Col>
           <Col md={8} sm={24}>
             <FormItem label="用户编号">
-              {getFieldDecorator('user_id')(<Input placeholder="用户编号" />)}
+              {getFieldDecorator('invite_code')(<Input placeholder="用户编号" />)}
             </FormItem>
           </Col>
         </Row>
