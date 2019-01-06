@@ -12,6 +12,8 @@ import SelectProductCategory from '@/components/Select/SelectProductCategory';
 import Uploader from '@/components/Uploader';
 import config from '@/config';
 import SelectProductLink from '@/components/Select/SelectProductLink';
+import Editor from '@/components/Editor/editor';
+import BraftEditor from 'braft-editor';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -47,6 +49,9 @@ class CommonForm extends React.PureComponent {
     const onValidateForm = () => {
       validateFieldsAndScroll((err, values) => {
         if (!err) {
+          if (values.apply_condition) {
+            values.apply_condition = values.apply_condition.toHTML();
+          }
           dispatch({
             type: 'goodAdd/saveFormData',
             payload: values,
@@ -169,7 +174,7 @@ class CommonForm extends React.PureComponent {
 
           <Form.Item {...formItemLayout} label="后台分类">
             {getFieldDecorator('bg_category', {
-              initialValue: +data.bg_category,
+              initialValue: data.bg_category || 1,
               rules: [{ required: true, message: '请选择后台分类' }],
             })(
               <Select placeholder="后台分类">
@@ -301,11 +306,24 @@ class CommonForm extends React.PureComponent {
             this.productType === 2 ? (
               <Form.Item {...formItemLayout} label="申请条件">
                 {getFieldDecorator('apply_condition', {
-                  initialValue: data.apply_condition,
-                  rules: [
-                    { required: false, max: 200, message: '请输入申请条件' },
-                  ],
-                })(<TextArea rows={3} placeholder="请输入申请条件" />)}
+                  initialValue: BraftEditor.createEditorState(data.apply_condition),
+                  validateTrigger: 'onBlur',
+                  rules: [{
+                    required: true,
+                    validator: (_, value, callback) => {
+                      if (value.isEmpty()) {
+                        callback('请输入申请条件')
+                      } else {
+                        callback()
+                      }
+                    }
+                  }],
+                })(
+                  // <TextArea rows={3} placeholder="请输入申请条件" />
+                  <Editor 
+                    placeholder="请输入申请条件" 
+                  />
+                )}
               </Form.Item>
             ) : null
           }

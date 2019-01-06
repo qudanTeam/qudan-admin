@@ -10,6 +10,8 @@ import { digitUppercase } from '@/utils/utils';
 import styles from './style.less';
 import config from '@/config';
 import Uploader from '@/components/Uploader';
+import Editor from '@/components/Editor/editor';
+import BraftEditor from 'braft-editor';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -45,6 +47,18 @@ class DetailsForm extends React.PureComponent {
       e.preventDefault();
       validateFieldsAndScroll((err, values) => {
         if (!err) {
+          if (values.preferential) {
+            values.preferential = values.preferential.toHTML();
+          }
+          if (values.how_settle) {
+            values.how_settle = values.how_settle.toHTML();
+          }
+          if (values.base_right) {
+            values.base_right = values.base_right.toHTML();
+          }
+          if (values.card_progress_img) {
+            values.card_progress_img = values.card_progress_img.toHTML();
+          }
           dispatch({
             type: 'goodAdd/create',
             payload: values,
@@ -288,10 +302,23 @@ class DetailsForm extends React.PureComponent {
 
         <Form.Item {...formItemLayout} label="如何结算奖金">
           {getFieldDecorator('how_settle', {
-            initialValue: data.how_settle,
-            rules: [{ required: true, max: 255, message: '请填写如何结算奖金' }],
+            initialValue: BraftEditor.createEditorState(data.how_settle),
+            // rules: [{ required: true, max: 255, message: '请填写如何结算奖金' }],
+            validateTrigger: 'onBlur',
+            rules: [{
+              required: true,
+              validator: (_, value, callback) => {
+                if (value.isEmpty()) {
+                  callback('请输入如何结算奖金')
+                } else {
+                  callback()
+                }
+              }
+            }],
           })(
-            <TextArea rows={3} placeholder="如何结算奖金" />
+            <Editor 
+              placeholder="如何结算奖金" 
+            />
           )}
         </Form.Item>
 
@@ -304,7 +331,7 @@ class DetailsForm extends React.PureComponent {
           )}
         </Form.Item>
 
-        {
+        {/* {
           this.productType === 1 ? (
             <Form.Item {...formItemLayout} label="办卡流程图">
               {getFieldDecorator('card_progress_img', {
@@ -315,16 +342,51 @@ class DetailsForm extends React.PureComponent {
               )}
             </Form.Item>
           ) : null
+        } */}
+
+        {
+          this.productType === 1 ? (
+            <Form.Item {...formItemLayout} label="温馨提示">
+              {getFieldDecorator('card_progress_img', {
+                initialValue: BraftEditor.createEditorState(data.card_progress_img),
+                validateTrigger: 'onBlur',
+                rules: [{
+                  required: true,
+                  validator: (_, value, callback) => {
+                    if (value.isEmpty()) {
+                      callback('请输入温馨提示')
+                    } else {
+                      callback()
+                    }
+                  }
+                }],
+              })(
+                // <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
+                <Editor placeholder="温馨提示" />
+              )}
+            </Form.Item>
+          ) : null
         }
 
         {
           this.productType === 1 ? (
             <Form.Item {...formItemLayout} label="基本权益">
               {getFieldDecorator('base_right', {
-                initialValue: data.base_right,
-                rules: [{ required: true, max: 200, message: '请填写基本权益' }],
+                initialValue: BraftEditor.createEditorState(data.base_right),
+                validateTrigger: 'onBlur',
+                rules: [{
+                  required: true,
+                  validator: (_, value, callback) => {
+                    if (value.isEmpty()) {
+                      callback('请输入基本权益');
+                    } else {
+                      callback();
+                    }
+                  }
+                }],
               })(
-                <Input.TextArea placeholder="基本权益" rows={3} />
+                // <Input.TextArea placeholder="基本权益" rows={3} />
+                <Editor placeholder="基本权益" />
               )}
             </Form.Item>
           ) : null
@@ -334,10 +396,22 @@ class DetailsForm extends React.PureComponent {
           this.productType === 1 ? (
             <Form.Item {...formItemLayout} label="优惠活动">
               {getFieldDecorator('preferential', {
-                initialValue: data.preferential,
-                rules: [{ required: true, max: 200, message: '请填写优惠活动' }],
+                initialValue: BraftEditor.createEditorState(data.preferential),
+                // rules: [{ required: true, max: 200, message: '请填写优惠活动' }],
+                validateTrigger: 'onBlur',
+                rules: [{
+                  required: true,
+                  validator: (_, value, callback) => {
+                    if (value.isEmpty()) {
+                      callback('请输入优惠活动');
+                    } else {
+                      callback();
+                    }
+                  }
+                }],
               })(
-                <Input.TextArea placeholder="优惠活动" rwos={3} />
+                // <Input.TextArea placeholder="优惠活动" rwos={3} />
+                <Editor placeholder="优惠活动" />
               )}
             </Form.Item>
           ) : null
