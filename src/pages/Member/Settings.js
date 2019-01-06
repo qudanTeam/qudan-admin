@@ -14,7 +14,7 @@ import {
   Form, 
   DatePicker, 
   InputNumber,
-  message, Button, Input, Divider, Modal } from 'antd';
+  message, Button, Input, Divider, Modal, Select } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import NumericInput from '@/components/NumericInput';
 import { formatMessage, FormattedMessage } from 'umi/locale';
@@ -81,6 +81,18 @@ const CreateForm = Form.create()(props => {
           {form.getFieldDecorator('vip_name', {
             rules: [{ required: true, message: '请填写vip名称' }],
           })(<Input placeholder="取个名称" />)}
+        </FormItem>
+        <FormItem {...formItemLayout} label="VIP等级">
+          {form.getFieldDecorator('vip_level', {
+            initialValue: 1,
+            rules: [{ required: true, message: '请选择VIP等级' }],
+          })(
+            <Select>
+              <Select.Option value={1}>初级</Select.Option>
+              <Select.Option value={2}>中级</Select.Option>
+              <Select.Option value={3}>高级</Select.Option>
+            </Select>
+          )}
         </FormItem>
         <FormItem {...formItemLayout} label="任务加成比例">
           {form.getFieldDecorator('add_rate', {
@@ -184,6 +196,18 @@ const UpdateForm = Form.create()(props => {
             rules: [{ required: true, message: '请填写vip名称' }],
             initialValue: data.vip_name,
           })(<Input placeholder="取个名称" />)}
+        </FormItem>
+        <FormItem {...formItemLayout} label="VIP等级">
+          {form.getFieldDecorator('vip_level', {
+            initialValue: data.vip_level,
+            rules: [{ required: true, message: '请选择VIP等级' }],
+          })(
+            <Select>
+              <Select.Option value={1}>初级</Select.Option>
+              <Select.Option value={2}>中级</Select.Option>
+              <Select.Option value={3}>高级</Select.Option>
+            </Select>
+          )}
         </FormItem>
         <FormItem {...formItemLayout} label="任务加成比例">
           {form.getFieldDecorator('add_rate', {

@@ -48,6 +48,9 @@ const CreateForm = Form.create()(props => {
     form.validateFields((err, fieldsValue) => {
       if (err) return;
       form.resetFields();
+      if (fieldsValue.content) {
+        fieldsValue.content = fieldsValue.content.replace(/[\n\r]/g,'<br>');
+      }
       if (typeof handleSubmit === "function") {
         handleSubmit(fieldsValue);
       }
@@ -146,6 +149,9 @@ const UpdateForm = Form.create()(props => {
       if (err) return;
       // console.log(fieldsValue, 'values');
       form.resetFields();
+      if (fieldsValue.content) {
+        fieldsValue.content = fieldsValue.content.replace(/[\n\r]/g,'<br>');
+      }
       if (typeof handleSubmit === 'function') {
         handleSubmit(fieldsValue);
       }
@@ -189,7 +195,7 @@ const UpdateForm = Form.create()(props => {
 
         <FormItem {...formItemLayout} label="配置内容">
           {form.getFieldDecorator('content', {
-            initialValue: data.content,
+            initialValue: data.content ? data.content.replace('<br>', '\r\n') : '',
             rules: [{ required: true, message: '配置标题' }],
           })(
             <TextArea rows={3} />
@@ -238,6 +244,9 @@ class SettleView extends PureComponent {
       title: '配置内容',
       dataIndex: 'content',
       // width: 200,
+      render: (val) => {
+        return (<span dangerouslySetInnerHTML = {{ __html:val }}></span>)
+      }
     },
     {
       title: '操作',

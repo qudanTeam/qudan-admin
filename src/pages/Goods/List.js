@@ -931,7 +931,7 @@ class ListView extends PureComponent {
       dataIndex: 'is_show',
       width: 150,
       render: (val) => {
-        return (<Tag>{+val === 1 ? '是' : '否'}</Tag>)
+        return (<Tag color={+val === 1 ? config.colors.blue_active : config.colors.blue_normal}>{+val === 1 ? '是' : '否'}</Tag>)
       }
     },
     {
@@ -939,7 +939,7 @@ class ListView extends PureComponent {
       dataIndex: 'is_in_shop',
       width: 150,
       render: (val) => {
-        return (<Tag>{+val === 1 ? '是' : '否'}</Tag>)
+        return (<Tag color={+val === 1 ? config.colors.blue_active : config.colors.blue_normal}>{+val === 1 ? '是' : '否'}</Tag>)
       }
     },
 
@@ -948,7 +948,7 @@ class ListView extends PureComponent {
       dataIndex: 'is_shelf',
       width: 200,
       render: (val) => {
-        return (<Tag>{+val === 1 ? '已上架' : '已下架'}</Tag>)
+        return (<Tag color={+val === 1 ? config.colors.success : config.colors.failed}>{+val === 1 ? '已上架' : '已下架'}</Tag>)
       }
     },
     {

@@ -20,7 +20,11 @@ export default {
 
 
   colors: {
-    
+    cate_1: '#C39BD3',
+    cate_2: '#AF7AC5',
+    cate_3: '#BB8FCE',
+    blue_active: '#3498DB',
+    blue_normal: '#85C1E9',
     success: '#87d068',
     active: '#2db7f5',
     finished: '108ee9',
