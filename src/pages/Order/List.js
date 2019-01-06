@@ -60,7 +60,7 @@ class OrderListView extends PureComponent {
     },
     {
       title: '用户编号',
-      dataIndex: 'user_id',
+      dataIndex: 'invite_code',
       width: 150,
     },
     {
@@ -68,16 +68,16 @@ class OrderListView extends PureComponent {
       dataIndex: 'realname',
       width: 150,
     },
-    {
-      title: '已完成任务量',
-      dataIndex: 'finished_task_count',
-      width: 150,
-    },
-    {
-      title: '已完成金额',
-      dataIndex: 'finished_task_price',
-      width: 150,
-    },
+    // {
+    //   title: '已完成任务量',
+    //   dataIndex: 'finished_task_count',
+    //   width: 150,
+    // },
+    // {
+    //   title: '已完成金额',
+    //   dataIndex: 'finished_task_price',
+    //   width: 150,
+    // },
     {
       title: '用户手机号',
       dataIndex: 'mobile',
@@ -256,8 +256,8 @@ class OrderListView extends PureComponent {
               <Description term="商品名称">{profile.product_name}</Description>
               <Description term="用户编号">{profile.user_id}</Description>
               <Description term="用户名称">{profile.realname}</Description>
-              <Description term="已完成任务量">{+profile.finished_task_count}</Description>
-              <Description term="已完成金额">{+profile.finished_task_price}</Description>
+              {/* <Description term="已完成任务量">{+profile.finished_task_count}</Description>
+              <Description term="已完成金额">{+profile.finished_task_price}</Description> */}
               <Description term="用户手机">{profile.mobile}</Description>
               <Description term="订单创建时间">{moment(profile.create_time).format("YYYY-MM-DD HH:mm:ss")}</Description>
               

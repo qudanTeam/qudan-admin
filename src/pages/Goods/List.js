@@ -231,7 +231,7 @@ const UpdateForm = Form.create()(props => {
                     message: '请输入正确的贷款最高额度',
                   },
                 ],
-              })(<Input prefix="¥" placeholder="最高额度" />)}
+              })(<Input  placeholder="最高额度" />)}
             </Form.Item>
           ) : null
         }
@@ -248,7 +248,7 @@ const UpdateForm = Form.create()(props => {
                     message: '请输入正确的贷款额度',
                   },
                 ],
-              })(<Input prefix="¥" placeholder="额度" />)}
+              })(<Input  placeholder="额度" />)}
             </Form.Item>
           ) : null
         }
@@ -414,7 +414,7 @@ const UpdateForm = Form.create()(props => {
                 message: '请输入商品利润价格',
               },
             ],
-          })(<Input prefix="¥" placeholder="输入商品利润价格" />)}
+          })(<Input  placeholder="输入商品利润价格" />)}
         </Form.Item>
 
         {
@@ -508,7 +508,7 @@ const UpdateForm = Form.create()(props => {
                 message: '请输入正确的阶梯A起始值',
               },
             ],
-          })(<Input prefix="¥" placeholder="阶梯A起始值" />)}
+          })(<Input  placeholder="阶梯A起始值" />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="阶梯A结束值">
@@ -521,7 +521,7 @@ const UpdateForm = Form.create()(props => {
                 message: '请输入正确的阶梯A结束值',
               },
             ],
-          })(<Input prefix="¥" placeholder="阶梯A结束值" />)}
+          })(<Input  placeholder="阶梯A结束值" />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="阶梯B起始值">
@@ -534,7 +534,7 @@ const UpdateForm = Form.create()(props => {
                 message: '请输入正确的阶梯B起始值',
               },
             ],
-          })(<Input prefix="¥" placeholder="阶梯B起始值" />)}
+          })(<Input  placeholder="阶梯B起始值" />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="阶梯B结束值">
@@ -547,7 +547,7 @@ const UpdateForm = Form.create()(props => {
                 message: '请输入正确的阶梯B结束值',
               },
             ],
-          })(<Input prefix="¥" placeholder="阶梯B结束值" />)}
+          })(<Input  placeholder="阶梯B结束值" />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="阶梯C起始值">
@@ -560,7 +560,7 @@ const UpdateForm = Form.create()(props => {
                 message: '请输入正确的阶梯C起始值',
               },
             ],
-          })(<Input prefix="¥" placeholder="阶梯C起始值" />)}
+          })(<Input  placeholder="阶梯C起始值" />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="阶梯C结束值">
@@ -573,7 +573,7 @@ const UpdateForm = Form.create()(props => {
                 message: '请输入正确的阶梯C结束值',
               },
             ],
-          })(<Input prefix="¥" placeholder="阶梯C结束值" />)}
+          })(<Input  placeholder="阶梯C结束值" />)}
         </Form.Item>
 
         {/* <Form.Item {...formItemLayout} label="月度工资">

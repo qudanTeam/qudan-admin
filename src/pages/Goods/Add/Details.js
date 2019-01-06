@@ -89,7 +89,7 @@ class DetailsForm extends React.PureComponent {
                 message: '请输入正确的阶梯A起始值',
               },
             ],
-          })(<Input prefix="¥" placeholder="阶梯A起始值" />)}
+          })(<Input  placeholder="阶梯A起始值" />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="阶梯A结束值">
@@ -102,7 +102,7 @@ class DetailsForm extends React.PureComponent {
                 message: '请输入正确的阶梯A结束值',
               },
             ],
-          })(<Input prefix="¥" placeholder="阶梯A结束值" />)}
+          })(<Input  placeholder="阶梯A结束值" />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="阶梯B起始值">
@@ -115,7 +115,7 @@ class DetailsForm extends React.PureComponent {
                 message: '请输入正确的阶梯B起始值',
               },
             ],
-          })(<Input prefix="¥" placeholder="阶梯B起始值" />)}
+          })(<Input  placeholder="阶梯B起始值" />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="阶梯B结束值">
@@ -128,7 +128,7 @@ class DetailsForm extends React.PureComponent {
                 message: '请输入正确的阶梯B结束值',
               },
             ],
-          })(<Input prefix="¥" placeholder="阶梯B结束值" />)}
+          })(<Input  placeholder="阶梯B结束值" />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="阶梯C起始值">
@@ -141,7 +141,7 @@ class DetailsForm extends React.PureComponent {
                 message: '请输入正确的阶梯C起始值',
               },
             ],
-          })(<Input prefix="¥" placeholder="阶梯C起始值" />)}
+          })(<Input  placeholder="阶梯C起始值" />)}
         </Form.Item>
 
         <Form.Item {...formItemLayout} label="阶梯C结束值">
@@ -154,7 +154,7 @@ class DetailsForm extends React.PureComponent {
                 message: '请输入正确的阶梯C结束值',
               },
             ],
-          })(<Input prefix="¥" placeholder="阶梯C结束值" />)}
+          })(<Input  placeholder="阶梯C结束值" />)}
         </Form.Item>
 {/* 
         <Form.Item {...formItemLayout} label="月度工资">

@@ -306,7 +306,7 @@ class UsersView extends PureComponent {
     },
     {
       title: '推荐人',
-      dataIndex: 'recommend_username',
+      dataIndex: 'recommend_invite_code',
       width: 150,
     },
     {

@@ -191,7 +191,7 @@ class CommonForm extends React.PureComponent {
                       message: '请输入正确的贷款最高额度',
                     },
                   ],
-                })(<Input prefix="¥" placeholder="最高额度" />)}
+                })(<Input  placeholder="最高额度" />)}
               </Form.Item>
             ) : null
           }
@@ -208,7 +208,7 @@ class CommonForm extends React.PureComponent {
                       message: '请输入正确的贷款额度',
                     },
                   ],
-                })(<Input prefix="¥" placeholder="额度" />)}
+                })(<Input  placeholder="额度" />)}
               </Form.Item>
             ) : null
           }
@@ -376,7 +376,7 @@ class CommonForm extends React.PureComponent {
                   message: '请输入商品利润价格',
                 },
               ],
-            })(<Input prefix="¥" placeholder="输入商品利润价格" />)}
+            })(<Input  placeholder="输入商品利润价格" />)}
           </Form.Item>
 
         {

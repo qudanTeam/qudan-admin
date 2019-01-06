@@ -253,7 +253,7 @@ class ResourceView extends PureComponent {
     {
       title: '素材文案',
       dataIndex: 'content',
-      width: 150,
+      width: 600,
     },
     {
       title: '图片',
@@ -411,7 +411,7 @@ class ResourceView extends PureComponent {
               data={data}
               columns={this.columns}
               onChange={this.handleTableChange}
-              scroll={{ x: 1090 }}
+              scroll={{ x: 1550 }}
             />
           </div>
           <CreateForm 

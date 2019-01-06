@@ -102,14 +102,14 @@ const CreateForm = Form.create()(props => {
             rules: [{ required: true, message: '请填写正确的有效期限' }],
           })(<InputNumber min={1} />)} 天
         </FormItem>
-        <FormItem {...formItemLayout} label="VIP特权图">
+        {/* <FormItem {...formItemLayout} label="VIP特权图">
           {form.getFieldDecorator('vip_logo', {
             
             // rules: [{ required: true, message: '请输入至少五个字符的规则描述！' }],
           })(
             <Uploader action={config.uploadPath} host={config.qiniu.host} />
           )}
-        </FormItem>
+        </FormItem> */}
         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
           <Button type="primary" htmlType="submit">
             <FormattedMessage id="form.submit" />
@@ -211,13 +211,13 @@ const UpdateForm = Form.create()(props => {
           })(<InputNumber min={1} />)} 天
         </FormItem>
 
-        <FormItem {...formItemLayout} label="VIP特权图">
+        {/* <FormItem {...formItemLayout} label="VIP特权图">
           {form.getFieldDecorator('vip_logo', {
             initialValue: (data.vip_logo ? `${data.vip_logo}` : null),
           })(
             <Uploader action={config.uploadPath} host={config.qiniu.host} />
           )}
-        </FormItem>
+        </FormItem> */}
 
         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
           <Button type="primary" htmlType="submit">
@@ -269,20 +269,20 @@ class SettingsView extends PureComponent {
     {
       title: 'VIP有效期',
       dataIndex: 'service_days',
-      width: 150,
+      // width: 150,
       // render: (_, record) => {
       //   return (<span>{record.start_time} <br /> ~ <br /> {record.end_time}</span>)
       // }
     },
-    {
-      title: 'VIP特权图片',
-      dataIndex: 'vip_logo',
-      // width: 150,
-      render: (imgURL) => {
-        const url = `${config.qiniu.host}/${imgURL}`;
-        return (<Avatar shape="square" size={100} src={url} />);
-      }
-    },
+    // {
+    //   title: 'VIP特权图片',
+    //   dataIndex: 'vip_logo',
+    //   // width: 150,
+    //   render: (imgURL) => {
+    //     const url = `${config.qiniu.host}/${imgURL}`;
+    //     return (<Avatar shape="square" size={100} src={url} />);
+    //   }
+    // },
     {
       title: '操作',
       width: 200,
