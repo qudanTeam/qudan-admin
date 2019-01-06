@@ -39,6 +39,8 @@ const CreateForm = Form.create()(props => {
     },
   };
 
+  const getFieldValue = form.getFieldValue;
+
   const okHandle = (e) => {
     if (typeof e !== 'undefined') {
       e.preventDefault();
@@ -89,6 +91,51 @@ const CreateForm = Form.create()(props => {
             <Uploader action={config.uploadPath} host={config.qiniu.host} />
           )}
         </FormItem>
+
+        <FormItem {...formItemLayout} label="是否需要图形验证码">
+          {form.getFieldDecorator('need_verify_code', {
+            initialValue: 0,
+            rules: [{ required: true, message: '请选择' }],
+          })(
+            <Select>
+              <Option value={0}>否</Option>
+              <Option value={1}>是</Option>
+            </Select>
+          )}
+        </FormItem>
+        
+        {
+          getFieldValue('need_verify_code') === 1 ? (
+            <FormItem {...formItemLayout} label="图形验证码链接">
+              {form.getFieldDecorator('verify_code_link', {
+                rules: [{ required: true, message: '请填写图形验证码链接' }],
+              })(<Input.TextArea rows={3} placeholder="图形验证码链接" />)}
+            </FormItem>
+          ) : null
+        }
+
+        <FormItem {...formItemLayout} label="是否需要手机验证码">
+          {form.getFieldDecorator('need_mobile_verify_code', {
+            initialValue: 0,
+            rules: [{ required: true, message: '请选择' }],
+          })(
+            <Select >
+              <Option value={0}>否</Option>
+              <Option value={1}>是</Option>
+            </Select>
+          )}
+        </FormItem>
+
+        {
+          getFieldValue('need_mobile_verify_code') === 1 ? (
+            <FormItem {...formItemLayout} label="手机验证码链接">
+              {form.getFieldDecorator('mobile_verify_code_link', {
+                
+                rules: [{ required: true, message: '请填写手机验证码链接' }],
+              })(<Input.TextArea rows={3} placeholder="手机验证码链接" />)}
+            </FormItem>
+          ) : null
+        }
         
         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
           <Button type="primary" htmlType="submit">
@@ -129,6 +176,8 @@ const UpdateForm = Form.create()(props => {
       sm: { span: 10, offset: 7 },
     },
   };
+
+  const getFieldValue = form.getFieldValue;
 
   const okHandle = (e) => {
     if (typeof e !== 'undefined') {
@@ -183,6 +232,53 @@ const UpdateForm = Form.create()(props => {
             <Uploader action={config.uploadPath} host={config.qiniu.host} />
           )}
         </FormItem>
+
+        <FormItem {...formItemLayout} label="是否需要图形验证码">
+          {form.getFieldDecorator('need_verify_code', {
+            initialValue: data.need_verify_code || 0,
+            rules: [{ required: true, message: '请选择' }],
+          })(
+            <Select>
+              <Option value={0}>否</Option>
+              <Option value={1}>是</Option>
+            </Select>
+          )}
+        </FormItem>
+        
+        {
+          getFieldValue('need_verify_code') === 1 ? (
+            <FormItem {...formItemLayout} label="图形验证码链接">
+              {form.getFieldDecorator('verify_code_link', {
+                initialValue: data.verify_code_link,
+                rules: [{ required: true, message: '请填写图形验证码链接' }],
+              })(<Input.TextArea rows={3} placeholder="图形验证码链接" />)}
+            </FormItem>
+          ) : null
+        }
+
+        <FormItem {...formItemLayout} label="是否需要手机验证码">
+          {form.getFieldDecorator('need_mobile_verify_code', {
+            initialValue: data.need_mobile_verify_code || 0,
+            rules: [{ required: true, message: '请选择' }],
+          })(
+            <Select >
+              <Option value={0}>否</Option>
+              <Option value={1}>是</Option>
+            </Select>
+          )}
+        </FormItem>
+
+        {
+          getFieldValue('need_mobile_verify_code') === 1 ? (
+            <FormItem {...formItemLayout} label="手机验证码链接">
+              {form.getFieldDecorator('mobile_verify_code_link', {
+                initialValue: data.mobile_verify_code_link,
+                rules: [{ required: true, message: '请填写手机验证码链接' }],
+              })(<Input.TextArea rows={3} placeholder="手机验证码链接" />)}
+            </FormItem>
+          ) : null
+        }
+        
         
         <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
           <Button type="primary" htmlType="submit">

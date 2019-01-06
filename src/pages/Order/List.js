@@ -250,16 +250,16 @@ class OrderListView extends PureComponent {
         <Card bordered={false}>
           <Skeleton loading={loadingProfile}>
             <DescriptionList col={2} size="large" title="基本信息" style={{ marginBottom: 32 }}>
-              <Description term="订单编号">{profile.apply_id_code}</Description>
-              <Description term="订单状态">{config.OrderStatus[+profile.status]}</Description>
-              <Description term="订单类型">{config.ProductType[+profile.product_type]}</Description>
-              <Description term="商品名称">{profile.product_name}</Description>
-              <Description term="用户编号">{profile.user_id}</Description>
-              <Description term="用户名称">{profile.realname}</Description>
+              <Description term="订单编号">{profile.apply_id_code || '--'}</Description>
+              <Description term="订单状态">{config.OrderStatus[+profile.status] || '--'}</Description>
+              <Description term="订单类型">{config.ProductType[+profile.product_type] || '--'}</Description>
+              <Description term="商品名称">{profile.product_name || '--'}</Description>
+              <Description term="用户编号">{profile.invite_code || '--'}</Description>
+              <Description term="用户名称">{profile.realname || '--'}</Description>
               {/* <Description term="已完成任务量">{+profile.finished_task_count}</Description>
               <Description term="已完成金额">{+profile.finished_task_price}</Description> */}
-              <Description term="用户手机">{profile.mobile}</Description>
-              <Description term="订单创建时间">{moment(profile.create_time).format("YYYY-MM-DD HH:mm:ss")}</Description>
+              <Description term="用户手机">{profile.mobile || '--'}</Description>
+              <Description term="订单创建时间">{moment(profile.create_time).format("YYYY-MM-DD HH:mm:ss") || '--'}</Description>
               
             </DescriptionList>
           </Skeleton>
