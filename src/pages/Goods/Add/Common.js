@@ -169,7 +169,7 @@ class CommonForm extends React.PureComponent {
 
           <Form.Item {...formItemLayout} label="后台分类">
             {getFieldDecorator('bg_category', {
-              initialValue: data.bg_category,
+              initialValue: +data.bg_category,
               rules: [{ required: true, message: '请选择后台分类' }],
             })(
               <Select placeholder="后台分类">
