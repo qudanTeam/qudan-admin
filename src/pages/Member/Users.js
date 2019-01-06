@@ -204,7 +204,8 @@ class UsersView extends PureComponent {
       width: 75,
       fixed: 'left',
       render: (val) => {
-        return <Avatar src={`${sysConfig.qiniu.host}/${val}`} />
+        // return <Avatar src={`${sysConfig.qiniu.host}/${val}`} />
+        return <Avatar src={`${val}`} />;
       }
     },
     {
@@ -730,7 +731,7 @@ class UsersView extends PureComponent {
 
     const title = (
       <div>
-        <Avatar src={`${sysConfig.qiniu.host}/${basicInfo.userface}`} />
+        <Avatar src={`${basicInfo.userface}`} />
         <span style={{marginLeft: '14px' }}>{`“${titleText}” 的个人信息`}</span>
       </div>
     );

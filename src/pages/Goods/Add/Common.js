@@ -151,7 +151,7 @@ class CommonForm extends React.PureComponent {
                   message: '请输入合法金额数字',
                 },
               ],
-            })(<Input prefix="￥" placeholder="请输入金额" />)}
+            })(<Input placeholder="请输入金额" />)}
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="排序">
