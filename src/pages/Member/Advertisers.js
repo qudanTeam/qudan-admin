@@ -135,7 +135,7 @@ class AdvertiserView extends PureComponent {
     },
     {
       title: '入驻时间',
-      dataIndex: 'create_time',
+      dataIndex: 'modify_time',
       // width: 150,
       render: (val) => {
         return (<span>{moment(val).format("YYYY-MM-DD HH:mm:ss")}</span>)

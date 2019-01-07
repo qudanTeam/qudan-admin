@@ -1,7 +1,7 @@
 import { queryBanners, createBanner, updateBanner, deleteBanner } from "@/services/banner";
 import { requestDataToPageResult } from "@/utils/utils";
 import { message } from "antd";
-import { queryFinancials, queryFinancialsMonthReport } from "@/services/financials";
+import { queryFinancials, queryFinancialsMonthReport, queryWithdraws, passFinancialsWithdraw, refuseFinancialsWithdraw, finishedFinancialsWithdraw } from "@/services/financials";
 
 export default {
   namespace: 'financials',
@@ -18,6 +18,12 @@ export default {
     },
 
     financials_details: {},
+
+    withdraws: {
+      list: [],
+      pagination: {},
+    },
+
   },
 
   effects: {
@@ -38,6 +44,56 @@ export default {
       });
 
     },
+
+    *fetchWithdraws({ payload }, { call, put }) {
+      const resp = yield call(queryWithdraws, payload);
+      yield put({
+        type: 'saveWithdraws',
+        payload: requestDataToPageResult(resp),
+      });
+    },
+
+    *passWithdraw({ payload }, { call, put }) {
+      const resp = yield call(passFinancialsWithdraw, payload);
+
+      if (resp.id) {
+        yield put({
+          type: 'fetchWithdraws',
+          payload: {
+            page: 1,
+            pageSize: 15,
+          },
+        });
+      }
+    },
+
+    *finishedWithdraw({ payload }, { call, put }) {
+      const resp = yield call(finishedFinancialsWithdraw, payload);
+
+      if (resp.id) {
+        yield put({
+          type: 'fetchWithdraws',
+          payload: {
+            page: 1,
+            pageSize: 15,
+          },
+        });
+      }
+    },
+
+    *refuseWithdraw({ payload }, { call, put }) {
+      const resp = yield call(refuseFinancialsWithdraw, payload);
+
+      if (resp.id) {
+        yield put({
+          type: 'fetchWithdraws',
+          payload: {
+            page: 1,
+            pageSize: 15,
+          },
+        });
+      }
+    },
   },
 
   reducers: {
@@ -54,5 +110,12 @@ export default {
         month_report: action.payload,
       };
     },
+
+    saveWithdraws(state, action) {
+      return {
+        ...state,
+        withdraws: action.payload,
+      };
+    }
   }
 }

@@ -15,6 +15,8 @@ export default {
   ApplyOfficalStatus: ['申请仍在处理中', '申请已通过，后续请留意查收卡片', '申请未成功'],
   ProductBGCategory: ['未知', '秒到账','大额度', '秒办卡'],
   TradeType: ['未知', '提现','任务佣金','团队佣金','VIP购买','阶梯工资'],
+  TradeTypeState: ['未知', '待审核', '已审核', '已拒绝'],
+  TradeTypeSendState: ['未知', '未发放', '已发放'],
   RateRegex: /^(\d{1,3})((?:\.\d+)?)$/,
   VipLevel: ['--', 'VIP1', 'VIP2', 'VIP3'],
 

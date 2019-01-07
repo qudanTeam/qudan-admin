@@ -45,6 +45,13 @@ class ApplyView extends PureComponent {
       // width: 150,
     },
     {
+      title: '更新时间',
+      dataIndex: 'modify_time',
+      render: (val) => {
+        return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
+      },
+    },
+    {
       title: '操作',
       width: 100,
       fixed: 'right',

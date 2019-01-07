@@ -18,6 +18,7 @@ import SelectAdvistor from '@/components/Select/SelectAdvistor';
 import SelectProductLink from '@/components/Select/SelectProductLink';
 import Editor from '@/components/Editor/editor';
 import BraftEditor from 'braft-editor';
+import moment from 'moment';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -951,6 +952,15 @@ class ListView extends PureComponent {
         return (<Tag color={+val === 1 ? config.colors.success : config.colors.failed}>{+val === 1 ? '已上架' : '已下架'}</Tag>)
       }
     },
+
+    {
+      title: '更新时间',
+      dataIndex: 'modify_time',
+      render: (val) => {
+        return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
+      }
+    },
+    
     {
       title: '操作',
       width: 200,
@@ -1098,7 +1108,7 @@ class ListView extends PureComponent {
               data={data}
               columns={this.columns}
               onChange={this.handleTableChange}
-              scroll={{ x: 600 }}
+              scroll={{ x: 1700 }}
             />
           </div>
         </Card>

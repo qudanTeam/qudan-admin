@@ -84,6 +84,13 @@ class OrderListView extends PureComponent {
       // width: 150,
     },
     {
+      title: '更新时间',
+      dataIndex: 'modify_time',
+      render: (val) => {
+        return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
+      }
+    },
+    {
       title: '操作',
       width: 240,
       fixed: 'right',
@@ -91,9 +98,9 @@ class OrderListView extends PureComponent {
         <Fragment>
           <a onClick={this.handleShowOne(record.id)}>查看</a>
           <Divider type="vertical" />
-          <a disabled={+record.status === 2} onClick={this.handlePassOne(record.id)}>设为已通过</a>
+          <a disabled={+record.status > 1} onClick={this.handlePassOne(record.id)}>设为已通过</a>
           <Divider type="vertical" />
-          <a disabled={+record.status === 3} onClick={this.handleRefuseOne(record.id)} style={ +record.status === 3 ? null : { color: 'red'}} >设为未通过</a>
+          <a disabled={+record.status > 1} onClick={this.handleRefuseOne(record.id)} style={ +record.status > 1 ? null : { color: 'red'}} >设为未通过</a>
         </Fragment>
       ),
     },

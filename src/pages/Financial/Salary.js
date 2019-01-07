@@ -36,6 +36,14 @@ class SalaryView extends PureComponent {
       width: 150,
     },
     {
+      title: '类型',
+      dataIndex: 'trade_type',
+      width: 150,
+      render: (val) => {
+        return (<Tag>{config.TradeType[val]}</Tag>)
+      }
+    },
+    {
       title: '订单编号',
       dataIndex: 'apply_id_code',
       width: 150,
@@ -74,9 +82,9 @@ class SalaryView extends PureComponent {
       fixed: 'right',
       render: (text, record) => (
         <Fragment>
-          <a disabled={+record.status === 2} onClick={this.handlePass(record.id)}>审核通过</a>
+          <a disabled={+record.status > 1} onClick={this.handlePass(record.id)}>审核通过</a>
           <Divider type="vertical" />
-          <a disabled={+record.status === 3} onClick={this.handleRefused(record.id)}>审核不通过</a>
+          <a disabled={+record.status > 1} onClick={this.handleRefused(record.id)}>审核不通过</a>
         </Fragment>
       ),
     },

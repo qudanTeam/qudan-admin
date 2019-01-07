@@ -10,6 +10,34 @@ export function queryFinancialsMonthReport(params) {
   return request(`${pathConfig.Financials}/monthReport?${stringify(params)}`);
 }
 
+export function queryWithdraws(params) {
+  return request(`${pathConfig.Financials}/withdraw?${stringify(params)}`);
+}
+
+export function passFinancialsWithdraw(params) {
+  const { id } = params;
+  return request(`${pathConfig.Financials}/${id}/passOneWithdraw`, {
+    method: 'PUT',
+  });
+}
+
+export function finishedFinancialsWithdraw(params) {
+  const { id } = params;
+  return request(`${pathConfig.Financials}/${id}/finishedWithdraw`, {
+    method: 'PUT',
+  });
+}
+
+export function refuseFinancialsWithdraw(params) {
+  const { id, msg } = params;
+  return request(`${pathConfig.Financials}/${id}/refuseOneWithdraw`, {
+    method: 'PUT',
+    body: {
+      msg,
+    }
+  });
+}
+
 export function queryFinancialsSalary(params) {
   return request(`${pathConfig.Financials}/salaryList?${stringify(params)}`);
 }

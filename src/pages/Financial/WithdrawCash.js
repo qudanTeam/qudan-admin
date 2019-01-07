@@ -5,75 +5,119 @@
 import React, { PureComponent, Fragment } from 'react';
 import styles from './WithdrawCash.less';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { Card, Divider, Form, Row, Icon, Col, Button, Input, Select } from 'antd';
+import { Card, Divider, Form, Row, Icon, Col, Button, Input, Select, Tag, message, Modal } from 'antd';
 import StandardTable from '@/components/StandardTable';
+import { connect } from 'dva';
+import moment from 'moment';
+import config from '@/config';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 
+@connect(({ financials, loading }) => ({
+  financials,
+  loading: loading.effects['financials/fetchWithdraws'],
+}))
 @Form.create()
 class WithdrawView extends PureComponent {
+
+  state = {
+    currentMessage: '',
+  }
 
   columns = [
     {
       title: '用户编号',
-      dataIndex: 'user_no',
+      dataIndex: 'invite_code',
       width: 150,
     },
     {
       title: '提现编号',
-      dataIndex: 'withdraw_no',
+      dataIndex: 'id',
       width: 150,
     },
     {
       title: '手机号码',
-      dataIndex: 'mobile',
+      dataIndex: 'register_mobile',
       width: 150,
     },
     {
       title: '打款信息',
-      dataIndex: 'message',
-      width: 150,
+      // dataIndex: 'message',
+      key: 'message',
+      width: 250,
+      render:(_, record) => {
+        return (
+          <div>
+          <p>提现支付宝: {record.tx_alipay_no}</p>
+          <p>姓名: {record.tx_name}</p>
+          </div>
+        )
+      }
     },
     {
       title: '提现金额',
-      dataIndex: 'amount',
+      dataIndex: 'price',
       width: 150,
     },
     {
       title: '审核状态',
-      dataIndex: 'review_state',
+      dataIndex: 'status',
       width: 150,
+      render: (val) => {
+        return (
+          <Tag>{config.TradeTypeState[val]}</Tag>
+        );
+      }
     },
     {
       title: '发放状态',
-      dataIndex: 'paid_state',
+      dataIndex: 'send_status',
       width: 150,
+      render: (val) => {
+        return (
+          <Tag>{config.TradeTypeSendState[val]}</Tag>
+        );
+      }
     },
     {
       title: '申请时间',
-      dataIndex: 'accept_time',
-      width: 150,
+      dataIndex: 'create_time',
+      width: 250,
+      render: (val) => {
+        if (!val) {
+          return '--';
+        }
+        return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
+      }
     },
     {
       title: '审核时间',
-      dataIndex: 'review_time',
-      width: 150,
+      dataIndex: 'audit_time',
+      width: 250,
+      render: (val) => {
+        if (!val) {
+          return '--';
+        }
+        return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
+      }
     },
     {
       title: '备注说明',
-      dataIndex: 'note',
-      width: 150,
+      dataIndex: 'remark',
+      // width: 150,
     },
     {
       title: '操作',
-      width: 200,
+      width: 250,
       fixed: 'right',
       render: (text, record) => (
         <Fragment>
-          <a>审核通过/不通过</a>
+          <a disabled={+record.status > 1} onClick={this.handlePass(record.id)}>审核通过</a>
           <Divider type="vertical" />
-          <a>线下打款</a>
+          <a disabled={+record.status > 1} onClick={this.handleRefused(record.id)}>审核不通过</a>
+          <Divider type="vertical" />
+          <a disabled={+record.status === 3 || record.send_status === 2} onClick={this.handleFinished(record.id)}>打款</a>
         </Fragment>
       ),
     },
@@ -81,6 +125,100 @@ class WithdrawView extends PureComponent {
 
   handleTableChange = () => {
 
+  }
+
+  handlePass = id => e => {
+    e.preventDefault();
+
+    this.props.dispatch({
+      type: 'financials/passWithdraw',
+      payload: {
+        id,
+      },
+    });
+  }
+
+  handleFinished = id => e => {
+    e.preventDefault();
+
+    this.props.dispatch({
+      type: 'financials/finishedWithdraw',
+      payload: {
+        id,
+      },
+    });
+  }
+
+  handleRefused = id => (e) => {
+    e.preventDefault();
+    Modal.confirm({
+      title: '您的理由是?',
+      content: (
+        <Input.TextArea placeholder="您的理由" rows={3} maxLength={1000} onChange={(e) => this.setState({currentMessage: e.target.value})} />
+      ),
+      okText: '确认',
+      cancelText: '取消',
+      // okButtonProps: {
+      //   disabled: !this.state.currentMessage,
+      // },
+      onOk: () => {
+        console.log(this.state, 'state');
+        if (!this.state.currentMessage) {
+          message.error('请填写您的理由');
+          return Promise.reject('error');
+        }
+
+
+        return this.props.dispatch({
+          type: 'financials/refuseWithdraw',
+          payload: {
+            id,
+            msg: this.state.currentMessage,
+          },
+        });
+      },
+    });
+  }
+
+  handleSearch = (e) => {
+    console.log('search');
+    e.preventDefault();
+
+    const { dispatch, form } = this.props;
+
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+
+      const values = {
+        ...fieldsValue,
+        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
+      };
+
+      this.setState({
+        formValues: values,
+      });
+
+      dispatch({
+        type: 'financials/fetchWithdraws',
+        payload: {
+          page: 1,
+          pageSize: 15,
+          ...values
+        },
+      });
+    });
+  }
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'financials/fetchWithdraws',
+      payload: {
+        page: 1,
+        pageSize: 15,
+      },
+    });
   }
 
   renderQueryForm() {
@@ -92,19 +230,19 @@ class WithdrawView extends PureComponent {
         <Row gutter={{ md: 0, lg: 24, xl: 48 }}>
           <Col md={6} sm={24}>
             <FormItem>
-              {getFieldDecorator('userNum')(<Input placeholder="搜索: 用户编号" />)}
+              {getFieldDecorator('invite_code')(<Input placeholder="搜索: 用户编号" />)}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
             <FormItem>
-              {getFieldDecorator('mobile')(
+              {getFieldDecorator('register_mobile')(
                 <Input placeholder="搜索: 手机号码" />  
               )}
             </FormItem>
           </Col>
           <Col md={6} sm={24}>
             <FormItem>
-              {getFieldDecorator('accept_state', {
+              {getFieldDecorator('status', {
                 initialValue: 'all',
               })(
                 <Select>
@@ -131,6 +269,12 @@ class WithdrawView extends PureComponent {
   }
 
   render() {
+    const {
+      financials: {
+        withdraws
+      },
+      loading,
+    } = this.props;
     return (
       <PageHeaderWrapper title="提现审核">
         <Card bordered={false}>
@@ -138,10 +282,11 @@ class WithdrawView extends PureComponent {
             <div className={styles.tableListForm}>{this.renderQueryForm()}</div>
             <StandardTable
               size="small"
-              data={{}}
+              loading={loading}
+              data={withdraws}
               columns={this.columns}
               onChange={this.handleTableChange}
-              scroll={{ x: 1000 }}
+              scroll={{ x: 2100 }}
             />
           </div>
           

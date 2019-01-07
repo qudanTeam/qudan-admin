@@ -85,7 +85,8 @@ class ListView extends PureComponent {
       title: '合计',
       dataIndex: 'total',
       render: (val, record) => {
-        return (<span>{record.income - record.outcome}</span>)
+        const total = Number(record.income - record.outcome).toFixed(2)
+        return (<span>{total}</span>)
       },
     },
   ]
