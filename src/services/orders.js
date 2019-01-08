@@ -6,9 +6,11 @@ export const queryOrder = async params => {
   return request(`${pathConfig.Orders}?${stringify(params)}`);
 }
 
-export const passOne = async id => {
+export const passOne = async (params) => {
+  const {id, ...rest } = params;
   return request(`${pathConfig.Orders}/${id}/pass`, {
     method: 'PUT',
+    body: rest,
   });
 }
 

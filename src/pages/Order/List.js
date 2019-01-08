@@ -5,7 +5,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import styles from './List.less';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { Card, Form, Row, Icon, Col, Button, Input, Modal, Select, Divider, Tag, Drawer, Skeleton } from 'antd';
+import { Card, Form, Row, Icon, Col, Button, Input, Modal, Select, Divider, Tag, Drawer, Skeleton, DatePicker, message } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import StandardTable from '@/components/StandardTable';
 import { connect } from 'dva';
@@ -84,8 +84,8 @@ class OrderListView extends PureComponent {
       // width: 150,
     },
     {
-      title: '更新时间',
-      dataIndex: 'modify_time',
+      title: '申请时间',
+      dataIndex: 'create_time',
       render: (val) => {
         return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
       }
@@ -98,7 +98,7 @@ class OrderListView extends PureComponent {
         <Fragment>
           <a onClick={this.handleShowOne(record.id)}>查看</a>
           <Divider type="vertical" />
-          <a disabled={+record.status > 1} onClick={this.handlePassOne(record.id)}>设为已通过</a>
+          <a disabled={+record.status > 1} onClick={this.handlePassOne(record)}>设为已通过</a>
           <Divider type="vertical" />
           <a disabled={+record.status > 1} onClick={this.handleRefuseOne(record.id)} style={ +record.status > 1 ? null : { color: 'red'}} >设为未通过</a>
         </Fragment>
@@ -134,19 +134,61 @@ class OrderListView extends PureComponent {
     });
   }
 
-  handlePassOne = id => (e) => {
+  handlePassOne = record => (e) => {
+    const { id, product_type } = record;
     if (e) {
       e.preventDefault()
     }
 
     const { dispatch } = this.props;
 
-    dispatch({
-      type: 'orders/passOne',
-      payload: {
-        id,
+    Modal.confirm({
+      title: '填写通过的资料',
+      content: product_type === 2 ? (
+        <>
+        <Input placeholder="贷款额度" onChange={(e) => this.setState({loan_money: e.target.value})} />
+        <br/>
+        <Input placeholder="贷款期限" onChange={(e) => this.setState({loan_expire: e.target.value})} />
+        </>
+      ) : (<Input placeholder="信用卡办卡额度" onChange={(e) => this.setState({card_money: e.target.value})} />),
+      okText: '确认',
+      cancelText: '取消',
+      // okButtonProps: {
+      //   disabled: !this.state.currentMessage,
+      // },
+      onOk: () => {
+        console.log(this.state, 'state');
+
+        if (product_type === 2) {
+          if (!this.state.loan_money || !this.state.loan_expire) {
+            message.error('请填写通过详情');
+            return Promise.reject('error');
+          }
+        } else {
+          if (!this.state.card_money) {
+            message.error('请填写通过详情');
+            return Promise.reject('error');
+          }
+        }
+      
+        return this.props.dispatch({
+          type: 'orders/passOne',
+          payload: {
+            id,
+            loan_money: this.state.loan_money,
+            loan_expire: this.state.loan_expire,
+            card_money: this.state.card_money,
+          },
+        });
       },
-    })
+    });
+
+    // dispatch({
+    //   type: 'orders/passOne',
+    //   payload: {
+    //     id,
+    //   },
+    // })
   }
 
   handleRefuseOne = id => (e) => {
@@ -179,6 +221,13 @@ class OrderListView extends PureComponent {
         page: 1,
         pageSize: 15,
       };
+
+      if (values.filter_time && values.filter_time.length > 0) {
+        values.start_time = values.filter_time[0].format('YYYY-MM-DD HH:mm:ss');
+        values.end_time = values.filter_time[1].format('YYYY-MM-DD HH:mm:ss');
+        delete values.filter_time;
+      }
+
       this.setState({
         formValues: values,
       });
@@ -231,6 +280,8 @@ class OrderListView extends PureComponent {
     });
   }
 
+  
+
   renderDetailsDrawer = () => {
 
     const { orders: { profile }, loadingProfile } = this.props;
@@ -263,6 +314,24 @@ class OrderListView extends PureComponent {
               <Description term="商品名称">{profile.product_name || '--'}</Description>
               <Description term="用户编号">{profile.invite_code || '--'}</Description>
               <Description term="用户名称">{profile.realname || '--'}</Description>
+              {
+                profile.product_type === 2 ? (
+                  <Description term="实际贷款额度">{profile.loan_money || '--'}</Description>
+                ) : null
+              }
+
+              {
+                profile.product_type === 2 ? (
+                  <Description term="贷款期限">{profile.loan_expire || '--'}</Description>
+                ) : null
+              }        
+              {
+                profile.product_type === 1 ? (
+                  <Description term="信用卡放卡额度">{profile.card_money || '--'}</Description>
+                ) : null
+              }      
+              
+              
               {/* <Description term="已完成任务量">{+profile.finished_task_count}</Description>
               <Description term="已完成金额">{+profile.finished_task_price}</Description> */}
               <Description term="用户手机">{profile.mobile || '--'}</Description>
@@ -333,7 +402,22 @@ class OrderListView extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <span className={styles.submitButtons}>
+            <FormItem label="时间查询">
+              {getFieldDecorator('filter_time', {
+                initialValue: null,
+              })(
+                <DatePicker.RangePicker
+                  format="YYYY-MM-DD"
+                /> 
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+        <Row gutter={{ md: 0, lg: 24, xl: 48}}>
+          <Col md={8} sm={24}></Col>
+          <Col md={8} sm={24}></Col>
+          <Col md={8} sm={24}>
+            <span style={{ float: 'right' }} className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
               </Button>

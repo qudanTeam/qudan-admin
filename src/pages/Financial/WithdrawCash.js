@@ -5,7 +5,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import styles from './WithdrawCash.less';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { Card, Divider, Form, Row, Icon, Col, Button, Input, Select, Tag, message, Modal } from 'antd';
+import { Card, Divider, Form, Row, Icon, Col, Button, Input, Select, Tag, message, Modal, DatePicker } from 'antd';
 import StandardTable from '@/components/StandardTable';
 import { connect } from 'dva';
 import moment from 'moment';
@@ -194,6 +194,12 @@ class WithdrawView extends PureComponent {
         updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
       };
 
+      if (values.filter_time && values.filter_time.length > 0) {
+        values.start_time = values.filter_time[0].format('YYYY-MM-DD HH:mm:ss');
+        values.end_time = values.filter_time[1].format('YYYY-MM-DD HH:mm:ss');
+        delete values.filter_time;
+      }
+
       this.setState({
         formValues: values,
       });
@@ -228,19 +234,19 @@ class WithdrawView extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 0, lg: 24, xl: 48 }}>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem>
               {getFieldDecorator('invite_code')(<Input placeholder="搜索: 用户编号" />)}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem>
               {getFieldDecorator('register_mobile')(
                 <Input placeholder="搜索: 手机号码" />  
               )}
             </FormItem>
           </Col>
-          <Col md={6} sm={24}>
+          <Col md={8} sm={24}>
             <FormItem>
               {getFieldDecorator('status', {
                 initialValue: 'all',
@@ -254,9 +260,25 @@ class WithdrawView extends PureComponent {
               )}
             </FormItem>
           </Col>
+
           
-          <Col md={4} sm={24}>
-            <span className={styles.submitButtons}>
+        </Row>
+        <Row>
+          
+          <Col md={8} sm={24}>
+            <FormItem>
+              {getFieldDecorator('filter_time', {
+                initialValue: null,
+              })(
+                <DatePicker.RangePicker
+                format="YYYY-MM-DD"
+                /> 
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}></Col>
+          <Col md={8} sm={24}>
+            <span style={{float:'right'}} className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
               </Button>

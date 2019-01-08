@@ -35,7 +35,7 @@ export default {
     },
 
     *passOne({ payload }, { call, put }) {
-      const response = yield call(passOne, payload.id);
+      const response = yield call(passOne, payload);
 
       if (response.id) {
         yield put({

@@ -768,12 +768,30 @@ class UpdateForm extends PureComponent {
             )}
           </Form.Item>
   
-          <Form.Item {...formItemLayout} label="分享内容(分享的标题)">
+          <Form.Item {...formItemLayout} label="分享的标题">
             {getFieldDecorator('share_title', {
               initialValue: data.share_title,
-              rules: [{ required: true, max: 200, message: '请填写分享内容' }],
+              rules: [{ required: true, max: 200, message: '请填写分享的标题' }],
             })(
-              <Input placeholder="分享内容" />
+              <Input placeholder="分享的标题" />
+            )}
+          </Form.Item>
+
+          <Form.Item {...formItemLayout} label="分享的内容">
+            {getFieldDecorator('share_content', {
+              initialValue: data.share_content,
+              rules: [{ required: true, max: 200, message: '请填写分享的内容' }],
+            })(
+              <Input placeholder="分享的内容" />
+            )}
+          </Form.Item>
+
+          <Form.Item {...formItemLayout} label="分享的LOGO">
+            {getFieldDecorator('share_logo', {
+              initialValue: data.share_logo,
+              rules: [{ required: true, max: 200, message: '请填写分享的标题' }],
+            })(
+              <Uploader action={config.uploadPath} host={config.qiniu.host} />
             )}
           </Form.Item>
   
