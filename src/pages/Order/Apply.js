@@ -5,7 +5,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import styles from './List.less';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
-import { Card, Form, Row, Icon, Col, Button, Input, Modal, Select, Divider, Tag, Drawer, Skeleton } from 'antd';
+import { Card, Form, Row, Icon, Col, Button, Input, Modal, Select, Divider, Tag, Drawer, Skeleton, DatePicker } from 'antd';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import StandardTable from '@/components/StandardTable';
 import { connect } from 'dva';
@@ -65,23 +65,28 @@ class ApplyView extends PureComponent {
 
   originCardProfileColumns = [
     {
+      title: '订单编号',
+      dataIndex: 'apply_id_code',
+      width: 170,
+    },
+    {
       title: '用户编号',
       dataIndex: 'user_invite_code',
       width: 170,
     },
     {
       title: '姓名',
-      dataIndex: 'user_realname',
+      dataIndex: 'name',
       width: 150,
     },
     {
       title: '手机号',
-      dataIndex: 'user_mobile',
+      dataIndex: 'mobile',
       width: 150,
     },
     {
       title: '身份证号码',
-      dataIndex: 'user_id_no',
+      dataIndex: 'id_no',
       width: 200,
     },
     {
@@ -176,23 +181,28 @@ class ApplyView extends PureComponent {
 
   originProfileColumns = [
     {
+      title: '订单编号',
+      dataIndex: 'apply_id_code',
+      width: 170,
+    },
+    {
       title: '用户编号',
       dataIndex: 'user_invite_code',
       width: 170,
     },
     {
       title: '姓名',
-      dataIndex: 'user_realname',
+      dataIndex: 'name',
       width: 150,
     },
     {
       title: '手机号',
-      dataIndex: 'user_mobile',
+      dataIndex: 'mobile',
       width: 150,
     },
     {
       title: '身份证号码',
-      dataIndex: 'user_id_no',
+      dataIndex: 'id_no',
       width: 200,
     },
     {
@@ -353,6 +363,13 @@ class ApplyView extends PureComponent {
         page: 1,
         pageSize: 15,
       };
+
+      if (values.filter_time && values.filter_time.length > 0) {
+        values.start_time = values.filter_time[0].format('YYYY-MM-DD HH:mm:ss');
+        values.end_time = values.filter_time[1].format('YYYY-MM-DD HH:mm:ss');
+        delete values.filter_time;
+      }
+
       this.setState({
         profileFormValues: values,
       });
@@ -415,15 +432,15 @@ class ApplyView extends PureComponent {
     // const { data = [] } = profile
     const title = (
       <div>
-        <span style={{marginLeft: '14px' }}>订单详情</span>
+        <span style={{marginLeft: '14px' }}>申请详情</span>
       </div>
     );
     
     let cols = this.profileColumns;
-    let pixX = 1650;
+    let pixX = 1850;
     if (+profile.productType === 1) {
       cols = this.cardProfileColumns;
-      pixX = 2400;
+      pixX = 2600;
     }
     
     return (
@@ -465,21 +482,21 @@ class ApplyView extends PureComponent {
       <Form onSubmit={this.handleProfileSearch} layout="inline">
         <Row gutter={{ md: 0, lg: 24, xl: 48 }}>
           <Col md={8} sm={24}>
-            <FormItem label="用户编号">
+            <FormItem>
               {getFieldDecorator('user_invite_code')(
                 <Input placeholder="用户编号" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="用户手机号">
+            <FormItem>
               {getFieldDecorator('user_mobile')(
                 <Input placeholder="用户手机号" />
               )}
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="代理用户编号">
+            <FormItem>
               {getFieldDecorator('user_recommend_invite_code')(
                 <Input placeholder="代理用户编号" />
               )}
@@ -488,16 +505,31 @@ class ApplyView extends PureComponent {
           
         </Row>
         <Row gutter={{ md: 0, lg: 24, xl: 48 }}>
-          <Col md={16} sm={24}>
-            <FormItem label="用户身份证号">
+          <Col md={8} sm={24}>
+            <FormItem>
               {getFieldDecorator('user_id_no')(
                 <Input placeholder="身份证号" />
               )}
             </FormItem>
           </Col>
-          
+
+          <Col md={16} sm={24}>
+            <FormItem label="时间查询">
+              {getFieldDecorator('filter_time', {
+                initialValue: null,
+              })(
+                <DatePicker.RangePicker
+                  format="YYYY-MM-DD"
+                /> 
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+        <Row gutter={{ md: 0, lg: 24, xl: 48 }}>
+          <Col md={8} sm={24} />
+          <Col md={8} sm={24} />
           <Col md={8} sm={24}>
-            <span className={styles.submitButtons}>
+            <span style={{ float: 'right' }} className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询
               </Button>

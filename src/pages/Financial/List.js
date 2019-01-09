@@ -281,7 +281,6 @@ class ListView extends PureComponent {
               <div className={styles.tableList}>
                 <StandardTable
                   size="small"
-                  scroll={{ x: 2000 }}
                   loading={loadingFinancialsMonthReport}
                   data={financials.month_report}
                   columns={this.monthReportColumns}
