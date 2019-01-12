@@ -330,18 +330,44 @@ class UsersView extends PureComponent {
       title: '操作',
       width: 200,
       fixed: 'right',
-      render: (text, record) => (
-        <Fragment>
-          <a onClick={this.showProfile(record.id)}>查看</a>
-          <Divider type="vertical" />
-          <a style={{ color: (!!record.alipay_no ? '#13c2c2' : '#1cae6e')}} onClick={this.showRealnameAuth(record.id)} >
-          <Tag color={!!record.realname ? "#faad14" : "#52c41a"} style={{ width: '10px', height: '10px', padding: 0}}></Tag>
-          实名审核
-          </a>
-          <Divider type="vertical" />
-          <a onClick={this.prepareUpdate(record.id)}>编辑</a>
-        </Fragment>
-      ),
+      render: (text, record) => {
+        const isRealnameAuth = (info) => {
+          return !!info.realname && !!info.id_no && !isRealnameAuthed(info);
+        }
+    
+        const isFinanceAuth = (info) => {
+          return !!info.alipay_no && !isFinanceAuthed(info);
+        }
+
+        const isRealnameAuthed = (info) => {
+          return +info.status === 3;
+        }
+    
+        const isFinanceAuthed = (info) => {
+          return +info.finance_status === 3;
+        }
+        return (
+          <Fragment>
+            <a onClick={this.showProfile(record.id)}>查看</a>
+            <Divider type="vertical" />
+            <a onClick={this.showRealnameAuth(record.id)} >
+            {
+              isRealnameAuth(record) ?
+              <Tag color="#faad14" style={{ width: '10px', height: '10px', padding: 0}}></Tag>
+              : null
+            }
+            {
+              isFinanceAuth(record) ? 
+              <Tag color="#52c41a" style={{ width: '10px', height: '10px', padding: 0}}></Tag>
+              : null
+            }
+            实名审核
+            </a>
+            <Divider type="vertical" />
+            <a onClick={this.prepareUpdate(record.id)}>编辑</a>
+          </Fragment>
+        );
+      },
     },
   ];
 
