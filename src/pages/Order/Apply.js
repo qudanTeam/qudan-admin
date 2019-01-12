@@ -240,7 +240,8 @@ class ApplyView extends PureComponent {
         if (!val) {
           return '-';
         }
-        return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
+        return <span>{val}</span>
+        // return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
       }
       
     },
