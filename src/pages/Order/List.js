@@ -196,6 +196,9 @@ class OrderListView extends PureComponent {
       title: '用户名称',
       dataIndex: 'syr_realname',
       width: 150,
+      render: (val, record) => {
+        return (<span>{val || record.realname}</span>)
+      }
     },
     // {
     //   title: '已完成任务量',
@@ -211,6 +214,9 @@ class OrderListView extends PureComponent {
       title: '用户手机号',
       dataIndex: 'syr_register_mobile',
       // width: 150,
+      render: (val, record) => {
+        return (<span>{val || record.register_mobile}</span>)
+      }
     },
     {
       title: '申请时间',
