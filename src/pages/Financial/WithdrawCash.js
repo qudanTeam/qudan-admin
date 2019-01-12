@@ -88,7 +88,7 @@ class WithdrawView extends PureComponent {
         if (!val) {
           return '--';
         }
-        return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
+        return (<span>{moment(val).utc().zone(+8).format('YYYY-MM-DD HH:mm:ss')}</span>)
       }
     },
     {
@@ -99,7 +99,7 @@ class WithdrawView extends PureComponent {
         if (!val) {
           return '--';
         }
-        return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
+        return (<span>{moment(val).utc().zone(+8).format('YYYY-MM-DD HH:mm:ss')}</span>)
       }
     },
     {
@@ -113,7 +113,9 @@ class WithdrawView extends PureComponent {
       fixed: 'right',
       render: (text, record) => (
         <Fragment>
-          <a disabled={+record.status > 1} onClick={this.handlePass(record.id)}>审核通过</a>
+          <a disabled={+record.status > 1} onClick={this.handlePass(record.id)}>
+          审核通过
+          </a>
           <Divider type="vertical" />
           <a disabled={+record.status > 1} onClick={this.handleRefused(record.id)}>审核不通过</a>
           <Divider type="vertical" />

@@ -315,7 +315,7 @@ class UsersView extends PureComponent {
       dataIndex: 'register_time',
       width: 200,
       render: (val) => {
-        return (<span>{moment(val).format("YYYY-MM-DD HH:mm:ss")}</span>)
+        return (<span>{moment(val).utc().zone(+8).format("YYYY-MM-DD HH:mm:ss")}</span>)
       },
     },
     {
@@ -323,7 +323,7 @@ class UsersView extends PureComponent {
       dataIndex: 'last_login_time',
       // width: 200,
       render: (val) => {
-        return (<span>{moment(val).format("YYYY-MM-DD HH:mm:ss")}</span>)
+        return (<span>{moment(val).utc().zone(+8).format("YYYY-MM-DD HH:mm:ss")}</span>)
       },
     },
     {
@@ -334,7 +334,10 @@ class UsersView extends PureComponent {
         <Fragment>
           <a onClick={this.showProfile(record.id)}>查看</a>
           <Divider type="vertical" />
-          <a onClick={this.showRealnameAuth(record.id)} >实名审核</a>
+          <a style={{ color: (!!record.alipay_no ? '#13c2c2' : '#1cae6e')}} onClick={this.showRealnameAuth(record.id)} >
+          <Tag color={!!record.realname ? "#faad14" : "#52c41a"} style={{ width: '10px', height: '10px', padding: 0}}></Tag>
+          实名审核
+          </a>
           <Divider type="vertical" />
           <a onClick={this.prepareUpdate(record.id)}>编辑</a>
         </Fragment>
@@ -388,7 +391,7 @@ class UsersView extends PureComponent {
       dataIndex: 'register_time',
       width: 200,
       render: (val) => {
-        return (<span>{moment(val).format("YYYY-MM-DD HH:mm:ss")}</span>)
+        return (<span>{moment(val).utc().zone(+8).format("YYYY-MM-DD HH:mm:ss")}</span>)
       },
     }
   ];
@@ -766,8 +769,8 @@ class UsersView extends PureComponent {
             vipInfo.vip_level ? (
               <DescriptionList size="large" title="VIP资料" style={{ marginBottom: 32 }}>
                 <Description term="VIP类型">{VipLevel[vipInfo.vip_level]}</Description>
-                <Description term="开通时间">{moment(vipInfo.start_time).format("YYYY年MM月DD日")}</Description>
-                <Description term="结束时间">{moment(vipInfo.end_time).format("YYYY年MM月DD日")}</Description>
+                <Description term="开通时间">{moment(vipInfo.start_time).utc().zone(+8).format("YYYY年MM月DD日")}</Description>
+                <Description term="结束时间">{moment(vipInfo.end_time).utc().zone(+8).format("YYYY年MM月DD日")}</Description>
                 <Description term="已支付金额">{vipInfo.trade_price}</Description>
                 <Description term="订单号">{vipInfo.trade_id}</Description>
                 <Description term="加成金额">{vipInfo.addRate}</Description>

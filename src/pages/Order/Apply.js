@@ -71,21 +71,24 @@ class ApplyView extends PureComponent {
     },
     {
       title: '用户编号',
-      dataIndex: 'user_invite_code',
+      dataIndex: 'invite_code',
       width: 170,
+      render: (val, record) => {
+        return <span>{val || record.user_invite_code}</span>
+      }
     },
     {
-      title: '姓名',
+      title: '申请人姓名',
       dataIndex: 'name',
       width: 150,
     },
     {
-      title: '手机号',
+      title: '申请人手机号',
       dataIndex: 'mobile',
       width: 150,
     },
     {
-      title: '身份证号码',
+      title: '申请人身份证号码',
       dataIndex: 'id_no',
       width: 200,
     },

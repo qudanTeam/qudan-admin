@@ -23,3 +23,11 @@ export const refuseOne = async id => {
 export async function queryDetails(id) {
   return request(`${pathConfig.Orders}/${id}`);
 }
+
+export async function updateOrder(params) {
+  const { id, ...rest } = params;
+  return request(`${pathConfig.Orders}/${id}`, {
+    method: 'PUT',
+    body: rest,
+  });
+}

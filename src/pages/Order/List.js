@@ -17,6 +17,131 @@ const { Option } = Select;
 const FormItem = Form.Item;
 const { Description } = DescriptionList;
 
+
+
+const UpdateForm = Form.create()(props => {
+  const { 
+    modalVisible, 
+    form,
+    handleSubmit, 
+    data,
+    loading,
+    handleModalVisible } = props;
+
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 7 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 13 },
+      md: { span: 10 },
+    },
+  };
+
+  const submitFormLayout = {
+    wrapperCol: {
+      xs: { span: 24, offset: 0 },
+      sm: { span: 10, offset: 7 },
+    },
+  };
+
+  const { getFieldDecorator, getFieldValue } = form;
+
+  const okHandle = (e) => {
+    if (typeof e !== 'undefined') {
+      e.preventDefault();
+    }
+    
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      // console.log(fieldsValue, 'values');
+      form.resetFields();
+      if (typeof handleSubmit === 'function') {
+        handleSubmit(fieldsValue);
+      }
+    });
+  };
+  return (
+    <Modal
+      // wrapClassName="fullscreen-able"
+      destroyOnClose
+      title="编辑订单"
+      centered
+      visible={modalVisible}
+      footer={null}
+      // mask={false}
+      // style={{height: '100vh'}}
+      // width="100%"
+      onCancel={() => handleModalVisible()}
+    >
+      <Skeleton
+        active
+        loading={loading}
+        paragraph={{
+          rows: 10,
+        }}
+      >
+      <Form
+        onSubmit={okHandle} 
+        hideRequiredMark 
+        style={{ marginTop: 8 }}
+      >
+
+      {
+        (data.product_type === 2 ) ? (
+          <Form.Item {...formItemLayout} label="贷款额度">
+            {getFieldDecorator('loan_money', {
+              initialValue: data.loan_money,
+              rules: [{ required: true, max: 100, message: '贷款额度' }],
+            })(
+              <Input placeholder="贷款额度" />
+            )}
+          </Form.Item>
+        ) : null
+      }
+
+      {
+        (data.product_type === 2 ) ? (
+          <Form.Item {...formItemLayout} label="贷款期限">
+            {getFieldDecorator('loan_expire', {
+              initialValue: data.loan_expire,
+              rules: [{ required: true, max: 100, message: '贷款期限' }],
+            })(
+              <Input placeholder="贷款期限" />
+            )}
+          </Form.Item>
+        ) : null
+      }
+
+      {
+        (data.product_type === 1) ? (
+          <Form.Item {...formItemLayout} label="信用卡额度">
+            {getFieldDecorator('card_money', {
+              initialValue: data.card_money,
+              rules: [{ required: true, max: 100, message: '信用卡额度' }],
+            })(
+              <Input placeholder="信用卡额度" />
+            )}
+          </Form.Item>
+        ) : null
+      }
+        <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
+          <Button type="primary" htmlType="submit">
+            <FormattedMessage id="form.submit" />
+          </Button>
+          <Button style={{ marginLeft: 8 }} onClick={() => handleModalVisible()}>
+            <FormattedMessage id="form.cancel" />
+          </Button>
+        </FormItem>
+      </Form>
+      </Skeleton>
+    </Modal>
+  );
+});
+
+
 @connect(({orders, loading }) => ({
   orders,
   loading: loading.models.orders,
@@ -28,6 +153,7 @@ class OrderListView extends PureComponent {
   state = {
     preLoading: false,
     formValues: {},
+    updateVisible: false,
     profileVisible: false,
   }
 
@@ -62,10 +188,13 @@ class OrderListView extends PureComponent {
       title: '用户编号',
       dataIndex: 'invite_code',
       width: 150,
+      render: (val, record) => {
+        return <span>{val || record.user_invite_code}</span>
+      }
     },
     {
       title: '用户名称',
-      dataIndex: 'realname',
+      dataIndex: 'syr_realname',
       width: 150,
     },
     // {
@@ -80,23 +209,25 @@ class OrderListView extends PureComponent {
     // },
     {
       title: '用户手机号',
-      dataIndex: 'mobile',
+      dataIndex: 'syr_register_mobile',
       // width: 150,
     },
     {
       title: '申请时间',
       dataIndex: 'create_time',
       render: (val) => {
-        return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
+        return (<span>{moment(val).utc().zone(+8).format('YYYY-MM-DD HH:mm:ss')}</span>)
       }
     },
     {
       title: '操作',
-      width: 240,
+      width: 270,
       fixed: 'right',
       render: (text, record) => (
         <Fragment>
           <a onClick={this.handleShowOne(record.id)}>查看</a>
+          <Divider type="vertical" />
+          <a onClick={this.prepareUpdate(record.id)}>编辑</a>
           <Divider type="vertical" />
           <a disabled={+record.status > 1} onClick={this.handlePassOne(record)}>设为已通过</a>
           <Divider type="vertical" />
@@ -131,6 +262,12 @@ class OrderListView extends PureComponent {
     dispatch({
       type: 'orders/fetch',
       payload: params,
+    });
+  }
+
+  toggleUpdateVisible = () => {
+    this.setState({
+      updateVisible: !this.state.updateVisible,
     });
   }
 
@@ -253,6 +390,34 @@ class OrderListView extends PureComponent {
     });
   }
 
+  prepareUpdate = (id) => e => {
+    e.preventDefault();
+    const { dispatch } = this.props;
+    this.setState({
+      updateID: id,
+    });
+    this.toggleUpdateVisible();
+
+    dispatch({
+      type: 'orders/fetchProfile',
+      payload: {
+        id,
+      },
+    });
+  }
+
+  handleUpdate = (values) => {
+    const { dispatch } = this.props;
+    values.id = this.state.updateID;
+    // console.log(values, '=====');
+    dispatch({
+      type: 'orders/update',
+      payload: values,
+    }).then(() => {
+      this.toggleUpdateVisible();
+    });
+  }
+
   handleShowOne = (id) => e => {
     if (e) {
       e.preventDefault();
@@ -279,8 +444,6 @@ class OrderListView extends PureComponent {
       profileVisible: !this.state.profileVisible,
     });
   }
-
-  
 
   renderDetailsDrawer = () => {
 
@@ -335,7 +498,7 @@ class OrderListView extends PureComponent {
               {/* <Description term="已完成任务量">{+profile.finished_task_count}</Description>
               <Description term="已完成金额">{+profile.finished_task_price}</Description> */}
               <Description term="用户手机">{profile.mobile || '--'}</Description>
-              <Description term="订单创建时间">{moment(profile.create_time).format("YYYY-MM-DD HH:mm:ss") || '--'}</Description>
+              <Description term="订单创建时间">{moment(profile.create_time).utc().zone(+8).format("YYYY-MM-DD HH:mm:ss") || '--'}</Description>
               
             </DescriptionList>
           </Skeleton>
@@ -431,8 +594,9 @@ class OrderListView extends PureComponent {
 
   render() {
     const {
-      orders: { data },
+      orders: { data, profile = {} },
       loading,
+      loadingProfile,
     } = this.props;
     return (
       <PageHeaderWrapper title="订单列表">
@@ -449,6 +613,13 @@ class OrderListView extends PureComponent {
             />
           </div>
           {this.renderDetailsDrawer()}
+          <UpdateForm
+            modalVisible={this.state.updateVisible}
+            handleModalVisible={this.toggleUpdateVisible}
+            handleSubmit={this.handleUpdate}
+            loading={loadingProfile}
+            data={profile ? profile : {}}
+          />
         </Card>
       </PageHeaderWrapper>
     );

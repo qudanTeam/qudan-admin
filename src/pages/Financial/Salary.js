@@ -83,7 +83,7 @@ class SalaryView extends PureComponent {
       width: 250,
       render: (val) => {
         return (
-          <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>
+          <span>{moment(val).utc().zone(+8).format('YYYY-MM-DD HH:mm:ss')}</span>
         );
       }
     },
@@ -95,7 +95,7 @@ class SalaryView extends PureComponent {
           return '--';
         }
         return (
-          <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>
+          <span>{moment(val).utc().zone(+8).format('YYYY-MM-DD HH:mm:ss')}</span>
         );
       }
     },

@@ -286,7 +286,7 @@ class SettingsView extends PureComponent {
     {
       title: '分享次数',
       dataIndex: 'share_limit',
-      width: 150,
+      // width: 150,
     },
     {
       title: '操作',
@@ -419,7 +419,7 @@ class SettingsView extends PureComponent {
               loading={loading}
               columns={this.columns}
               onChange={this.handleTableChange}
-              scroll={{ x: 1000 }}
+              scroll={{ x: 1200 }}
             />
           </div>
 

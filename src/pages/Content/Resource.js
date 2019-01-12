@@ -270,7 +270,7 @@ class ResourceView extends PureComponent {
       width: 200,
       render: (txt, record) => {
         return (
-          <span>{moment(txt).format("YYYY-MM-DD HH:mm:ss")}</span>
+          <span>{moment(txt).utc().zone(+8).format("YYYY-MM-DD HH:mm:ss")}</span>
         );
       }
     },

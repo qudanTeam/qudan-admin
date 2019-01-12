@@ -1,7 +1,7 @@
 
 import { requestDataToPageResult } from '@/utils/utils';
 import { message } from 'antd';
-import { queryOrder, passOne, refuseOne, queryDetails } from '@/services/orders';
+import { queryOrder, passOne, refuseOne, queryDetails, updateOrder } from '@/services/orders';
 
 export default {
   namespace: 'orders',
@@ -53,6 +53,17 @@ export default {
         });
       }
     },
+
+    *update({ payload }, { call, put }) {
+      const response = yield call(updateOrder, payload);
+
+
+      if (response.id) {
+        yield put({
+          type: 'fetch',
+        });
+      }
+    }
   },
 
   reducers: {
