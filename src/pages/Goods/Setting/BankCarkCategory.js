@@ -85,15 +85,14 @@ const CreateForm = Form.create()(props => {
 
         <FormItem {...formItemLayout} label="LOGO">
           {form.getFieldDecorator('logo', {
-            
             rules: [{ required: true, message: '请上传LOGO图' }],
           })(
             <Uploader action={config.uploadPath} host={config.qiniu.host} />
           )}
         </FormItem>
 
-        <FormItem {...formItemLayout} label="是否需要图形验证码">
-          {form.getFieldDecorator('need_verify_code', {
+        <FormItem {...formItemLayout} label="是否有H5链接">
+          {form.getFieldDecorator('has_link', {
             initialValue: 0,
             rules: [{ required: true, message: '请选择' }],
           })(
@@ -103,9 +102,25 @@ const CreateForm = Form.create()(props => {
             </Select>
           )}
         </FormItem>
+
+        {
+          getFieldValue('has_link') === 1 ? (
+            <FormItem {...formItemLayout} label="是否需要图形验证码">
+              {form.getFieldDecorator('need_verify_code', {
+                initialValue: 0,
+                rules: [{ required: true, message: '请选择' }],
+              })(
+                <Select>
+                  <Option value={0}>否</Option>
+                  <Option value={1}>是</Option>
+                </Select>
+              )}
+            </FormItem>
+          ) : null
+        }
         
         {
-          getFieldValue('need_verify_code') === 1 ? (
+          (getFieldValue('need_verify_code') === 1 && getFieldValue('has_link') === 1) ? (
             <FormItem {...formItemLayout} label="图形验证码链接">
               {form.getFieldDecorator('verify_code_link', {
                 rules: [{ required: true, message: '请填写图形验证码链接' }],
@@ -114,20 +129,24 @@ const CreateForm = Form.create()(props => {
           ) : null
         }
 
-        <FormItem {...formItemLayout} label="是否需要手机验证码">
-          {form.getFieldDecorator('need_mobile_verify_code', {
-            initialValue: 0,
-            rules: [{ required: true, message: '请选择' }],
-          })(
-            <Select >
-              <Option value={0}>否</Option>
-              <Option value={1}>是</Option>
-            </Select>
-          )}
-        </FormItem>
+        {
+          getFieldValue('has_link') === 1 ? (
+            <FormItem {...formItemLayout} label="是否需要手机验证码">
+              {form.getFieldDecorator('need_mobile_verify_code', {
+                initialValue: 0,
+                rules: [{ required: true, message: '请选择' }],
+              })(
+                <Select >
+                  <Option value={0}>否</Option>
+                  <Option value={1}>是</Option>
+                </Select>
+              )}
+            </FormItem>
+          ) : null
+        }
 
         {
-          getFieldValue('need_mobile_verify_code') === 1 ? (
+          (getFieldValue('need_mobile_verify_code') === 1 && getFieldValue('has_link') === 1) ? (
             <FormItem {...formItemLayout} label="手机验证码链接">
               {form.getFieldDecorator('mobile_verify_code_link', {
                 
@@ -233,9 +252,9 @@ const UpdateForm = Form.create()(props => {
           )}
         </FormItem>
 
-        <FormItem {...formItemLayout} label="是否需要图形验证码">
-          {form.getFieldDecorator('need_verify_code', {
-            initialValue: data.need_verify_code || 0,
+        <FormItem {...formItemLayout} label="是否有H5链接">
+          {form.getFieldDecorator('has_link', {
+            initialValue: data.has_link || 0,
             rules: [{ required: true, message: '请选择' }],
           })(
             <Select>
@@ -244,9 +263,25 @@ const UpdateForm = Form.create()(props => {
             </Select>
           )}
         </FormItem>
+
+        {
+          getFieldValue('has_link') === 1 ? (
+            <FormItem {...formItemLayout} label="是否需要图形验证码">
+              {form.getFieldDecorator('need_verify_code', {
+                initialValue: data.need_verify_code || 0,
+                rules: [{ required: true, message: '请选择' }],
+              })(
+                <Select>
+                  <Option value={0}>否</Option>
+                  <Option value={1}>是</Option>
+                </Select>
+              )}
+            </FormItem>
+          ) : null
+        }
         
         {
-          getFieldValue('need_verify_code') === 1 ? (
+          (getFieldValue('need_verify_code') === 1 && getFieldValue('has_link') === 1) ? (
             <FormItem {...formItemLayout} label="图形验证码链接">
               {form.getFieldDecorator('verify_code_link', {
                 initialValue: data.verify_code_link,
@@ -256,20 +291,24 @@ const UpdateForm = Form.create()(props => {
           ) : null
         }
 
-        <FormItem {...formItemLayout} label="是否需要手机验证码">
-          {form.getFieldDecorator('need_mobile_verify_code', {
-            initialValue: data.need_mobile_verify_code || 0,
-            rules: [{ required: true, message: '请选择' }],
-          })(
-            <Select >
-              <Option value={0}>否</Option>
-              <Option value={1}>是</Option>
-            </Select>
-          )}
-        </FormItem>
+        {
+          getFieldValue('has_link') === 1 ? (
+            <FormItem {...formItemLayout} label="是否需要手机验证码">
+              {form.getFieldDecorator('need_mobile_verify_code', {
+                initialValue: data.need_mobile_verify_code || 0,
+                rules: [{ required: true, message: '请选择' }],
+              })(
+                <Select >
+                  <Option value={0}>否</Option>
+                  <Option value={1}>是</Option>
+                </Select>
+              )}
+            </FormItem>
+          ) : null
+        }
 
         {
-          getFieldValue('need_mobile_verify_code') === 1 ? (
+          (getFieldValue('need_mobile_verify_code') === 1 && getFieldValue('has_link') === 1) ? (
             <FormItem {...formItemLayout} label="手机验证码链接">
               {form.getFieldDecorator('mobile_verify_code_link', {
                 initialValue: data.mobile_verify_code_link,
