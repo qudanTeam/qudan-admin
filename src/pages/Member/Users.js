@@ -172,6 +172,116 @@ const UpdateForm = Form.create()(props => {
   );
 });
 
+const DepositForm = Form.create()(props => {
+  const { 
+    modalVisible, 
+    form,
+    handleSubmit, 
+    data,
+    loading,
+    handleModalVisible } = props;
+
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 7 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 13 },
+      md: { span: 10 },
+    },
+  };
+
+  const submitFormLayout = {
+    wrapperCol: {
+      xs: { span: 24, offset: 0 },
+      sm: { span: 10, offset: 7 },
+    },
+  };
+
+  const { getFieldDecorator, getFieldValue } = form;
+
+  const okHandle = (e) => {
+    if (typeof e !== 'undefined') {
+      e.preventDefault();
+    }
+    
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      // console.log(fieldsValue, 'values');
+      form.resetFields();
+      if (typeof handleSubmit === 'function') {
+        handleSubmit(fieldsValue);
+      }
+    });
+  };
+  return (
+    <Modal
+      // wrapClassName="fullscreen-able"
+      destroyOnClose
+      title="充值金额"
+      centered
+      visible={modalVisible}
+      footer={null}
+      // mask={false}
+      // style={{height: '100vh'}}
+      // width="100%"
+      onCancel={() => handleModalVisible()}
+    >
+      <Skeleton
+        active
+        loading={loading}
+        paragraph={{
+          rows: 10,
+        }}
+      >
+      <Form
+        onSubmit={okHandle} 
+        hideRequiredMark 
+        style={{ marginTop: 8 }}
+      >
+        {/* <Form.Item {...formItemLayout} label="手机号">
+          {getFieldDecorator('register_mobile', {
+            initialValue: data.register_mobile,
+            rules: [{ required: true, max: 100, message: '请填写手机号' }],
+          })(
+            <Input placeholder="手机号" />
+          )}
+        </Form.Item> */}
+
+        {/* <Form.Item {...formItemLayout} label="账户余额">
+          {getFieldDecorator('balance', {
+            initialValue: data.balance,
+            rules: [{ required: true, max: 100, message: '请填写账户余额' }],
+          })(
+            <Input placeholder="账户余额" />
+          )}
+        </Form.Item> */}
+
+        <Form.Item {...formItemLayout} label="充值金额">
+          {getFieldDecorator('blance', {
+            initialValue: 0,
+            rules: [{ required: true, message: '请填写充值金额' }],
+          })(
+            <Input placeholder="充值金额" />
+          )}
+        </Form.Item>
+        
+        <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
+          <Button type="primary" htmlType="submit">
+            <FormattedMessage id="form.submit" />
+          </Button>
+          <Button style={{ marginLeft: 8 }} onClick={() => handleModalVisible()}>
+            <FormattedMessage id="form.cancel" />
+          </Button>
+        </FormItem>
+      </Form>
+      </Skeleton>
+    </Modal>
+  );
+});
+
 
 
 @connect(({ users, loading}) => ({
@@ -192,6 +302,7 @@ class UsersView extends PureComponent {
     realNameAuthVisible: false,
     createFormVisible: false,
     updateVisible: false,
+    depositVisible: false,
   }
 
   /**
@@ -365,6 +476,8 @@ class UsersView extends PureComponent {
             </a>
             <Divider type="vertical" />
             <a onClick={this.prepareUpdate(record.id)}>编辑</a>
+            <Divider type="vertical" />
+            <a onClick={this.prepareDeposit(record.id)}>充值</a>
           </Fragment>
         );
       },
@@ -554,6 +667,34 @@ class UsersView extends PureComponent {
       },
     });
   }
+
+  prepareDeposit = (id) => e => {
+    e.preventDefault();
+    // const { dispatch } = this.props;
+    this.setState({
+      updateID: id,
+    });
+    this.toggleDepositVisible();
+  }
+
+  toggleDepositVisible = () => {
+    this.setState({
+      depositVisible: !this.state.depositVisible,
+    });
+  }
+
+  handleDeposit = (values) => {
+    const { dispatch } = this.props;
+    values.id = this.state.updateID;
+    console.log(values, '=====');
+    dispatch({
+      type: 'users/deposit',
+      payload: values,
+    }).then(() => {
+      this.toggleDepositVisible();
+    });
+  }
+
 
   prepareUpdate = (id) => e => {
     e.preventDefault();
@@ -986,6 +1127,12 @@ class UsersView extends PureComponent {
           handleSubmit={this.handleUpdate}
           // loading={loadingDetails}
           data={profile.basicInfo ? profile.basicInfo : null}
+        />
+        <DepositForm 
+          modalVisible={this.state.depositVisible}
+          handleModalVisible={this.toggleDepositVisible}
+          handleSubmit={this.handleDeposit}
+          data={{}}
         />
       </PageHeaderWrapper>
     );

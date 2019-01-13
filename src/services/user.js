@@ -23,6 +23,14 @@ export function updateUser(params) {
   });
 }
 
+export function deposit(params) {
+  const { id, ...rest } = params;
+  return request(`${pathConfig.Users}/${id}/deposit`, {
+    method: 'PUT',
+    body: rest,
+  });
+}
+
 export function passFinanceAuth(id) {
   return request(`${pathConfig.Users}/${id}/passFinanceAuth`, {
     method: 'PUT',

@@ -20,3 +20,10 @@ export async function updateCategory(params) {
     body: params,
   });
 }
+
+export async function deleteCategory(id) {
+  // const { id } = params;
+  return request(`${pathConfig.Categories}/${id}`, {
+    method: 'DELETE',
+  });
+}

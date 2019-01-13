@@ -335,6 +335,8 @@ class BankCarkCategoryView extends PureComponent {
       render: (text, record) => (
         <Fragment>
           <a onClick={this.prepareUpdate(record)}>编辑</a>
+          <Divider type="vertical" />
+          <a onClick={this.delete(record.id)}>删除</a>
         </Fragment>
       ),
     },
@@ -343,6 +345,22 @@ class BankCarkCategoryView extends PureComponent {
   toggleUpdateForm = () => {
     this.setState({
       updateFormVisible: !this.state.updateFormVisible,
+    });
+  }
+
+
+  delete = id => e => {
+    if (e) {
+      e.preventDefault();
+    }
+    console.log(id);
+
+    this.props.dispatch({
+      type: 'categories/delete',
+      payload: {
+        id,
+        category_type: 1,
+      },
     });
   }
 
@@ -436,7 +454,7 @@ class BankCarkCategoryView extends PureComponent {
               data={data}
               columns={this.columns}
               onChange={this.handleTableChange}
-              scroll={{ x: 600 }}
+              scroll={{ x: 800 }}
             />
           </div>
           <CreateForm 

@@ -5,7 +5,7 @@ import {
   queryUserVipProfile,
  } from '@/services/api';
 import { requestDataToPageResult } from '@/utils/utils';
-import { passRealnameAuth, refuseRealnameAuth, refuseFinanceAuth, passFinanceAuth, queryChildUsers, updateUser } from '@/services/user';
+import { passRealnameAuth, refuseRealnameAuth, refuseFinanceAuth, passFinanceAuth, queryChildUsers, updateUser, deposit } from '@/services/user';
 
 
 
@@ -150,6 +150,20 @@ export default {
         });
       }
     },
+
+    *deposit({ payload }, { call, put, select }) {
+      const result = yield call(deposit, payload);
+      const { data: { pagination } = { pagination: { current: 1, pageSize: 15 }} } = yield select(_ => _.users);
+      if (result.id) {
+        yield put({
+          type: 'fetch',
+          payload: {
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+          },
+        });
+      }
+    }
     
   },
 

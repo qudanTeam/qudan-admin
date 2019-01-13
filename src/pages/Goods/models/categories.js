@@ -1,6 +1,6 @@
 import { requestDataToPageResult } from "@/utils/utils";
 import { message } from "antd";
-import { queryCategories, createCategory, updateCategory } from "@/services/categories";
+import { queryCategories, createCategory, updateCategory, deleteCategory } from "@/services/categories";
 
 export default {
   namespace: 'categories',
@@ -52,6 +52,19 @@ export default {
         });
       }
     },
+
+    * delete({ payload } , { call, put }) {
+      yield call(deleteCategory, payload.id);
+
+      yield put({
+        type: 'fetch',
+        payload: {
+          category_type: payload.category_type,
+          page: 1,
+          pageSize: 15,
+        },
+      });
+    }
   },
 
   reducers: {

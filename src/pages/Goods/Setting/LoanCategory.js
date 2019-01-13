@@ -237,6 +237,8 @@ class LoadCategoryView extends PureComponent {
       render: (text, record) => (
         <Fragment>
           <a onClick={this.prepareUpdate(record)}>编辑</a>
+          <Divider type="vertical" />
+          <a onClick={this.delete(record.id)}>删除</a>
         </Fragment>
       ),
     },
@@ -260,6 +262,20 @@ class LoadCategoryView extends PureComponent {
       details: record,
     });
     this.toggleUpdateForm();
+  }
+
+  delete = id => e => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    this.props.dispatch({
+      type: 'categories/delete',
+      payload: {
+        id,
+        category_type: 2,
+      },
+    });
   }
 
   toggleCreateForm = () => {
@@ -338,7 +354,7 @@ class LoadCategoryView extends PureComponent {
               data={data}
               columns={this.columns}
               onChange={this.handleTableChange}
-              scroll={{ x: 600 }}
+              scroll={{ x: 800 }}
             />
           </div>
           <CreateForm 
