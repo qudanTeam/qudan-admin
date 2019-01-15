@@ -254,7 +254,7 @@ const UpdateForm = Form.create()(props => {
 
         <FormItem {...formItemLayout} label="是否有H5链接">
           {form.getFieldDecorator('has_link', {
-            initialValue: data.has_link || 1,
+            initialValue: Number(data.has_link || 0),
             rules: [{ required: true, message: '请选择' }],
           })(
             <Select>

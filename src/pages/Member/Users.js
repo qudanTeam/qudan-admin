@@ -336,6 +336,17 @@ class UsersView extends PureComponent {
       title: '微信号',
       dataIndex: 'wechat_name',
       width: 150,
+      render: (val) => {
+        return (<span>{val || '--'}</span>)
+      }
+    },
+    {
+      title: '邀请人数',
+      dataIndex: 'invite_num',
+      width: 150,
+      render: (val) => {
+        return (<span>{val || 0}</span>)
+      }
     },
     {
       title: '账户余额',
@@ -426,7 +437,7 @@ class UsersView extends PureComponent {
       dataIndex: 'register_time',
       width: 200,
       render: (val) => {
-        return (<span>{moment(val).utc().zone(+8).format("YYYY-MM-DD HH:mm:ss")}</span>)
+        return (<span>{moment(val).utc().zone(-8).format("YYYY-MM-DD HH:mm:ss")}</span>)
       },
     },
     {
@@ -434,7 +445,7 @@ class UsersView extends PureComponent {
       dataIndex: 'last_login_time',
       // width: 200,
       render: (val) => {
-        return (<span>{moment(val).utc().zone(+8).format("YYYY-MM-DD HH:mm:ss")}</span>)
+        return (<span>{moment(val).utc().zone(-8).format("YYYY-MM-DD HH:mm:ss")}</span>)
       },
     },
     {
@@ -530,7 +541,7 @@ class UsersView extends PureComponent {
       dataIndex: 'register_time',
       width: 200,
       render: (val) => {
-        return (<span>{moment(val).utc().zone(+8).format("YYYY-MM-DD HH:mm:ss")}</span>)
+        return (<span>{moment(val).utc().zone(-8).format("YYYY-MM-DD HH:mm:ss")}</span>)
       },
     }
   ];
@@ -854,8 +865,8 @@ class UsersView extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="身份证号码">
-              {getFieldDecorator('id_no')(<Input placeholder="请输入"/>)}
+            <FormItem label="推荐人">
+              {getFieldDecorator('recommend_invite_code')(<Input placeholder="请输入"/>)}
             </FormItem>
           </Col>
         </Row>
@@ -866,8 +877,20 @@ class UsersView extends PureComponent {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="支付宝账号">
-              {getFieldDecorator('alipay_no')(<Input placeholder="请输入"/>)}
+
+            <FormItem label="用户类型">
+              {getFieldDecorator('user_type', {
+                initialValue: 'all',
+              })(
+                <Select>
+                  <Select.Option value={'all'}>所有</Select.Option>
+                  <Select.Option value={'default'}>默认身份</Select.Option>
+                  <Select.Option value={'finance'}>财务认证</Select.Option>
+                  <Select.Option value={'realname'}>实名认证</Select.Option>
+                  <Select.Option value={'vip'}>vip</Select.Option>
+                  <Select.Option value={'agent'}>代理</Select.Option>
+                </Select>
+              )}
             </FormItem>
           </Col>
           
@@ -936,8 +959,8 @@ class UsersView extends PureComponent {
             vipInfo.vip_level ? (
               <DescriptionList size="large" title="VIP资料" style={{ marginBottom: 32 }}>
                 <Description term="VIP类型">{VipLevel[vipInfo.vip_level]}</Description>
-                <Description term="开通时间">{moment(vipInfo.start_time).utc().zone(+8).format("YYYY年MM月DD日")}</Description>
-                <Description term="结束时间">{moment(vipInfo.end_time).utc().zone(+8).format("YYYY年MM月DD日")}</Description>
+                <Description term="开通时间">{moment(vipInfo.start_time).utc().zone(-8).format("YYYY年MM月DD日")}</Description>
+                <Description term="结束时间">{moment(vipInfo.end_time).utc().zone(-8).format("YYYY年MM月DD日")}</Description>
                 <Description term="已支付金额">{vipInfo.trade_price}</Description>
                 <Description term="订单号">{vipInfo.trade_id}</Description>
                 <Description term="加成金额">{vipInfo.addRate}</Description>
@@ -1114,7 +1137,7 @@ class UsersView extends PureComponent {
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
-              scroll={{ x: 2190 }}
+              scroll={{ x: 2390 }}
             />
           </div>
         </Card>
