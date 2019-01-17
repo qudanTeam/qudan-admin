@@ -496,13 +496,33 @@ class UpdateForm extends PureComponent {
   
           {
             getProductType() === 2 ? (
-              <Form.Item {...formItemLayout} label="返佣标准">
-                {getFieldDecorator('commission_standard', {
+              <Form.Item {...formItemLayout} label="注意事项">
+                {/* {getFieldDecorator('commission_standard', {
                   initialValue: data.commission_standard,
                   rules: [
                     { required: false, max: 100, message: '返佣标准' },
                   ],
-                })(<Input placeholder="输入返佣标准" />)}
+                })(<Input placeholder="输入返佣标准" />)} */}
+
+                {getFieldDecorator('commission_standard', {
+                  initialValue: BraftEditor.createEditorState(data.commission_standard),
+                  validateTrigger: 'onBlur',
+                  rules: [{
+                    required: true,
+                    validator: (_, value, callback) => {
+                      if (value.isEmpty()) {
+                        callback('输入注意事项')
+                      } else {
+                        callback()
+                      }
+                    }
+                  }],
+                })(
+                  // <TextArea rows={3} placeholder="请输入申请条件" />
+                  <Editor 
+                    placeholder="输入注意事项" 
+                  />
+                )}
               </Form.Item>
             ) : null
           }
