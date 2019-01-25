@@ -3,8 +3,8 @@ export default {
 
   uploadPath: '/apis/upload',
 
-  UserType: ['默认身份', 'vip', '代理', '混合身份', '实名认证', '财务认证', '内部账户'],
-  // UserType: ['vip', '代理', '实名认证', '财务认证', '内部账户'],
+  UserType: ['默认身份', 'vip', '代理', '混合身份', '内部账户'],
+  AuthenticateType: ['未认证', '实名认证', '财务认证'],
   AgentLevel: ['未知', '初级', '中级', '高级'],
   RewardStatus: ['未知', '未发放', '已发放'],
   TradeExecState: ['未知', '待审核', '已审核', '已拒绝'],

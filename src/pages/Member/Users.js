@@ -34,6 +34,7 @@ import { connect } from 'dva';
 import { findUserType, isRealnameAuth, isFinanceAuth } from '@/utils/helpers';
 
 const { UserType, VipLevel } = config;
+const { AuthenticateType } = sysConfig;
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { Description } = DescriptionList;
@@ -357,42 +358,47 @@ class UsersView extends PureComponent {
       title: '用户类型',
       dataIndex: 'user_type',
       width: 150,
-      // filters: [
-      //   {
-      //     text: UserType[0],
-      //     value: 0,
-      //   },
-      //   {
-      //     text: UserType[1],
-      //     value: 1,
-      //   },
-      //   {
-      //     text: UserType[2],
-      //     value: 2,
-      //   },
-      //   {
-      //     text: UserType[3],
-      //     value: 3,
-      //   },
-      //   {
-      //     text: UserType[4],
-      //     value: 4,
-      //   },
-      // ],
       render(val, record) {
         let color = 'magenta';
-        // const utype = +val;
+        // // const utype = +val;
+        // if (+record.status === 3) {
+        //   val = 4; // 实名认证
+        //   color = 'gold';
+        // }
+
+        // if (+record.finance_status === 3) {
+        //   val = 5; // 财务认证
+        //   color = 'cyan';
+        // }
+
+        return <Tag color={color}>{UserType[val]}</Tag>;
+      },
+    },
+    {
+      title: '认证类型',
+      dataIndex: 'authenticate_type',
+      width: '350',
+      render: (val, record) => {
+        let res = [];
+        let authIndex = 0;
+        let color = 'magenta';
         if (+record.status === 3) {
-          val = 4; // 实名认证
+          authIndex = 1;
           color = 'gold';
+          res.push(<Tag color={color}>{AuthenticateType[authIndex]}</Tag>);
         }
 
         if (+record.finance_status === 3) {
-          val = 5; // 财务认证
+          authIndex = 2;
           color = 'cyan';
+          res.push(<Tag color={color}>{AuthenticateType[authIndex]}</Tag>);
         }
 
-        return <Tag color={color}>{UserType[val]}</Tag>;
+        if (res.length <= 0) {
+          res.push(<Tag color={color}>未认证</Tag>)
+        }
+        return res;
+        // return <Tag color={color}>{AuthenticateType[authIndex]}</Tag>
       },
     },
     {
@@ -885,10 +891,29 @@ class UsersView extends PureComponent {
                 <Select>
                   <Select.Option value={'all'}>所有</Select.Option>
                   <Select.Option value={'default'}>默认身份</Select.Option>
-                  <Select.Option value={'finance'}>财务认证</Select.Option>
-                  <Select.Option value={'realname'}>实名认证</Select.Option>
                   <Select.Option value={'vip'}>vip</Select.Option>
                   <Select.Option value={'agent'}>代理</Select.Option>
+                  {/* <Select.Option value={'finance'}>财务认证</Select.Option>
+                  <Select.Option value={'realname'}>实名认证</Select.Option> */}
+                  
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+
+          <Col md={8} sm={24}>
+
+            <FormItem label="认证类型">
+              {getFieldDecorator('authenticate_type', {
+                initialValue: 'all',
+              })(
+                <Select>
+                  <Select.Option value={'all'}>全部</Select.Option>
+                  <Select.Option value={'realname'}>实名认证</Select.Option>
+                  <Select.Option value={'financial'}>财务认证</Select.Option>
+                  {/* <Select.Option value={'finance'}>财务认证</Select.Option>
+                  <Select.Option value={'realname'}>实名认证</Select.Option> */}
+                  
                 </Select>
               )}
             </FormItem>
