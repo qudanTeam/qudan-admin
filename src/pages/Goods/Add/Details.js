@@ -56,6 +56,18 @@ class DetailsForm extends React.PureComponent {
           if (values.base_right) {
             values.base_right = values.base_right.toHTML();
           }
+          if (values.require_condition) {
+            values.require_condition = values.require_condition.toHTML();
+          }
+
+          if (values.benefits_b) {
+            values.benefits_b = values.benefits_b.toHTML();
+          }
+
+          if (values.benefits_c) {
+            values.benefits_c = values.benefits_c.toHTML();
+          }
+
           if (values.card_progress_img) {
             values.card_progress_img = values.card_progress_img.toHTML();
           }
@@ -74,365 +86,529 @@ class DetailsForm extends React.PureComponent {
       });
     };
     return (
+      
       <Form layout="horizontal" className={styles.stepForm}>
-        <Form.Item {...formItemLayout} label="特色文案">
-          {getFieldDecorator('special_txt', {
-            initialValue: data.special_txt,
-            rules: [{ required: true, max: 255, message: '请填写产品名称' }],
-          })(
-            <Input placeholder="特色文案" />
-          )}
-        </Form.Item>
+        {
+          +this.productType === 3 ? (
+            <>
+              <Form.Item {...formItemLayout} label="特色文案">
+                {getFieldDecorator('special_txt', {
+                  initialValue: data.special_txt,
+                  rules: [{ required: true, max: 255, message: '请填写产品名称' }],
+                })(
+                  <Input placeholder="特色文案" />
+                )}
+              </Form.Item>
 
-        {/* <Form.Item {...formItemLayout} label="产品海报">
-          {getFieldDecorator('product_show_img', {
-            initialValue: data.product_show_img,
-            rules: [{ required: true, message: '请填写产品名称' }],
-          })(
-            <Uploader />
-          )}
-        </Form.Item> */}
+              <Form.Item {...formItemLayout} label="特色标签">
+                {getFieldDecorator('special_tag', {
+                  initialValue: data.special_tag,
+                  rules: [{ required: true, max: 255, message: '请填写特色标签' }],
+                })(
+                  <Input placeholder="特色标签" />
+                )}
+              </Form.Item>
 
-        <Form.Item {...formItemLayout} label="阶梯A起始值">
-          {getFieldDecorator('a_begin', {
-            initialValue: data.a_begin,
-            rules: [
-              { required: true, message: '请输入阶梯A起始值' },
+              <Form.Item {...formItemLayout} label="详情页头部图片">
+                {getFieldDecorator('detail_header_img', {
+                  initialValue: data.detail_header_img,
+                  rules: [{ required: true, message: '请上传详情页头部图片' }],
+                })(
+                  <Uploader action={config.uploadPath} host={config.qiniu.host} />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="基本权益">
+                {getFieldDecorator('base_right', {
+                  initialValue: BraftEditor.createEditorState(data.base_right),
+                  validateTrigger: 'onBlur',
+                  rules: [{
+                    required: true,
+                    validator: (_, value, callback) => {
+                      if (value.isEmpty()) {
+                        callback('请输入基本权益');
+                      } else {
+                        callback();
+                      }
+                    }
+                  }],
+                })(
+                  // <Input.TextArea placeholder="基本权益" rows={3} />
+                  <Editor placeholder="基本权益" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="办理流程">
+                {getFieldDecorator('handing_process', {
+                  initialValue: data.handing_process,
+                  rules: [{ required: true, message: '请上传办理流程' }],
+                })(
+                  <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="办理要求">
+                {getFieldDecorator('require_condition', {
+                  initialValue: BraftEditor.createEditorState(data.require_condition),
+                  validateTrigger: 'onBlur',
+                  rules: [{
+                    required: true,
+                    validator: (_, value, callback) => {
+                      if (value.isEmpty()) {
+                        callback('请输入办理要求');
+                      } else {
+                        callback();
+                      }
+                    }
+                  }],
+                })(
+                  // <Input.TextArea placeholder="基本权益" rows={3} />
+                  <Editor placeholder="办理要求" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="产品优势B端">
+                {getFieldDecorator('benefits_b', {
+                  initialValue: BraftEditor.createEditorState(data.benefits_b),
+                  validateTrigger: 'onBlur',
+                  rules: [{
+                    required: true,
+                    validator: (_, value, callback) => {
+                      if (value.isEmpty()) {
+                        callback('请输入B端产品优势');
+                      } else {
+                        callback();
+                      }
+                    }
+                  }],
+                })(
+                  // <Input.TextArea placeholder="基本权益" rows={3} />
+                  <Editor placeholder="B端产品优势" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="产品优势C端">
+                {getFieldDecorator('benefits_c', {
+                  initialValue: BraftEditor.createEditorState(data.benefits_c),
+                  validateTrigger: 'onBlur',
+                  rules: [{
+                    required: true,
+                    validator: (_, value, callback) => {
+                      if (value.isEmpty()) {
+                        callback('请输入C端产品优势');
+                      } else {
+                        callback();
+                      }
+                    }
+                  }],
+                })(
+                  // <Input.TextArea placeholder="基本权益" rows={3} />
+                  <Editor placeholder="C端产品优势" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="产品海报">
+                {getFieldDecorator('product_poster', {
+                  initialValue: data.product_poster,
+                  rules: [{ required: true, message: '请上传产品海报' }],
+                })(
+                  <Uploader action={config.uploadPath} host={config.qiniu.host} />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="分享的标题">
+                {getFieldDecorator('share_title', {
+                  initialValue: data.share_title,
+                  rules: [{ required: true, max: 200, message: '请填写分享的标题' }],
+                })(
+                  <Input placeholder="分享的标题" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="分享的内容">
+                {getFieldDecorator('share_content', {
+                  initialValue: data.share_content,
+                  rules: [{ required: true, max: 200, message: '请填写分享的内容' }],
+                })(
+                  <Input placeholder="分享的内容" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="分享的LOGO">
+                {getFieldDecorator('share_logo', {
+                  initialValue: data.share_logo,
+                  rules: [{ required: true, max: 200, message: '请填写分享的标题' }],
+                })(
+                  <Uploader action={config.uploadPath} host={config.qiniu.host} />
+                )}
+              </Form.Item>
+
+            </>
+          ) : (
+            <>
+              <Form.Item {...formItemLayout} label="特色文案">
+                {getFieldDecorator('special_txt', {
+                  initialValue: data.special_txt,
+                  rules: [{ required: true, max: 255, message: '请填写产品名称' }],
+                })(
+                  <Input placeholder="特色文案" />
+                )}
+              </Form.Item>
+              
+
+              {/* <Form.Item {...formItemLayout} label="产品海报">
+                {getFieldDecorator('product_show_img', {
+                  initialValue: data.product_show_img,
+                  rules: [{ required: true, message: '请填写产品名称' }],
+                })(
+                  <Uploader />
+                )}
+              </Form.Item> */}
+
+              <Form.Item {...formItemLayout} label="阶梯A起始值">
+                {getFieldDecorator('a_begin', {
+                  initialValue: data.a_begin,
+                  rules: [
+                    { required: true, message: '请输入阶梯A起始值' },
+                    {
+                      pattern: /^(\d+)((?:\.\d+)?)$/,
+                      message: '请输入正确的阶梯A起始值',
+                    },
+                  ],
+                })(<Input  placeholder="阶梯A起始值" />)}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="阶梯A结束值">
+                {getFieldDecorator('a_limit', {
+                  initialValue: data.a_limit,
+                  rules: [
+                    { required: true, message: '请输入阶梯A结束值' },
+                    {
+                      pattern: /^(\d+)((?:\.\d+)?)$/,
+                      message: '请输入正确的阶梯A结束值',
+                    },
+                  ],
+                })(<Input  placeholder="阶梯A结束值" />)}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="阶梯B起始值">
+                {getFieldDecorator('b_begin', {
+                  initialValue: data.b_begin,
+                  rules: [
+                    { required: true, message: '请输入阶梯B起始值' },
+                    {
+                      pattern: /^(\d+)((?:\.\d+)?)$/,
+                      message: '请输入正确的阶梯B起始值',
+                    },
+                  ],
+                })(<Input  placeholder="阶梯B起始值" />)}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="阶梯B结束值">
+                {getFieldDecorator('b_limit', {
+                  initialValue: data.b_limit,
+                  rules: [
+                    { required: true, message: '请输入阶梯B结束值' },
+                    {
+                      pattern: /^(\d+)((?:\.\d+)?)$/,
+                      message: '请输入正确的阶梯B结束值',
+                    },
+                  ],
+                })(<Input  placeholder="阶梯B结束值" />)}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="阶梯C起始值">
+                {getFieldDecorator('c_start', {
+                  initialValue: data.c_start,
+                  rules: [
+                    { required: true, message: '请输入阶梯C起始值' },
+                    {
+                      pattern: /^(\d+)((?:\.\d+)?)$/,
+                      message: '请输入正确的阶梯C起始值',
+                    },
+                  ],
+                })(<Input  placeholder="阶梯C起始值" />)}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="阶梯C结束值">
+                {getFieldDecorator('c_limit', {
+                  initialValue: data.c_limit,
+                  rules: [
+                    { required: true, message: '请输入阶梯C结束值' },
+                    {
+                      pattern: /^(\d+)((?:\.\d+)?)$/,
+                      message: '请输入正确的阶梯C结束值',
+                    },
+                  ],
+                })(<Input  placeholder="阶梯C结束值" />)}
+              </Form.Item>
+      {/* 
+              <Form.Item {...formItemLayout} label="月度工资">
+                {getFieldDecorator('month_salary', {
+                  initialValue: data.month_salary,
+                  rules: [{ required: true, max: 100, message: '请填写月度工资' }],
+                })(
+                  <Input placeholder="月度工资" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="实时工资">
+                {getFieldDecorator('salary', {
+                  initialValue: data.salary,
+                  rules: [{ required: true, max: 100, message: '请填写实时工资' }],
+                })(
+                  <Input placeholder="实时工资" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="月度工资描述">
+                {getFieldDecorator('month_salary_desc', {
+                  initialValue: data.month_salary_desc,
+                  rules: [{ required: true, max: 500, message: '请填写月度工资描述' }],
+                })(
+                  <Input placeholder="月度工资描述" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="实时工资描述">
+                {getFieldDecorator('salary_desc', {
+                  initialValue: data.salary_desc,
+                  rules: [{ required: true,  max: 500, message: '请填写实时工资描述' }],
+                })(
+                  <Input placeholder="实时工资描述" />
+                )}
+              </Form.Item> */}
+
+              <Form.Item {...formItemLayout} label="阶梯A奖励">
+                {getFieldDecorator('a_level_reward', {
+                  initialValue: data.a_level_reward,
+                  rules: [
+                    { required: true, message: '请填写阶梯A奖励' },
+                    {
+                      pattern: config.RateRegex,
+                      message: '请输入正确的奖励值 例: 0.10',
+                    },
+                  ],
+                })(
+                  <Input placeholder="阶梯A奖励" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="阶梯B奖励">
+                {getFieldDecorator('b_level_reward', {
+                  initialValue: data.b_level_reward,
+                  rules: [
+                    { required: true, message: '请填写阶梯B奖励' },
+                    {
+                      pattern: config.RateRegex,
+                      message: '请输入正确的奖励值 例: 0.10',
+                    },
+                  ],
+                })(
+                  <Input placeholder="阶梯B奖励" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="阶梯C奖励">
+                {getFieldDecorator('c_level_reward', {
+                  initialValue: data.c_level_reward,
+                  rules: [
+                    { required: true, message: '请填写阶梯C奖励' },
+                    {
+                      pattern: config.RateRegex,
+                      message: '请输入正确的奖励值 例: 0.10',
+                    },
+                  ],
+                })(
+                  <Input placeholder="阶梯C奖励" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="详情页头部图片">
+                {getFieldDecorator('detail_header_img', {
+                  initialValue: data.detail_header_img,
+                  rules: [{ required: true, message: '请上传详情页头部图片' }],
+                })(
+                  <Uploader action={config.uploadPath} host={config.qiniu.host} />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="信用卡长图">
+                {getFieldDecorator('card_long_img', {
+                  initialValue: data.card_long_img,
+                  rules: [{ required: true, message: '请上传信用卡长图' }],
+                })(
+                  <Uploader action={config.uploadPath} host={config.qiniu.host} />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="产品海报">
+                {getFieldDecorator('product_poster', {
+                  initialValue: data.product_poster,
+                  rules: [{ required: true, message: '请上传产品海报' }],
+                })(
+                  <Uploader action={config.uploadPath} host={config.qiniu.host} />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="结算内容显示">
+                {getFieldDecorator('settlement_type', {
+                  initialValue: data.settlement_type,
+                  rules: [{ required: true, message: '请填写一个类型' }],
+                })(
+                  <Select >
+                    <Option value={1}>实时结</Option>
+                    <Option value={2}>T+1结</Option>
+                    <Option value={3}>T+2结</Option>
+                    <Option value={4}>T+3结</Option>
+                    <Option value={5}>每周一结</Option>
+                    <Option value={6}>每周二结</Option>
+                    <Option value={7}>每周三结</Option>
+                    <Option value={8}>每周四结</Option>
+                    <Option value={9}>每周五结</Option>
+                    <Option value={10}>次月5-15日结</Option>
+                    <Option value={11}>次月20-25结</Option>
+                  </Select>
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="如何结算奖金">
+                {getFieldDecorator('how_settle', {
+                  initialValue: BraftEditor.createEditorState(data.how_settle),
+                  // rules: [{ required: true, max: 255, message: '请填写如何结算奖金' }],
+                  validateTrigger: 'onBlur',
+                  rules: [{
+                    required: true,
+                    validator: (_, value, callback) => {
+                      if (value.isEmpty()) {
+                        callback('请输入如何结算奖金')
+                      } else {
+                        callback()
+                      }
+                    }
+                  }],
+                })(
+                  <Editor 
+                    placeholder="如何结算奖金" 
+                  />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="分享的标题">
+                {getFieldDecorator('share_title', {
+                  initialValue: data.share_title,
+                  rules: [{ required: true, max: 200, message: '请填写分享的标题' }],
+                })(
+                  <Input placeholder="分享的标题" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="分享的内容">
+                {getFieldDecorator('share_content', {
+                  initialValue: data.share_content,
+                  rules: [{ required: true, max: 200, message: '请填写分享的内容' }],
+                })(
+                  <Input placeholder="分享的内容" />
+                )}
+              </Form.Item>
+
+              <Form.Item {...formItemLayout} label="分享的LOGO">
+                {getFieldDecorator('share_logo', {
+                  initialValue: data.share_logo,
+                  rules: [{ required: true, max: 200, message: '请填写分享的标题' }],
+                })(
+                  <Uploader action={config.uploadPath} host={config.qiniu.host} />
+                )}
+              </Form.Item>
+
+              {/* {
+                this.productType === 1 ? (
+                  <Form.Item {...formItemLayout} label="办卡流程图">
+                    {getFieldDecorator('card_progress_img', {
+                      initialValue: data.card_progress_img,
+                      rules: [{ required: true, message: '请上传办卡流程图' }],
+                    })(
+                      <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
+                    )}
+                  </Form.Item>
+                ) : null
+              } */}
+
               {
-                pattern: /^(\d+)((?:\.\d+)?)$/,
-                message: '请输入正确的阶梯A起始值',
-              },
-            ],
-          })(<Input  placeholder="阶梯A起始值" />)}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="阶梯A结束值">
-          {getFieldDecorator('a_limit', {
-            initialValue: data.a_limit,
-            rules: [
-              { required: true, message: '请输入阶梯A结束值' },
-              {
-                pattern: /^(\d+)((?:\.\d+)?)$/,
-                message: '请输入正确的阶梯A结束值',
-              },
-            ],
-          })(<Input  placeholder="阶梯A结束值" />)}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="阶梯B起始值">
-          {getFieldDecorator('b_begin', {
-            initialValue: data.b_begin,
-            rules: [
-              { required: true, message: '请输入阶梯B起始值' },
-              {
-                pattern: /^(\d+)((?:\.\d+)?)$/,
-                message: '请输入正确的阶梯B起始值',
-              },
-            ],
-          })(<Input  placeholder="阶梯B起始值" />)}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="阶梯B结束值">
-          {getFieldDecorator('b_limit', {
-            initialValue: data.b_limit,
-            rules: [
-              { required: true, message: '请输入阶梯B结束值' },
-              {
-                pattern: /^(\d+)((?:\.\d+)?)$/,
-                message: '请输入正确的阶梯B结束值',
-              },
-            ],
-          })(<Input  placeholder="阶梯B结束值" />)}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="阶梯C起始值">
-          {getFieldDecorator('c_start', {
-            initialValue: data.c_start,
-            rules: [
-              { required: true, message: '请输入阶梯C起始值' },
-              {
-                pattern: /^(\d+)((?:\.\d+)?)$/,
-                message: '请输入正确的阶梯C起始值',
-              },
-            ],
-          })(<Input  placeholder="阶梯C起始值" />)}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="阶梯C结束值">
-          {getFieldDecorator('c_limit', {
-            initialValue: data.c_limit,
-            rules: [
-              { required: true, message: '请输入阶梯C结束值' },
-              {
-                pattern: /^(\d+)((?:\.\d+)?)$/,
-                message: '请输入正确的阶梯C结束值',
-              },
-            ],
-          })(<Input  placeholder="阶梯C结束值" />)}
-        </Form.Item>
-{/* 
-        <Form.Item {...formItemLayout} label="月度工资">
-          {getFieldDecorator('month_salary', {
-            initialValue: data.month_salary,
-            rules: [{ required: true, max: 100, message: '请填写月度工资' }],
-          })(
-            <Input placeholder="月度工资" />
-          )}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="实时工资">
-          {getFieldDecorator('salary', {
-            initialValue: data.salary,
-            rules: [{ required: true, max: 100, message: '请填写实时工资' }],
-          })(
-            <Input placeholder="实时工资" />
-          )}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="月度工资描述">
-          {getFieldDecorator('month_salary_desc', {
-            initialValue: data.month_salary_desc,
-            rules: [{ required: true, max: 500, message: '请填写月度工资描述' }],
-          })(
-            <Input placeholder="月度工资描述" />
-          )}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="实时工资描述">
-          {getFieldDecorator('salary_desc', {
-            initialValue: data.salary_desc,
-            rules: [{ required: true,  max: 500, message: '请填写实时工资描述' }],
-          })(
-            <Input placeholder="实时工资描述" />
-          )}
-        </Form.Item> */}
-
-        <Form.Item {...formItemLayout} label="阶梯A奖励">
-          {getFieldDecorator('a_level_reward', {
-            initialValue: data.a_level_reward,
-            rules: [
-              { required: true, message: '请填写阶梯A奖励' },
-              {
-                pattern: config.RateRegex,
-                message: '请输入正确的奖励值 例: 0.10',
-              },
-            ],
-          })(
-            <Input placeholder="阶梯A奖励" />
-          )}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="阶梯B奖励">
-          {getFieldDecorator('b_level_reward', {
-            initialValue: data.b_level_reward,
-            rules: [
-              { required: true, message: '请填写阶梯B奖励' },
-              {
-                pattern: config.RateRegex,
-                message: '请输入正确的奖励值 例: 0.10',
-              },
-            ],
-          })(
-            <Input placeholder="阶梯B奖励" />
-          )}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="阶梯C奖励">
-          {getFieldDecorator('c_level_reward', {
-            initialValue: data.c_level_reward,
-            rules: [
-              { required: true, message: '请填写阶梯C奖励' },
-              {
-                pattern: config.RateRegex,
-                message: '请输入正确的奖励值 例: 0.10',
-              },
-            ],
-          })(
-            <Input placeholder="阶梯C奖励" />
-          )}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="详情页头部图片">
-          {getFieldDecorator('detail_header_img', {
-            initialValue: data.detail_header_img,
-            rules: [{ required: true, message: '请上传详情页头部图片' }],
-          })(
-            <Uploader action={config.uploadPath} host={config.qiniu.host} />
-          )}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="信用卡长图">
-          {getFieldDecorator('card_long_img', {
-            initialValue: data.card_long_img,
-            rules: [{ required: true, message: '请上传信用卡长图' }],
-          })(
-            <Uploader action={config.uploadPath} host={config.qiniu.host} />
-          )}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="产品海报">
-          {getFieldDecorator('product_poster', {
-            initialValue: data.product_poster,
-            rules: [{ required: true, message: '请上传产品海报' }],
-          })(
-            <Uploader action={config.uploadPath} host={config.qiniu.host} />
-          )}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="结算内容显示">
-          {getFieldDecorator('settlement_type', {
-            initialValue: data.settlement_type,
-            rules: [{ required: true, message: '请填写一个类型' }],
-          })(
-            <Select >
-              <Option value={1}>实时结</Option>
-              <Option value={2}>T+1结</Option>
-              <Option value={3}>T+2结</Option>
-              <Option value={4}>T+3结</Option>
-              <Option value={5}>每周一结</Option>
-              <Option value={6}>每周二结</Option>
-              <Option value={7}>每周三结</Option>
-              <Option value={8}>每周四结</Option>
-              <Option value={9}>每周五结</Option>
-              <Option value={10}>次月5-15日结</Option>
-              <Option value={11}>次月20-25结</Option>
-            </Select>
-          )}
-        </Form.Item>
-
-        <Form.Item {...formItemLayout} label="如何结算奖金">
-          {getFieldDecorator('how_settle', {
-            initialValue: BraftEditor.createEditorState(data.how_settle),
-            // rules: [{ required: true, max: 255, message: '请填写如何结算奖金' }],
-            validateTrigger: 'onBlur',
-            rules: [{
-              required: true,
-              validator: (_, value, callback) => {
-                if (value.isEmpty()) {
-                  callback('请输入如何结算奖金')
-                } else {
-                  callback()
-                }
+                this.productType === 1 ? (
+                  <Form.Item {...formItemLayout} label="温馨提示">
+                    {getFieldDecorator('card_progress_img', {
+                      initialValue: BraftEditor.createEditorState(data.card_progress_img),
+                      validateTrigger: 'onBlur',
+                      rules: [{
+                        required: true,
+                        validator: (_, value, callback) => {
+                          if (value.isEmpty()) {
+                            callback('请输入温馨提示')
+                          } else {
+                            callback()
+                          }
+                        }
+                      }],
+                    })(
+                      // <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
+                      <Editor placeholder="温馨提示" />
+                    )}
+                  </Form.Item>
+                ) : null
               }
-            }],
-          })(
-            <Editor 
-              placeholder="如何结算奖金" 
-            />
-          )}
-        </Form.Item>
 
-        <Form.Item {...formItemLayout} label="分享的标题">
-          {getFieldDecorator('share_title', {
-            initialValue: data.share_title,
-            rules: [{ required: true, max: 200, message: '请填写分享的标题' }],
-          })(
-            <Input placeholder="分享的标题" />
-          )}
-        </Form.Item>
+              {
+                this.productType === 1 ? (
+                  <Form.Item {...formItemLayout} label="基本权益">
+                    {getFieldDecorator('base_right', {
+                      initialValue: BraftEditor.createEditorState(data.base_right),
+                      validateTrigger: 'onBlur',
+                      rules: [{
+                        required: true,
+                        validator: (_, value, callback) => {
+                          if (value.isEmpty()) {
+                            callback('请输入基本权益');
+                          } else {
+                            callback();
+                          }
+                        }
+                      }],
+                    })(
+                      // <Input.TextArea placeholder="基本权益" rows={3} />
+                      <Editor placeholder="基本权益" />
+                    )}
+                  </Form.Item>
+                ) : null
+              }
 
-        <Form.Item {...formItemLayout} label="分享的内容">
-          {getFieldDecorator('share_content', {
-            initialValue: data.share_content,
-            rules: [{ required: true, max: 200, message: '请填写分享的内容' }],
-          })(
-            <Input placeholder="分享的内容" />
-          )}
-        </Form.Item>
+              {
+                this.productType === 1 ? (
+                  <Form.Item {...formItemLayout} label="优惠活动">
+                    {getFieldDecorator('preferential', {
+                      initialValue: BraftEditor.createEditorState(data.preferential),
+                      // rules: [{ required: true, max: 200, message: '请填写优惠活动' }],
+                      validateTrigger: 'onBlur',
+                      rules: [{
+                        required: true,
+                        validator: (_, value, callback) => {
+                          if (value.isEmpty()) {
+                            callback('请输入优惠活动');
+                          } else {
+                            callback();
+                          }
+                        }
+                      }],
+                    })(
+                      // <Input.TextArea placeholder="优惠活动" rwos={3} />
+                      <Editor placeholder="优惠活动" />
+                    )}
+                  </Form.Item>
+                ) : null
+              }
 
-        <Form.Item {...formItemLayout} label="分享的LOGO">
-          {getFieldDecorator('share_logo', {
-            initialValue: data.share_logo,
-            rules: [{ required: true, max: 200, message: '请填写分享的标题' }],
-          })(
-            <Uploader action={config.uploadPath} host={config.qiniu.host} />
-          )}
-        </Form.Item>
-
-        {/* {
-          this.productType === 1 ? (
-            <Form.Item {...formItemLayout} label="办卡流程图">
-              {getFieldDecorator('card_progress_img', {
-                initialValue: data.card_progress_img,
-                rules: [{ required: true, message: '请上传办卡流程图' }],
-              })(
-                <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
-              )}
-            </Form.Item>
-          ) : null
-        } */}
-
-        {
-          this.productType === 1 ? (
-            <Form.Item {...formItemLayout} label="温馨提示">
-              {getFieldDecorator('card_progress_img', {
-                initialValue: BraftEditor.createEditorState(data.card_progress_img),
-                validateTrigger: 'onBlur',
-                rules: [{
-                  required: true,
-                  validator: (_, value, callback) => {
-                    if (value.isEmpty()) {
-                      callback('请输入温馨提示')
-                    } else {
-                      callback()
-                    }
-                  }
-                }],
-              })(
-                // <Uploader isSingle={false} action={config.uploadPath} host={config.qiniu.host} />
-                <Editor placeholder="温馨提示" />
-              )}
-            </Form.Item>
-          ) : null
-        }
-
-        {
-          this.productType === 1 ? (
-            <Form.Item {...formItemLayout} label="基本权益">
-              {getFieldDecorator('base_right', {
-                initialValue: BraftEditor.createEditorState(data.base_right),
-                validateTrigger: 'onBlur',
-                rules: [{
-                  required: true,
-                  validator: (_, value, callback) => {
-                    if (value.isEmpty()) {
-                      callback('请输入基本权益');
-                    } else {
-                      callback();
-                    }
-                  }
-                }],
-              })(
-                // <Input.TextArea placeholder="基本权益" rows={3} />
-                <Editor placeholder="基本权益" />
-              )}
-            </Form.Item>
-          ) : null
-        }
-
-        {
-          this.productType === 1 ? (
-            <Form.Item {...formItemLayout} label="优惠活动">
-              {getFieldDecorator('preferential', {
-                initialValue: BraftEditor.createEditorState(data.preferential),
-                // rules: [{ required: true, max: 200, message: '请填写优惠活动' }],
-                validateTrigger: 'onBlur',
-                rules: [{
-                  required: true,
-                  validator: (_, value, callback) => {
-                    if (value.isEmpty()) {
-                      callback('请输入优惠活动');
-                    } else {
-                      callback();
-                    }
-                  }
-                }],
-              })(
-                // <Input.TextArea placeholder="优惠活动" rwos={3} />
-                <Editor placeholder="优惠活动" />
-              )}
-            </Form.Item>
-          ) : null
+            </>
+          )
         }
 
         <Form.Item

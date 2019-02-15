@@ -8,6 +8,7 @@ export default {
       is_show: true,
       is_hot: true,
       is_in_shop: true,
+      how_settle: '无',
       product_type: 2,
     }
   },

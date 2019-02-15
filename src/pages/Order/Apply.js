@@ -27,6 +27,7 @@ class ApplyView extends PureComponent {
 
   state = {
     productID: 0,
+    productType: 0,
     preLoading: false,
     formValues: {},
     profileFormValues: {},
@@ -57,7 +58,7 @@ class ApplyView extends PureComponent {
       fixed: 'right',
       render: (text, record) => (
         <Fragment>
-          <a onClick={this.handleShowProfile(record.id)}>查看详情</a>
+          <a onClick={this.handleShowProfile(record.id, record.product_type)}>查看详情</a>
         </Fragment>
       ),
     },
@@ -182,80 +183,235 @@ class ApplyView extends PureComponent {
     },
   ]
 
-  originProfileColumns = [
-    {
-      title: '订单编号',
-      dataIndex: 'apply_id_code',
-      width: 170,
-    },
-    {
-      title: '用户编号',
-      dataIndex: 'user_invite_code',
-      width: 170,
-    },
-    {
-      title: '申请人姓名',
-      dataIndex: 'name',
-      width: 150,
-    },
-    {
-      title: '申请人手机号',
-      dataIndex: 'mobile',
-      width: 150,
-    },
-    {
-      title: '申请人身份证号码',
-      dataIndex: 'id_no',
-      width: 200,
-    },
-    {
-      title: '注册时间',
-      dataIndex: 'user_register_time',
-      width: 200,
-      render: (val) => {
-        if (!val) {
-          return '-';
+  get originProfileColumns() {
+    let originProfileColumns = [];
+    
+    if (+this.state.productType === 3) {
+      originProfileColumns = [
+        {
+          title: '订单编号',
+          dataIndex: 'apply_id_code',
+          width: 170,
+        },
+        // {
+        //   title: '订单状态',
+        //   dataIndex: 'order_status',
+        //   width: 150,
+        // },
+        {
+          title: '是否有邀请人',
+          key: 'has_invite_user',
+          width: 100,
+          render: (val, record) => {
+            if (record.user_recommend_invite_code) {
+              return <span>是</span>
+            }
+
+            return <span>否</span>
+            // return (<span>{+val === 1 ? '是' : '否'}</span>);
+          }
+        },
+        {
+          title: '邀请人用户编号',
+          dataIndex: 'user_recommend_invite_code',
+          width: 170,
+          render: (val) => {
+            return (<span>{val || '--'}</span>);
+          }
+        },
+        {
+          title: '是否本平台用户',
+          key: 'is_platform_user',
+          width: 100,
+          render: (val, record) => {
+            if (record.user_invite_code) {
+              return <span>是</span>;
+            }
+
+            return <span>否</span>;
+          }
+        },
+        {
+          title: '申请人用户编号',
+          dataIndex: 'user_invite_code',
+          width: 170,
+        },
+        {
+          title: '申请人姓名',
+          dataIndex: 'name',
+          width: 150,
+        },
+        {
+          title: '申请人手机号',
+          dataIndex: 'mobile',
+          width: 150,
+        },
+        {
+          title: '商品状态',
+          dataIndex: 'deliver_status',
+          width: 150,
+          render: val => {
+            return <span>{config.DeliverStatus[+val] || '--'}</span>
+          }
+        },
+        {
+          title: '支付流水号',
+          dataIndex: 'pay_no',
+          width: 150,
+        },
+        {
+          title: '实付金额',
+          dataIndex: 'paid_amount',
+          width: 150,
+        },
+        {
+          title: '收件人姓名',
+          dataIndex: 'recipient_name',
+          width: 150,
+        },
+        {
+          title: '收件人手机号',
+          dataIndex: 'recipient_phone',
+          width: 150,
+        },
+        {
+          title: '收件人地址',
+          dataIndex: 'recipient_address',
+          width: 150,
+        },
+        {
+          title: '申请人支付宝账号',
+          dataIndex: 'alipay_no',
+          width: 150,
+        },
+        {
+          title: 'POS机机具编号',
+          dataIndex: 'pos_no',
+          width: 150,
+        },
+        {
+          title: '快递名称',
+          dataIndex: 'express_delivery_name',
+          width: 150,
+        },
+        {
+          title: '快递单号',
+          dataIndex: 'express_delivery_no',
+          width: 150,
+        },
+        {
+          title: '押金状态',
+          dataIndex: 'deposit_state',
+          width: 150,
+          render: val => {
+            return <span>{config.ApplyDepositState[+val] || '--'}</span>
+          }
+        },
+        {
+          title: '申请支付时间',
+          dataIndex: 'paid_time',
+          width: 150,
+          render: val => {
+            if (!val) {
+              return <span>--</span>;
+            }
+
+            return (<span>{moment(val).utc(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
+          }
+        },
+        {
+          title: '操作',
+          width: 200,
+          fixed: 'right',
+          render: (text, record) => (
+            <Fragment>
+              <a>发货</a>
+              <Divider type="vertical" />
+              <a>商品已签收</a>
+            </Fragment>
+          ),
         }
-        return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
-      }
-    },
-    {
-      title: '放款时间',
-      dataIndex: 'official_time',
-      key: 'send_time',
-      width: 200,
-      render: (val) => {
-        if (!val) {
-          return '-';
-        }
-        return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
-      }
-    },
-    {
-      title: '放款金额',
-      dataIndex: 'official_limit',
-      key: 'send_price',
-      width: 200,
-      render: (val) => {
-        if (!val) {
-          return '-';
-        }
-        return <span>{val}</span>
-        // return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
-      }
-      
-    },
-    {
-      title: '放款期限',
-      dataIndex: 'official_expire',
-      key: 'send_expires',
-      width: 150,
-    },
-    {
-      title: '所属代理用户编号',
-      dataIndex: 'user_recommend_invite_code',
-    },
-  ]
+      ]
+    } else {
+      originProfileColumns = [
+        {
+          title: '订单编号',
+          dataIndex: 'apply_id_code',
+          width: 170,
+        },
+        {
+          title: '用户编号',
+          dataIndex: 'user_invite_code',
+          width: 170,
+        },
+        {
+          title: '申请人姓名',
+          dataIndex: 'name',
+          width: 150,
+        },
+        {
+          title: '申请人手机号',
+          dataIndex: 'mobile',
+          width: 150,
+        },
+        {
+          title: '申请人身份证号码',
+          dataIndex: 'id_no',
+          width: 200,
+        },
+        {
+          title: '注册时间',
+          dataIndex: 'user_register_time',
+          width: 200,
+          render: (val) => {
+            if (!val) {
+              return '-';
+            }
+            return (<span>{moment(val).utc(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
+          }
+        },
+        {
+          title: '放款时间',
+          dataIndex: 'official_time',
+          key: 'send_time',
+          width: 200,
+          render: (val) => {
+            if (!val) {
+              return '-';
+            }
+            return (<span>{moment(val).utc(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
+          }
+        },
+        {
+          title: '放款金额',
+          dataIndex: 'official_limit',
+          key: 'send_price',
+          width: 200,
+          render: (val) => {
+            if (!val) {
+              return '-';
+            }
+            return <span>{val}</span>
+            // return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
+          }
+          
+        },
+        {
+          title: '放款期限',
+          dataIndex: 'official_expire',
+          key: 'send_expires',
+          width: 150,
+        },
+        {
+          title: '所属代理用户编号',
+          dataIndex: 'user_recommend_invite_code',
+        },
+      ];
+    }
+
+
+    return originProfileColumns;
+  }
 
   get cardProfileColumns() {
     return this.originCardProfileColumns.map((val) => {
@@ -385,14 +541,21 @@ class ApplyView extends PureComponent {
     });
   }
 
-  handleShowProfile = (id) => e => {
+  handleShowProfile = (id, productType) => e => {
     if (e) {
       e.preventDefault();
     }
     this.setState({
       productID: id,
+      productType,
     });
+
     this.toggleProfileDrawer();
+    let isPos = false;
+
+    if (+productType === 3) {
+      isPos = true;
+    }
 
     this.props.dispatch({
       type: 'applys/fetchProfile',
@@ -400,6 +563,7 @@ class ApplyView extends PureComponent {
         id,
         page: 1,
         pageSize: 15,
+        isPos,
       },
     });
   }
@@ -446,11 +610,15 @@ class ApplyView extends PureComponent {
       cols = this.cardProfileColumns;
       pixX = 2600;
     }
+
+    if (profile.productType === 3) {
+      pixX = 2650;
+    }
     
     return (
       <Drawer 
         title={title}
-        width={720}
+        width={this.state.productType === 3 ? 720 : 920}
         placement="right"
         onClose={this.toggleProfileDrawer}
         visible={this.state.profileVisible}

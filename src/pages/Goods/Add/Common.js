@@ -87,42 +87,44 @@ class CommonForm extends React.PureComponent {
               rules: [{ required: true, message: '请填写一个类型' }],
             })(
               <Select placeholder="选择产品类型">
+                <Option value={3}>POS机</Option>
                 <Option value={2}>贷款产品</Option>
                 <Option value={1}>信用卡产品</Option>
               </Select>
             )}
           </Form.Item>
-          <Form.Item 
-            {...formItemLayout} 
-            label={
-              <span>
-                产品分类 &nbsp;
-                <em className={styles.optional}>
-                  <Tooltip title="信用卡为关联银行信息-影响进度查询，贷款关联贷款分类标签-影响商品列表标签显示">
-                    <Icon type="info-circle-o" style={{ marginRight: 4 }} />
-                  </Tooltip>
-                </em>
-              </span>
-            }
-          >
-            {getFieldDecorator('product_category', {
-              initialValue: data.product_category,
-              rules: [{ required: true, message: '请选择一个产品分类' }],
-            })(
-              <SelectProductCategory ptype={getFieldValue('product_type')} />
-              // <Select placeholder="选择产品分类">
-              //   <Option value={1}>秒到账</Option>
-              //   <Option value={2}>大额度</Option>
-              //   <Option value={3}>秒办卡</Option>
-              // </Select>
-            )}
-          </Form.Item>
+          {
+            +this.productType !== 3 ? (
+              <Form.Item 
+                {...formItemLayout} 
+                label={
+                  <span>
+                    产品分类 &nbsp;
+                    <em className={styles.optional}>
+                      <Tooltip title="信用卡为关联银行信息-影响进度查询，贷款关联贷款分类标签-影响商品列表标签显示">
+                        <Icon type="info-circle-o" style={{ marginRight: 4 }} />
+                      </Tooltip>
+                    </em>
+                  </span>
+                }
+              >
+                {getFieldDecorator('product_category', {
+                  initialValue: data.product_category,
+                  rules: [{ required: true, message: '请选择一个产品分类' }],
+                })(
+                  <SelectProductCategory ptype={getFieldValue('product_type')} />
+                )}
+              </Form.Item>
+            ) : null
+          }
+          
           <Form.Item {...formItemLayout} label="是否热门">
             {getFieldDecorator('is_hot', {
               initialValue: data.is_hot,
               rules: [{required: true, type: 'boolean'}]
             })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />)}
           </Form.Item>
+
           <Form.Item {...formItemLayout} label="是否展示">
             {getFieldDecorator('is_show', {
               initialValue: data.is_show,
@@ -139,12 +141,16 @@ class CommonForm extends React.PureComponent {
             )}
           </Form.Item>
 
-          <Form.Item {...formItemLayout} label="是否上店铺可选">
-            {getFieldDecorator('is_in_shop', {
-              initialValue: data.is_in_shop,
-              rules: [{required: true, type: 'boolean'}]
-            })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />)}
-          </Form.Item>
+          {
+            +this.productType !== 3 ? (
+              <Form.Item {...formItemLayout} label="是否上店铺可选">
+                {getFieldDecorator('is_in_shop', {
+                  initialValue: data.is_in_shop,
+                  rules: [{required: true, type: 'boolean'}]
+                })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />)}
+              </Form.Item>
+            ) : null
+          }
 
           <Form.Item {...formItemLayout} label="奖金">
             {getFieldDecorator('commission', {
@@ -252,55 +258,104 @@ class CommonForm extends React.PureComponent {
             ) : null
           }
           
+          {
+            +this.productType !== 3 ? (
+              <Form.Item 
+                {...formItemLayout} 
+                label={
+                  <span>
+                    特色标签&nbsp;
+                    <em className={styles.optional}>
+                      <Tooltip title="商品详情页-标题旁的标签显示">
+                        <Icon type="info-circle-o" style={{ marginRight: 4 }} />
+                      </Tooltip>
+                    </em>
+                  </span>
+                } 
+              >
+                {getFieldDecorator('special_tag', {
+                  initialValue: data.special_tag,
+                  rules: [{ required: false, }],
+                })(
+                  <Input placeholder="特色标签" />
+                )}
+              </Form.Item>
+            ) : null
+          }
 
-          <Form.Item 
-            {...formItemLayout} 
-            label={
-              <span>
-                特色标签&nbsp;
-                <em className={styles.optional}>
-                  <Tooltip title="商品详情页-标题旁的标签显示">
-                    <Icon type="info-circle-o" style={{ marginRight: 4 }} />
-                  </Tooltip>
-                </em>
-              </span>
-            } 
-          >
-            {getFieldDecorator('special_tag', {
-              initialValue: data.special_tag,
-              rules: [{ required: false, }],
-            })(
-              <Input placeholder="特色标签" />
-            )}
-          </Form.Item>
+          {
+            +this.productType !== 3 ? (
+              <Form.Item {...formItemLayout} label="通过率">
+                {getFieldDecorator('allow_rate', {
+                  initialValue: data.allow_rate,
+                  rules: [
+                    { required: true, message: '请填写通过率' },
+                    {
+                      pattern: config.RateRegex,
+                      message: '请输入正确的通过率 例: 0.10',
+                    },
+                  ],
+                })(
+                  <Input placeholder="通过率" />
+                )}
+              </Form.Item>
+            ) : null
+          }
 
-          <Form.Item {...formItemLayout} label="通过率">
-            {getFieldDecorator('allow_rate', {
-              initialValue: data.allow_rate,
-              rules: [
-                { required: true, message: '请填写通过率' },
+          {
+            +this.productType === 3 ? (
+              <Form.Item {...formItemLayout} label="激活率">
                 {
-                  pattern: config.RateRegex,
-                  message: '请输入正确的通过率 例: 0.10',
-                },
-              ],
-            })(
-              <Input placeholder="通过率" />
-            )}
-          </Form.Item>
+                  getFieldDecorator('allow_rate', {
+                    initialValue: data.allow_rate,
+                    rules: [
+                      { required: true, message: '请填写激活率'},
+                      {
+                        pattern: config.RateRegex,
+                        message: '请输入正确的通过率 例: 0.10',
+                      },
+                    ],
+                  })(
+                    <Input placeholder="激活率" />
+                  )
+                }
+              </Form.Item>
+            ) : null
+          }
 
-          <Form.Item {...formItemLayout} label="申请人数">
-            {getFieldDecorator('apply_num', {
-              initialValue: data.apply_num,
-              rules: [
-                { required: true, message: '请输入申请人数' },
+          {
+            +this.productType === 3 ? (
+              <Form.Item {...formItemLayout} label="领取人数">
                 {
-                  pattern: /^(\d+)$/,
-                  message: '请输入正确的申请人数',
-                },
-              ],
-            })(<Input placeholder="请输入申请人数" />)}
-          </Form.Item>
+                  getFieldDecorator('apply_num', {
+                    initialValue: data.apply_num,
+                    rules: [
+                      { required: true, message: '请填写领取人数'},
+                    ],
+                  })(
+                    <Input placeholder="领取人数" />
+                  )
+                }
+              </Form.Item>
+            ) : null
+          }
+          
+          {
+            +this.productType !== 3 ? (
+              <Form.Item {...formItemLayout} label="申请人数">
+                {getFieldDecorator('apply_num', {
+                  initialValue: data.apply_num,
+                  rules: [
+                    { required: true, message: '请输入申请人数' },
+                    {
+                      pattern: /^(\d+)$/,
+                      message: '请输入正确的申请人数',
+                    },
+                  ],
+                })(<Input placeholder="请输入申请人数" />)}
+              </Form.Item>
+            ) : null
+          }
 
           {
             this.productType === 2 ? (
@@ -347,55 +402,110 @@ class CommonForm extends React.PureComponent {
               rules: [
                 { required: true, message: '请输入基本工资' },
                 {
-                  pattern: config.RateRegex,
+                  pattern: config.NumberRegex,
                   message: '请输入正确的基本工资',
                 },
               ],
             })(<Input placeholder="基本工资" />)}
           </Form.Item>
 
-          <Form.Item {...formItemLayout} label="阶梯值单位">
-            {getFieldDecorator('unit', {
-              initialValue: this.productType === 2 ? '万' : '张',
-              rules: [
-                { required: true, max: 200, message: '请输入阶梯值单位' },
-              ],
-            })(<Input placeholder="张/万" />)}
-          </Form.Item>
+          {
+            +this.productType === 3 ? (
+              <>
+                <Form.Item {...formItemLayout} label="平台奖励">
+                  {getFieldDecorator('platform_award', {
+                    initialValue: data.platform_award,
+                    rules: [
+                      { required: true, message: '请输入平台奖励' },
+                      {
+                        pattern: config.NumberRegex,
+                        message: '请输入正确的平台奖励',
+                      },
+                    ],
+                  })(<Input placeholder="平台奖励" />)}
+                </Form.Item>
+                <Form.Item {...formItemLayout} label="商品金额">
+                  {getFieldDecorator('pos_price', {
+                    initialValue: data.pos_price,
+                    rules: [
+                      { required: true, message: '请输入商品金额' },
+                      {
+                        pattern: config.NumberRegex,
+                        message: '请输入正确的商品金额',
+                      },
+                    ],
+                  })(<Input placeholder="商品金额" />)}
+                </Form.Item>
+                <Form.Item {...formItemLayout} label="商品押金">
+                  {getFieldDecorator('pos_deposit', {
+                    initialValue: data.pos_deposit,
+                    rules: [
+                      { required: true, message: '请输入商品押金' },
+                      {
+                        pattern: config.NumberRegex,
+                        message: '请输入正确的商品押金',
+                      },
+                    ],
+                  })(<Input placeholder="商品押金" />)}
+                </Form.Item>
+              </>
+            ) : null
+          }
 
-          <Form.Item {...formItemLayout} label="阶梯值奖励单位">
-            {getFieldDecorator('jl_unite', {
-              initialValue: data.jl_unite || '元',
-              rules: [
-                { required: true, max: 200, message: '请输入阶梯值奖励单位' },
-              ],
-            })(<Input placeholder="元" />)}
-          </Form.Item>
+          {
+            +this.productType !== 3 ? (
+              <Form.Item {...formItemLayout} label="阶梯值单位">
+                {getFieldDecorator('unit', {
+                  initialValue: this.productType === 2 ? '万' : '张',
+                  rules: [
+                    { required: true, max: 200, message: '请输入阶梯值单位' },
+                  ],
+                })(<Input placeholder="张/万" />)}
+              </Form.Item>
+            ) : null
+          }
 
-          <Form.Item 
-            {...formItemLayout} 
-            label={
-              <span>
-                商品利润价格&nbsp;
-                <em className={styles.optional}>
-                  <Tooltip title="用来计算此商品的总利润！">
-                    <Icon type="info-circle-o" style={{ marginRight: 4 }} />
-                  </Tooltip>
-                </em>
-              </span>
-            }
-          >
-            {getFieldDecorator('burundian', {
-              initialValue: data.burundian,
-              rules: [
-                { required: false, message: '请输入商品利润价格' },
-                {
-                  pattern: /^(\d+)((?:\.\d+)?)$/,
-                  message: '请输入商品利润价格',
-                },
-              ],
-            })(<Input  placeholder="输入商品利润价格" />)}
-          </Form.Item>
+          {
+            +this.productType !== 3 ? (
+              <Form.Item {...formItemLayout} label="阶梯值奖励单位">
+                {getFieldDecorator('jl_unite', {
+                  initialValue: data.jl_unite || '元',
+                  rules: [
+                    { required: true, max: 200, message: '请输入阶梯值奖励单位' },
+                  ],
+                })(<Input placeholder="元" />)}
+              </Form.Item>
+            ) : null
+          }
+
+          {
+            +this.productType !== 3 ? (
+              <Form.Item 
+                {...formItemLayout} 
+                label={
+                  <span>
+                    商品利润价格&nbsp;
+                    <em className={styles.optional}>
+                      <Tooltip title="用来计算此商品的总利润！">
+                        <Icon type="info-circle-o" style={{ marginRight: 4 }} />
+                      </Tooltip>
+                    </em>
+                  </span>
+                }
+              >
+                {getFieldDecorator('burundian', {
+                  initialValue: data.burundian,
+                  rules: [
+                    { required: false, message: '请输入商品利润价格' },
+                    {
+                      pattern: /^(\d+)((?:\.\d+)?)$/,
+                      message: '请输入商品利润价格',
+                    },
+                  ],
+                })(<Input  placeholder="输入商品利润价格" />)}
+              </Form.Item>
+            ) : null
+          }
 
         {
           this.productType === 2 ? (
@@ -472,13 +582,17 @@ class CommonForm extends React.PureComponent {
             )}
           </Form.Item> */}
 
-          <Form.Item {...formItemLayout} label="绑定商品链接">
-            {getFieldDecorator('product_link', {
-              initialValue: data.product_link,
-            })(
-              <Input placeholder="输入商品的链接"  />
-            )}
-          </Form.Item>
+          {
+            +this.productType !== 3 ? (
+                <Form.Item {...formItemLayout} label="绑定商品链接">
+                {getFieldDecorator('product_link', {
+                  initialValue: data.product_link,
+                })(
+                  <Input placeholder="输入商品的链接"  />
+                )}
+              </Form.Item>
+            ) : null
+          }
 
           
           <Form.Item

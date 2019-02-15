@@ -260,6 +260,18 @@ const DepositForm = Form.create()(props => {
           )}
         </Form.Item> */}
 
+        <Form.Item {...formItemLayout} label="充值类型">
+          {getFieldDecorator('action_type', {
+            initialValue: data.action_type || 1,
+            rules: [{ required: true, message: '选择一个充值类型' }],
+          })(
+            <Select placeholder="选择充值类型">
+              <Option value={1}>活动</Option>
+              <Option value={2}>退还押金</Option>
+            </Select>
+          )}
+        </Form.Item>
+
         <Form.Item {...formItemLayout} label="充值金额">
           {getFieldDecorator('blance', {
             initialValue: 0,

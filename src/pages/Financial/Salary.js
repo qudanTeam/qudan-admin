@@ -57,6 +57,14 @@ class SalaryView extends PureComponent {
       }
     },
     {
+      title: '订单类型',
+      dataIndex: 'product_type',
+      width: 150,
+      render: (val) => {
+        return <span>{config.ProductType[val] || '--'}</span>
+      }
+    },
+    {
       title: '审核状态',
       dataIndex: 'status',
       width: 150,
@@ -300,7 +308,7 @@ class SalaryView extends PureComponent {
             <StandardTable
               size="small"
               data={data}
-              scroll={{ x: 1600 }}
+              scroll={{ x: 1780 }}
               columns={this.columns}
               onChange={this.handleTableChange}
             />

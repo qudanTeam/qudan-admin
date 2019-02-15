@@ -31,6 +31,7 @@ export default {
     },
 
     *fetchProfile({ payload }, { call, put }) {
+      // const { isPos } = payload;
       const response = yield call(queryApplyTrades, payload);
       const data = response;
       const { productType } = data;

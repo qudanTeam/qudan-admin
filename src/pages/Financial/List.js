@@ -40,7 +40,7 @@ class ListView extends PureComponent {
       
       render: (val, record) => {
 
-        if ([1,2,3,6].includes(+record.trade_type)) {
+        if ([1,2,3,6,8].includes(+record.trade_type)) {
           return (<span style={{color: 'red'}}>{`- ${val}`}</span>); 
         }
 
@@ -210,6 +210,8 @@ class ListView extends PureComponent {
                   <Select.Option value={3}>团队佣金</Select.Option>
                   <Select.Option value={4}>VIP购买</Select.Option>
                   <Select.Option value={5}>阶梯工资</Select.Option>
+                  <Select.Option value={6}>活动</Select.Option>
+                  <Select.Option value={7}>退押金</Select.Option>
                 </Select>
               )}
             </FormItem>
