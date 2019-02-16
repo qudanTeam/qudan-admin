@@ -89,7 +89,7 @@ class Uploader extends PureComponent {
         this.onChangeCallback(fileList.map(getKeyFromFile).join(','));
         
         if (res) {
-          resolve(true);
+          resolve(file);
         } else {
           reject(res);
         }
