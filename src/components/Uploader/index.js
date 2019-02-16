@@ -177,6 +177,13 @@ class Uploader extends PureComponent {
         <div className="ant-upload-text">上传</div>
       </div>
     );
+
+    const disabledUploadButton = (
+      <div disabled={true} >
+        <Icon type={this.state.loading ? 'loading' : 'stop'} />
+        {/* <div className="ant-upload-text">上传</div> */}
+      </div>
+    );
     // mode is single or multi
     const { action, isSingle = true } = this.props;
     const { showFileList } = this.state;
@@ -192,8 +199,9 @@ class Uploader extends PureComponent {
         beforeUpload={this.handleBeforeUpload}
         onChange={this.handleChange}
         onRemove={this.handleRemove}
+        disabled={showFileList.length >= 1}
       >
-        {(isSingle && showFileList.length >= 1) ? null : uploadButton}
+        {(isSingle && showFileList.length >= 1) ? disabledUploadButton : uploadButton}
       </Upload>
     );
   }
