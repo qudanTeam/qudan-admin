@@ -1,7 +1,7 @@
 import { Upload, Icon, message, Avatar } from 'antd';
 import React, { PureComponent } from 'react';
 import uuid from 'uuid/v4';
-import { Promise } from 'es6-promise';
+// import { Promise } from 'es6-promise';
 // import config from '@/config';
 
 function getBase64(img, callback) {
