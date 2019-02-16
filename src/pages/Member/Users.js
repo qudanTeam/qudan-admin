@@ -1125,7 +1125,7 @@ class UsersView extends PureComponent {
           <Dropdown
             
             overlay={refuseMenu} 
-            // placement="bottomCenter"
+            placement="topCenter"
           >
             <Button
               style={{
@@ -1138,7 +1138,7 @@ class UsersView extends PureComponent {
 
           <Dropdown
             overlay={passMenu}
-            // placement="bottomCenter"
+            placement="topCenter"
           >
             <Button type="primary">通过</Button>
           </Dropdown>
