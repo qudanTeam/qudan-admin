@@ -974,7 +974,7 @@ class UsersView extends PureComponent {
         onClose={this.toggleProfileDrawer}
         visible={this.state.profileVisible}
         style={{
-          height: 'calc(100% - 65px)',
+          // height: 'calc(100% - 65px)',
           overflow: 'auto',
           paddingBottom: 53,
         }}
