@@ -1,7 +1,7 @@
 
 import { requestDataToPageResult } from '@/utils/utils';
 import { message } from 'antd';
-import { queryApply, queryApplyTrades } from '@/services/apply';
+import { queryApply, queryApplyTrades, putShipPos, putSigningPos } from '@/services/apply';
 
 export default {
   namespace: 'applys',
@@ -39,9 +39,44 @@ export default {
         type: 'saveProfile',
         payload: {
           productType,
+          productID: payload.id,
           ...requestDataToPageResult(data)
         },
       });
+    },
+
+    *shipPos({ payload }, { call, put, select }) {
+      const { productID } = yield select(_ => _.applys.profile);
+      const response = yield call(putShipPos, payload);
+
+      if (response.id) {
+        yield put({
+          type: 'fetchProfile',
+          payload: {
+            id: productID,
+            page: 1,
+            pageSize: 15,
+            isPos: true,
+          },
+        });
+      };
+    },
+
+    *signingPos({ payload }, { call, put, select }) {
+      const { productID } = yield select(_ => _.applys.profile);
+      const response = yield call(putSigningPos, payload);
+
+      if (response.id) {
+        yield put({
+          type: 'fetchProfile',
+          payload: {
+            id: productID,
+            page: 1,
+            pageSize: 15,
+            isPos: true,
+          },
+        });
+      };
     }
   },
 

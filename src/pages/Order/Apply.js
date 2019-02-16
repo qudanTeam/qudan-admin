@@ -17,6 +17,120 @@ const { Option } = Select;
 const FormItem = Form.Item;
 const { Description } = DescriptionList;
 
+
+// 发货的表单
+const ShipForm = Form.create()(props => {
+  const { 
+    modalVisible, 
+    form,
+    handleSubmit, 
+    data,
+    loading,
+    handleModalVisible } = props;
+
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 7 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 13 },
+      md: { span: 10 },
+    },
+  };
+
+  const submitFormLayout = {
+    wrapperCol: {
+      xs: { span: 24, offset: 0 },
+      sm: { span: 10, offset: 7 },
+    },
+  };
+
+  const { getFieldDecorator, getFieldValue } = form;
+
+  const okHandle = (e) => {
+    if (typeof e !== 'undefined') {
+      e.preventDefault();
+    }
+    
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+      // console.log(fieldsValue, 'values');
+      form.resetFields();
+      if (typeof handleSubmit === 'function') {
+        handleSubmit(fieldsValue);
+      }
+    });
+  };
+  return (
+    <Modal
+      // wrapClassName="fullscreen-able"
+      destroyOnClose
+      title="发货"
+      centered
+      visible={modalVisible}
+      footer={null}
+      // mask={false}
+      // style={{height: '100vh'}}
+      // width="100%"
+      onCancel={() => handleModalVisible()}
+    >
+      <Skeleton
+        active
+        loading={loading}
+        paragraph={{
+          rows: 10,
+        }}
+      >
+      <Form
+        onSubmit={okHandle} 
+        hideRequiredMark 
+        style={{ marginTop: 8 }}
+      >
+
+        <Form.Item {...formItemLayout} label="POS机机具编号">
+          {getFieldDecorator('pos_no', {
+            initialValue: data.pos_no,
+            rules: [{ required: true, max: 100, message: '请填写POS机机具编号' }],
+          })(
+            <Input placeholder="POS机机具编号" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="快递名称">
+          {getFieldDecorator('express_name', {
+            initialValue: data.express_name,
+            rules: [{ required: true, max: 100, message: '请填写快递名称' }],
+          })(
+            <Input placeholder="快递名称" />
+          )}
+        </Form.Item>
+
+        <Form.Item {...formItemLayout} label="快递编号">
+          {getFieldDecorator('express_no', {
+            initialValue: data.express_no,
+            rules: [{ required: true, max: 100, message: '请填写快递编号' }],
+          })(
+            <Input placeholder="快递编号" />
+          )}
+        </Form.Item>
+      
+        <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
+          <Button type="primary" htmlType="submit">
+            <FormattedMessage id="form.submit" />
+          </Button>
+          <Button style={{ marginLeft: 8 }} onClick={() => handleModalVisible()}>
+            <FormattedMessage id="form.cancel" />
+          </Button>
+        </FormItem>
+
+      </Form>
+      </Skeleton>
+    </Modal>
+  );
+});
+
 @connect(({applys, loading }) => ({
   applys,
   loading: loading.models.applys,
@@ -26,6 +140,8 @@ const { Description } = DescriptionList;
 class ApplyView extends PureComponent {
 
   state = {
+    paeID: 0,
+    shipVisible: false,
     productID: 0,
     productType: 0,
     preLoading: false,
@@ -325,9 +441,9 @@ class ApplyView extends PureComponent {
           fixed: 'right',
           render: (text, record) => (
             <Fragment>
-              <a>发货</a>
+              <a disabled={+record.deliver_status === 2} onClick={this.handleShipOne(record.pae_id)}>发货</a>
               <Divider type="vertical" />
-              <a>商品已签收</a>
+              <a onClick={this.handleSigning(record.pae_id)}>商品已签收</a>
             </Fragment>
           ),
         }
@@ -588,11 +704,51 @@ class ApplyView extends PureComponent {
     });
   }
 
+  handleShipOne = (id) => (e) => {
+    e.preventDefault();
+    console.log(`======${id}=======`);
+    this.setState({
+      paeID: id,
+    });
+
+    this.toggleShipVisible();
+  }
+
   toggleProfileDrawer = () => {
     this.setState({
       profileVisible: !this.state.profileVisible,
     });
   }
+
+  toggleShipVisible = () => {
+    this.setState({
+      shipVisible: !this.state.shipVisible,
+    });
+  }
+
+  handleShip = (values) => {
+    const { dispatch } = this.props;
+    values.id = this.state.paeID;
+    // console.log(values, '=====');
+    dispatch({
+      type: 'applys/shipPos',
+      payload: values,
+    }).then(() => {
+      this.toggleShipVisible();
+    });
+  }
+
+  handleSigning = (id) => () => {
+    const { dispatch } = this.props;
+    let values = {
+      id,
+    }
+
+    dispatch({
+      type: 'applys/signingPos',
+      payload: values,
+    });
+  } 
 
   renderDetailsDrawer = () => {
 
@@ -760,6 +916,12 @@ class ApplyView extends PureComponent {
             />
           </div>
           {this.renderDetailsDrawer()}
+          <ShipForm 
+            modalVisible={this.state.shipVisible}
+            handleModalVisible={this.toggleShipVisible}
+            handleSubmit={this.handleShip}
+            data={{}}
+          />
         </Card>
       </PageHeaderWrapper>
     );
