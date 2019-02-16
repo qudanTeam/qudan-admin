@@ -530,9 +530,6 @@ class UsersView extends PureComponent {
       render: (_, record) => {
         const { parent_user_id } = record;
 
-        console.log(this.state.parentUserID, '=======');
-        console.log(parent_user_id, '====++++===');
-
         if (+this.state.parentUserID === +parent_user_id) {
           return (
             <span>直接下级</span>
@@ -1087,6 +1084,7 @@ class UsersView extends PureComponent {
 
     return (
       <Drawer 
+        className="myDrawer"
         title={'实名认证'}
         width={520}
         placement="right"
