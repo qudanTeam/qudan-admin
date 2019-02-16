@@ -14,6 +14,14 @@ export const passOne = async (params) => {
   });
 }
 
+export const returnDeposit = async (params) => {
+  const { id } = params;
+
+  return request(`${pathConfig.Orders}/${id}/returnDeposit`, {
+    method: 'PUT',
+  });
+}
+
 export const refuseOne = async id => {
   return request(`${pathConfig.Orders}/${id}/refuse`, {
     method: 'PUT',

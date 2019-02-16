@@ -226,8 +226,19 @@ class OrderListView extends PureComponent {
       }
     },
     {
+      title: '押金状态',
+      dataIndex: 'deposit_status',
+      render: val => {
+        if (+val === 3) {
+          return <span>已退还</span>;
+        }
+
+        return <span>未退还</span>;
+      },
+    },
+    {
       title: '操作',
-      width: 270,
+      width: 370,
       fixed: 'right',
       render: (text, record) => (
         <Fragment>
@@ -238,6 +249,15 @@ class OrderListView extends PureComponent {
           <a disabled={+record.status > 1} onClick={this.handlePassOne(record)}>设为已通过</a>
           <Divider type="vertical" />
           <a disabled={+record.status > 1} onClick={this.handleRefuseOne(record.id)} style={ +record.status > 1 ? null : { color: 'red'}} >设为未通过</a>
+          {
+            record.product_type === 3 ?
+            (
+              <>
+                <Divider type="vertical" />
+                <a disabled={+record.deposit_status === 3} onClick={this.handleReturnDeposit(record.pae_id)} style={ +record.status > 1 ? null : { color: 'red'}} >押金已退还</a>
+              </>
+            ) : null
+          }
         </Fragment>
       ),
     },
@@ -343,6 +363,21 @@ class OrderListView extends PureComponent {
 
     dispatch({
       type: 'orders/refuseOne',
+      payload: {
+        id,
+      },
+    })
+  }
+
+  handleReturnDeposit = id => (e) => {
+    if (e) {
+      e.preventDefault()
+    }
+
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'orders/returnDeposit',
       payload: {
         id,
       },
@@ -566,6 +601,7 @@ class OrderListView extends PureComponent {
                   <Option value={null}>全部</Option>
                   <Option value={1}>信用卡</Option>
                   <Option value={2}>贷款</Option>
+                  <Option value={3}>POS机</Option>
               </Select>
               )}
             </FormItem>

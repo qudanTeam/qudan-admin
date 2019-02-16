@@ -441,7 +441,7 @@ class ApplyView extends PureComponent {
           fixed: 'right',
           render: (text, record) => (
             <Fragment>
-              <a disabled={+record.deliver_status === 2} onClick={this.handleShipOne(record.pae_id)}>发货</a>
+              <a disabled={+record.deliver_status > 1} onClick={this.handleShipOne(record.pae_id)}>发货</a>
               <Divider type="vertical" />
               <a onClick={this.handleSigning(record.pae_id)}>商品已签收</a>
             </Fragment>

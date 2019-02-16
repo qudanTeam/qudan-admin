@@ -1,7 +1,7 @@
 
 import { requestDataToPageResult } from '@/utils/utils';
 import { message } from 'antd';
-import { queryOrder, passOne, refuseOne, queryDetails, updateOrder } from '@/services/orders';
+import { queryOrder, passOne, refuseOne, queryDetails, updateOrder, returnDeposit } from '@/services/orders';
 
 export default {
   namespace: 'orders',
@@ -36,6 +36,16 @@ export default {
 
     *passOne({ payload }, { call, put }) {
       const response = yield call(passOne, payload);
+
+      if (response.id) {
+        yield put({
+          type: 'fetch',
+        });
+      }
+    },
+
+    *returnDeposit({ payload }, { call, put }) {
+      const response = yield call(returnDeposit, payload);
 
       if (response.id) {
         yield put({
