@@ -80,7 +80,7 @@ class Uploader extends PureComponent {
   handleBeforeUpload = (file) => {
     const res = beforeUpload(file);
     const fileList = this.state.showFileList.filter(f => f.status === 'done');
-
+    // Promise
     return new Promise((resolve, reject) => {
       this.setState({
         showFileList: [...fileList],
