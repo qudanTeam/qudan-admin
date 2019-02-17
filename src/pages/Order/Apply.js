@@ -187,6 +187,14 @@ class ApplyView extends PureComponent {
       width: 170,
     },
     {
+      title: '订单状态',
+      dataIndex: 'status',
+      width: 150,
+      render: val => {
+        return <span>{config.OrderStatus[val]}</span>
+      }
+    },
+    {
       title: '用户编号',
       dataIndex: 'invite_code',
       width: 170,
@@ -309,11 +317,14 @@ class ApplyView extends PureComponent {
           dataIndex: 'apply_id_code',
           width: 170,
         },
-        // {
-        //   title: '订单状态',
-        //   dataIndex: 'order_status',
-        //   width: 150,
-        // },
+        {
+          title: '订单状态',
+          dataIndex: 'status',
+          width: 150,
+          render: val => {
+            return <span>{config.OrderStatus[val]}</span>
+          }
+        },
         {
           title: '是否有邀请人',
           key: 'has_invite_user',
@@ -454,6 +465,14 @@ class ApplyView extends PureComponent {
           title: '订单编号',
           dataIndex: 'apply_id_code',
           width: 170,
+        },
+        {
+          title: '订单状态',
+          dataIndex: 'status',
+          width: 150,
+          render: val => {
+            return <span>{config.OrderStatus[val]}</span>
+          }
         },
         {
           title: '用户编号',

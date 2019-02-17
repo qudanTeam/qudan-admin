@@ -1303,6 +1303,11 @@ class ListView extends PureComponent {
         return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
       }
     },
+
+    {
+      title: '更新人',
+      dataIndex: 'update_admin',
+    },
     
     {
       title: '操作',
@@ -1414,6 +1419,40 @@ class ListView extends PureComponent {
     });
   }
 
+  handleSearch = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    const { dispatch, form } = this.props;
+
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+
+      const values = {
+        ...fieldsValue,
+        page: 1,
+        pageSize: 15,
+      };
+
+      if (values.filter_time && values.filter_time.length > 0) {
+        values.start_time = values.filter_time[0].format('YYYY-MM-DD HH:mm:ss');
+        values.end_time = values.filter_time[1].format('YYYY-MM-DD HH:mm:ss');
+        delete values.filter_time;
+      }
+
+      this.setState({
+        formValues: values,
+      });
+
+      dispatch({
+        type: 'products/fetch',
+        payload: values,
+      });
+    });
+  }
+
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -1424,6 +1463,47 @@ class ListView extends PureComponent {
         pageSize: 15,
       },
     });
+  }
+
+  renderQueryForm() {
+    const {
+      form: { getFieldDecorator },
+    } = this.props;
+    return (
+      <Form onSubmit={this.handleSearch} layout="inline">
+        <Row gutter={{ md: 0, lg: 24, xl: 48}}>
+          <Col md={8} sm={24}>
+            <FormItem label="商品类型">
+              {getFieldDecorator('product_type', {
+                initialValue: null,
+              })(
+                <Select>
+                  <Option value={null}>全部</Option>
+                  <Option value={1}>信用卡</Option>
+                  <Option value={2}>贷款</Option>
+                  <Option value={3}>POS机</Option>
+              </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="商品ID">
+              {getFieldDecorator('product_id')(
+                <Input placeholder="商品ID" />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <span style={{ float: 'right' }} className={styles.submitButtons}>
+              <Button type="primary" htmlType="submit">
+                查询
+              </Button>
+            </span>
+          </Col>
+        </Row>
+        
+      </Form>
+    );
   }
 
 
@@ -1440,6 +1520,7 @@ class ListView extends PureComponent {
       <PageHeaderWrapper title="商品列表">
         <Card bordered={false}>
           <div className={styles.tableList}>
+            <div className={styles.tableListForm}>{this.renderQueryForm()}</div>
             <div className={styles.tableListOperator}>
               <Button icon="plus" type="primary" onClick={this.goToCreate}>
                 新增

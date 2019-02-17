@@ -81,6 +81,7 @@ export default {
   'menu.financial_manager': '财务管理',
   'menu.financial_manager.list': '财务列表',
   'menu.financial_manager.salary': '工资结算审核',
+  'menu.financial_manager.paid': '支付列表',
   'menu.financial_manager.withdraw_cash': '提现审核',
   'menu.content_manager': '内容管理',
   'menu.content_manager.banner': '轮播图管理',

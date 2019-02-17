@@ -6,6 +6,10 @@ export function queryFinancials(params) {
   return request(`${pathConfig.Financials}?${stringify(params)}`);
 }
 
+export function queryPosApply(params) {
+  return request(`${pathConfig.Financials}/posApplyList`);
+}
+
 export function queryFinancialsMonthReport(params) {
   return request(`${pathConfig.Financials}/monthReport?${stringify(params)}`);
 }

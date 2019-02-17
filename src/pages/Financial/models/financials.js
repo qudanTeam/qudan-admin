@@ -1,13 +1,18 @@
 import { queryBanners, createBanner, updateBanner, deleteBanner } from "@/services/banner";
 import { requestDataToPageResult } from "@/utils/utils";
 import { message } from "antd";
-import { queryFinancials, queryFinancialsMonthReport, queryWithdraws, passFinancialsWithdraw, refuseFinancialsWithdraw, finishedFinancialsWithdraw } from "@/services/financials";
+import { queryFinancials, queryFinancialsMonthReport, queryWithdraws, passFinancialsWithdraw, refuseFinancialsWithdraw, finishedFinancialsWithdraw, queryPosApply } from "@/services/financials";
 
 export default {
   namespace: 'financials',
 
   state: {
     financials: {
+      list: [],
+      pagination: {},
+    },
+
+    posApply: {
       list: [],
       pagination: {},
     },
@@ -31,6 +36,15 @@ export default {
       const resp = yield call(queryFinancials, payload);
       yield put({
         type: 'saveFinancials',
+        payload: requestDataToPageResult(resp),
+      });
+    },
+
+    *fetchPosApply({ payload }, { call, put }) {
+      const resp = yield call(queryPosApply, payload);
+
+      yield put({
+        type: 'savePosApply',
         payload: requestDataToPageResult(resp),
       });
     },
@@ -101,6 +115,13 @@ export default {
       return {
         ...state,
         financials: action.payload,
+      };
+    },
+
+    savePosApply(state, action) {
+      return {
+        ...state,
+        posApply: action.payload,
       };
     },
     

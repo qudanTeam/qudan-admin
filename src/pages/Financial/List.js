@@ -211,7 +211,7 @@ class ListView extends PureComponent {
                   <Select.Option value={4}>VIP购买</Select.Option>
                   <Select.Option value={5}>阶梯工资</Select.Option>
                   <Select.Option value={6}>活动</Select.Option>
-                  <Select.Option value={7}>退押金</Select.Option>
+                  <Select.Option value={8}>退押金</Select.Option>
                 </Select>
               )}
             </FormItem>

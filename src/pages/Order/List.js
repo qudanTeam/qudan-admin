@@ -226,6 +226,18 @@ class OrderListView extends PureComponent {
       }
     },
     {
+      title: '支付人用户编号',
+      dataIndex: 'pos_apply_invite_code',
+    },
+    {
+      title: '支付流水号',
+      dataIndex: 'pay_order_no',
+    },
+    {
+      title: '支付金额',
+      dataIndex: 'pay_price',
+    },
+    {
       title: '押金状态',
       dataIndex: 'deposit_status',
       render: val => {
@@ -650,7 +662,7 @@ class OrderListView extends PureComponent {
               size="small"
               data={data}
               columns={this.columns}
-              scroll={{ x: 1600 }}
+              scroll={{ x: 1900 }}
               onChange={this.handleTableChange}
             />
           </div>

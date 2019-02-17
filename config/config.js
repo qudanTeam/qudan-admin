@@ -39,7 +39,7 @@ export default {
   },
   proxy: {
     "/apis": {
-      "target": "http://47.99.242.122:8781/",
+      "target": "http://localhost:7001/",
       "changeOrigin": true,
       "pathRewrite": { "^/apis" : "" }
     },
