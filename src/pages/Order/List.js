@@ -317,6 +317,19 @@ class OrderListView extends PureComponent {
 
     const { dispatch } = this.props;
 
+    if (product_type === 3) {
+
+      return this.props.dispatch({
+        type: 'orders/passOne',
+        payload: {
+          id,
+          loan_money: 0,
+          loan_expire: '',
+          card_money: 0,
+        },
+      });
+    }
+
     Modal.confirm({
       title: '填写通过的资料',
       content: product_type === 2 ? (

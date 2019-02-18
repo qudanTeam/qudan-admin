@@ -405,6 +405,9 @@ class ApplyView extends PureComponent {
           title: '收件人地址',
           dataIndex: 'recipient_address',
           width: 150,
+          render: (val, record) => {
+            return <span>{`${record.region} - ${val}`}</span>
+          }
         },
         {
           title: '申请人支付宝账号',
@@ -454,7 +457,7 @@ class ApplyView extends PureComponent {
             <Fragment>
               <a disabled={+record.deliver_status > 1} onClick={this.handleShipOne(record.pae_id)}>发货</a>
               <Divider type="vertical" />
-              <a onClick={this.handleSigning(record.pae_id)}>商品已签收</a>
+              <a disabled={+record.deliver_status !== 2} onClick={this.handleSigning(record.pae_id)}>商品已签收</a>
             </Fragment>
           ),
         }

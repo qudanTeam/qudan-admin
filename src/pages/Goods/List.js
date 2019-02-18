@@ -99,6 +99,17 @@ class UpdateForm extends PureComponent {
           if (fieldsValue.card_progress_img) {
             fieldsValue.card_progress_img = fieldsValue.card_progress_img.toHTML();
           }
+          if (fieldsValue.benefits_b) {
+            fieldsValue.benefits_b = fieldsValue.benefits_b.toHTML();
+          }
+
+          if (fieldsValue.benefits_c) {
+            fieldsValue.benefits_c = fieldsValue.benefits_c.toHTML();
+          }
+
+          if (fieldsValue.require_condition) {
+            fieldsValue.require_condition = fieldsValue.require_condition.toHTML();
+          }
           // console.log(fieldsValue, 'fieldsValue');
           handleSubmit(fieldsValue);
         }
@@ -179,7 +190,7 @@ class UpdateForm extends PureComponent {
 
                 <Form.Item {...formItemLayout} label="广告主">
                   {getFieldDecorator('advertisers_obj', {
-                    initialValue: data.advertisers,
+                    initialValue: data.advertisers_obj,
                     rules: [{ required: true, message: '请选择一个广告主' }],
                   })(
                     <SelectAdvistor />
