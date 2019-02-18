@@ -55,7 +55,7 @@ export default {
     },
     
     *refuseOne({ payload }, { call, put }) {
-      const response = yield call(refuseOne, payload.id);
+      const response = yield call(refuseOne, payload);
 
       if (response.id) {
         yield put({

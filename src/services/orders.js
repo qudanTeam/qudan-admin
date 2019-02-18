@@ -22,9 +22,11 @@ export const returnDeposit = async (params) => {
   });
 }
 
-export const refuseOne = async id => {
+export const refuseOne = async params => {
+  const { id, ...rest } = params;
   return request(`${pathConfig.Orders}/${id}/refuse`, {
     method: 'PUT',
+    body: rest,
   });
 }
 

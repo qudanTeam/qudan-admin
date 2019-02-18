@@ -252,26 +252,57 @@ class OrderListView extends PureComponent {
       title: '操作',
       width: 370,
       fixed: 'right',
-      render: (text, record) => (
+      render: (text, record) => {
+        const checkIsPassed = () => {
+          if (+record.status > 1) {
+            return true;
+          } else if (+record.product_type === 3) {
+            if (+record.deliver_status === 3 && +record.status > 1) {
+              return true;
+            }
+
+            return false;
+          }
+        }
+
+        const depositDisabled = () => {
+          if (+record.status === 3) {
+            return true;
+          }
+
+          if (+record.deposit_status === 3) {
+            return true;
+          }
+
+          if (+record.deliver_status < 3) {
+            return true;
+          }
+
+          return false;
+        }
+
+        // const checkIsUnPassed
+        return (
         <Fragment>
           <a onClick={this.handleShowOne(record.id)}>查看</a>
           <Divider type="vertical" />
           <a onClick={this.prepareUpdate(record.id)}>编辑</a>
           <Divider type="vertical" />
-          <a disabled={+record.status > 1} onClick={this.handlePassOne(record)}>设为已通过</a>
+          <a disabled={checkIsPassed()} onClick={this.handlePassOne(record)}>设为已通过</a>
           <Divider type="vertical" />
-          <a disabled={+record.status > 1} onClick={this.handleRefuseOne(record.id)} style={ +record.status > 1 ? null : { color: 'red'}} >设为未通过</a>
+          <a disabled={checkIsPassed()} onClick={this.handleRefuseOne(record)} style={ +record.status > 1 ? null : { color: 'red'}} >设为未通过</a>
           {
             record.product_type === 3 ?
             (
               <>
                 <Divider type="vertical" />
-                <a disabled={+record.deposit_status === 3} onClick={this.handleReturnDeposit(record.pae_id)} style={ +record.status > 1 ? null : { color: 'red'}} >押金已退还</a>
+                <a disabled={depositDisabled()} onClick={this.handleReturnDeposit(record.pae_id)} style={ +record.status > 1 ? null : { color: 'red'}} >押金已退还</a>
               </>
             ) : null
           }
         </Fragment>
-      ),
+        );
+      },
     },
   ]
 
@@ -379,12 +410,41 @@ class OrderListView extends PureComponent {
     // })
   }
 
-  handleRefuseOne = id => (e) => {
+  handleRefuseOne = record => (e) => {
+    const { id, product_type } = record;
     if (e) {
       e.preventDefault()
     }
-
     const { dispatch } = this.props;
+
+    if (product_type === 3) {
+      Modal.confirm({
+        title: '填写拒绝的理由',
+        content: (<Input placeholder="拒绝理由" onChange={(e) => this.setState({reject_reason: e.target.value})} />),
+        okText: '确认',
+        cancelText: '取消',
+        // okButtonProps: {
+        //   disabled: !this.state.currentMessage,
+        // },
+        onOk: () => {
+          
+            if (!this.state.reject_reason) {
+              message.error('请填写拒绝理由');
+              return Promise.reject('error');
+            }
+        
+          return this.props.dispatch({
+            type: 'orders/refuseOne',
+            payload: {
+              id,
+              reject_reason: this.state.reject_reason,
+            },
+          });
+        },
+      });
+
+      return;
+    }
 
     dispatch({
       type: 'orders/refuseOne',

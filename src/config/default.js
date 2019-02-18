@@ -18,7 +18,7 @@ export default {
   TradeTypeState: ['未知', '待审核', '已审核', '已拒绝'],
   TradeTypeSendState: ['未知', '未发放', '已发放'],
   ApplyDepositState: ['未退还', '未退还', '未退还', '已退还'],
-  DeliverStatus: ['--', '待发货', '已发货', '已签收'],
+  DeliverStatus: ['--', '待发货', '已发货', '已完成'],
   RateRegex: /^(\d{1,3})((?:\.\d+)?)$/,
   NumberRegex: /^(\d+)((?:\.\d+)?)$/,
   VipLevel: ['--', 'VIP1', 'VIP2', 'VIP3'],
