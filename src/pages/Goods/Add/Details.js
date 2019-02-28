@@ -433,14 +433,20 @@ class DetailsForm extends React.PureComponent {
                 )}
               </Form.Item>
 
-              <Form.Item {...formItemLayout} label="信用卡长图">
-                {getFieldDecorator('card_long_img', {
-                  initialValue: data.card_long_img,
-                  rules: [{ required: true, message: '请上传信用卡长图' }],
-                })(
-                  <Uploader action={config.uploadPath} host={config.qiniu.host} />
-                )}
-              </Form.Item>
+              {
+                +this.productType === 1 ? (
+                  <Form.Item {...formItemLayout} label="信用卡长图">
+                    {getFieldDecorator('card_long_img', {
+                      initialValue: data.card_long_img,
+                      rules: [{ required: true, message: '请上传信用卡长图' }],
+                    })(
+                      <Uploader action={config.uploadPath} host={config.qiniu.host} />
+                    )}
+                  </Form.Item>
+                ) : null
+              }
+
+              
 
               <Form.Item {...formItemLayout} label="产品海报">
                 {getFieldDecorator('product_poster', {

@@ -75,7 +75,7 @@ class UpdateForm extends PureComponent {
         e.preventDefault();
       }
       
-      form.validateFields((err, fieldsValue) => {
+      form.validateFieldsAndScroll((err, fieldsValue) => {
         if (err) return;
         // console.log(fieldsValue, 'values');
         form.resetFields();
@@ -1045,15 +1045,18 @@ class UpdateForm extends PureComponent {
                   <Uploader action={config.uploadPath} host={config.qiniu.host} />
                 )}
               </Form.Item>
-      
-              <Form.Item {...formItemLayout} label="信用卡长图">
-                {getFieldDecorator('card_long_img', {
-                  initialValue: data.card_long_img,
-                  rules: [{ required: true, message: '请上传信用卡长图' }],
-                })(
-                  <Uploader action={config.uploadPath} host={config.qiniu.host} />
-                )}
-              </Form.Item>
+              {
+                getProductType() === 1 ? (
+                  <Form.Item {...formItemLayout} label="信用卡长图">
+                    {getFieldDecorator('card_long_img', {
+                      initialValue: data.card_long_img,
+                      rules: [{ required: true, message: '请上传信用卡长图' }],
+                    })(
+                      <Uploader action={config.uploadPath} host={config.qiniu.host} />
+                    )}
+                  </Form.Item>
+                ) : null
+              }
       
               <Form.Item {...formItemLayout} label="产品海报">
                 {getFieldDecorator('product_poster', {
