@@ -52,6 +52,9 @@ class CommonForm extends React.PureComponent {
           if (values.apply_condition) {
             values.apply_condition = values.apply_condition.toHTML();
           }
+          if (values.commission_standard) {
+            values.commission_standard = values.commission_standard.toHTML();
+          }
           dispatch({
             type: 'goodAdd/saveFormData',
             payload: values,
