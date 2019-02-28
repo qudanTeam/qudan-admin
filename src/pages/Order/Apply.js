@@ -518,7 +518,7 @@ class ApplyView extends PureComponent {
               return '-';
             }
             return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
-          }
+          },
         },
         {
           title: '放款金额',
@@ -530,9 +530,7 @@ class ApplyView extends PureComponent {
               return '-';
             }
             return <span>{val}</span>
-            // return (<span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>)
-          }
-          
+          },
         },
         {
           title: '放款期限',

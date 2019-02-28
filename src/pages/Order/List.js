@@ -17,8 +17,6 @@ const { Option } = Select;
 const FormItem = Form.Item;
 const { Description } = DescriptionList;
 
-
-
 const UpdateForm = Form.create()(props => {
   const { 
     modalVisible, 
