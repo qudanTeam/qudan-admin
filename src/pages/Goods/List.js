@@ -110,6 +110,10 @@ class UpdateForm extends PureComponent {
           if (fieldsValue.require_condition) {
             fieldsValue.require_condition = fieldsValue.require_condition.toHTML();
           }
+
+          if (fieldsValue.commission_standard) {
+            fieldsValue.commission_standard = fieldsValue.commission_standard.toHTML();
+          }
           // console.log(fieldsValue, 'fieldsValue');
           handleSubmit(fieldsValue);
         }
