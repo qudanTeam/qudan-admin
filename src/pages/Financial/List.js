@@ -60,7 +60,7 @@ class ListView extends PureComponent {
       dataIndex: 'create_time',
       
       render: (val) => {
-        return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>);
+        return (<span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>);
       },
     },
     {

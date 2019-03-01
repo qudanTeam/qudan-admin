@@ -220,7 +220,8 @@ class OrderListView extends PureComponent {
       title: '申请时间',
       dataIndex: 'create_time',
       render: (val) => {
-        return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
+        return (<span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>);
+        // return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
       }
     },
     {
@@ -655,7 +656,7 @@ class OrderListView extends PureComponent {
               {/* <Description term="已完成任务量">{+profile.finished_task_count}</Description>
               <Description term="已完成金额">{+profile.finished_task_price}</Description> */}
               <Description term="用户手机">{profile.mobile || '--'}</Description>
-              <Description term="订单创建时间">{moment(profile.create_time).utc().zone(-8).format("YYYY-MM-DD HH:mm:ss") || '--'}</Description>
+              <Description term="订单创建时间">{moment(profile.create_time).utcOffset(-8).add(1, 'days').format("YYYY-MM-DD HH:mm:ss") || '--'}</Description>
               
             </DescriptionList>
           </Skeleton>

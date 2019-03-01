@@ -165,7 +165,7 @@ class ApplyView extends PureComponent {
       title: '更新时间',
       dataIndex: 'modify_time',
       render: (val) => {
-        return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
+        return (<span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>)
       },
     },
     {
@@ -232,7 +232,7 @@ class ApplyView extends PureComponent {
         if (!val) {
           return '-';
         }
-        return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
+        return (<span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>)
       }
     },
     {
@@ -250,7 +250,7 @@ class ApplyView extends PureComponent {
         if (!val) {
           return '-';
         }
-        return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
+        return (<span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>)
       }
     },
     {
@@ -261,7 +261,7 @@ class ApplyView extends PureComponent {
         if (!val) {
           return '-';
         }
-        return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
+        return (<span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>)
       }
     },
     {
@@ -280,7 +280,7 @@ class ApplyView extends PureComponent {
         if (!val) {
           return '-';
         }
-        return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
+        return (<span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>)
       }
     },
     {
@@ -446,7 +446,7 @@ class ApplyView extends PureComponent {
               return <span>--</span>;
             }
 
-            return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
+            return (<span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>)
           }
         },
         {
@@ -505,7 +505,7 @@ class ApplyView extends PureComponent {
             if (!val) {
               return '-';
             }
-            return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
+            return (<span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>)
           }
         },
         {
@@ -517,7 +517,7 @@ class ApplyView extends PureComponent {
             if (!val) {
               return '-';
             }
-            return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
+            return (<span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>)
           },
         },
         {

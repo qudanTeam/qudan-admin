@@ -67,7 +67,7 @@ class ListView extends PureComponent {
       // width: 150,
       render: (txt, record) => {
         return (
-          <span>{moment(txt).utc().zone(-8).format("YYYY-MM-DD HH:mm:ss")}</span>
+          <span>{moment(txt).utcOffset(-8).add(1, 'days').format("YYYY-MM-DD HH:mm:ss")}</span>
         );
       }
     },
@@ -247,7 +247,7 @@ class ListView extends PureComponent {
         dataIndex: 'register_time',
         width: 200,
         render: (val) => {
-          return (<span>{moment(val).utc().zone(-8).format("YYYY-MM-DD HH:mm:ss")}</span>)
+          return (<span>{moment(val).utcOffset(-8).add(1, 'days').format("YYYY-MM-DD HH:mm:ss")}</span>)
         },
       }
     ];
@@ -336,7 +336,7 @@ class ListView extends PureComponent {
         dataIndex: 'audit_time',
         width: 200,
         render: (val) => {
-          return (<span>{moment(val).utc().zone(-8).format("YYYY-MM-DD HH:mm:ss")}</span>)
+          return (<span>{moment(val).utcOffset(-8).add(1, 'days').format("YYYY-MM-DD HH:mm:ss")}</span>)
         },
       },
       {

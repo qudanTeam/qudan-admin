@@ -455,7 +455,7 @@ class UsersView extends PureComponent {
       dataIndex: 'register_time',
       width: 200,
       render: (val) => {
-        return (<span>{moment(val).utc().zone(-8).format("YYYY-MM-DD HH:mm:ss")}</span>)
+        return (<span>{moment(val).utcOffset(-8).add(1, 'days').format("YYYY-MM-DD HH:mm:ss")}</span>)
       },
     },
     {
@@ -463,7 +463,7 @@ class UsersView extends PureComponent {
       dataIndex: 'last_login_time',
       // width: 200,
       render: (val) => {
-        return (<span>{moment(val).utc().zone(-8).format("YYYY-MM-DD HH:mm:ss")}</span>)
+        return (<span>{moment(val).utcOffset(-8).add(1, 'days').format("YYYY-MM-DD HH:mm:ss")}</span>)
       },
     },
     {
@@ -556,7 +556,7 @@ class UsersView extends PureComponent {
       dataIndex: 'register_time',
       width: 200,
       render: (val) => {
-        return (<span>{moment(val).utc().zone(-8).format("YYYY-MM-DD HH:mm:ss")}</span>)
+        return (<span>{moment(val).utcOffset(-8).add(1, 'days').format("YYYY-MM-DD HH:mm:ss")}</span>)
       },
     }
   ];
@@ -993,8 +993,8 @@ class UsersView extends PureComponent {
             vipInfo.vip_level ? (
               <DescriptionList size="large" title="VIP资料" style={{ marginBottom: 32 }}>
                 <Description term="VIP类型">{VipLevel[vipInfo.vip_level]}</Description>
-                <Description term="开通时间">{moment(vipInfo.start_time).utc().zone(-8).format("YYYY年MM月DD日")}</Description>
-                <Description term="结束时间">{moment(vipInfo.end_time).utc().zone(-8).format("YYYY年MM月DD日")}</Description>
+                <Description term="开通时间">{moment(vipInfo.start_time).utcOffset(-8).add(1, 'days').format("YYYY年MM月DD日")}</Description>
+                <Description term="结束时间">{moment(vipInfo.end_time).utcOffset(-8).add(1, 'days').format("YYYY年MM月DD日")}</Description>
                 <Description term="已支付金额">{vipInfo.trade_price}</Description>
                 <Description term="订单号">{vipInfo.trade_id}</Description>
                 <Description term="加成金额">{vipInfo.addRate}</Description>

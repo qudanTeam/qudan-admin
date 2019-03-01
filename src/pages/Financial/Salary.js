@@ -96,7 +96,7 @@ class SalaryView extends PureComponent {
       width: 250,
       render: (val) => {
         return (
-          <span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>
+          <span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>
         );
       }
     },
@@ -108,7 +108,7 @@ class SalaryView extends PureComponent {
           return '--';
         }
         return (
-          <span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>
+          <span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>
         );
       }
     },

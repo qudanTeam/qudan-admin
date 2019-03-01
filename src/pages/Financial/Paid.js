@@ -48,7 +48,7 @@ class PaidView extends PureComponent {
       dataIndex: 'apply_create_time',
       width: 150,
       render: val => {
-        return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>);
+        return (<span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>);
       },
     },
     {
@@ -56,7 +56,7 @@ class PaidView extends PureComponent {
       dataIndex: 'modify_time',
       width: 150,
       render: val => {
-        return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>);
+        return (<span>{moment(val).utcOffset(-8).add(1, 'days').format('YYYY-MM-DD HH:mm:ss')}</span>);
       }
     },
     {
