@@ -32,6 +32,11 @@ class SalaryView extends PureComponent {
       width: 150,
     },
     {
+      title: '用户姓名',
+      dataIndex: 'realname',
+      width: 150,
+    },
+    {
       title: '金额',
       dataIndex: 'price',
       width: 150,
@@ -308,7 +313,7 @@ class SalaryView extends PureComponent {
             <StandardTable
               size="small"
               data={data}
-              scroll={{ x: 1780 }}
+              scroll={{ x: 2010 }}
               columns={this.columns}
               onChange={this.handleTableChange}
             />
