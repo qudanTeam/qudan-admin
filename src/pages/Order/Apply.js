@@ -440,7 +440,7 @@ class ApplyView extends PureComponent {
         {
           title: '申请支付时间',
           dataIndex: 'paid_time',
-          width: 150,
+          width: 200,
           render: val => {
             if (!val) {
               return <span>--</span>;

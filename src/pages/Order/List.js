@@ -185,7 +185,7 @@ class OrderListView extends PureComponent {
       width: 150,
     },
     {
-      title: '用户编号',
+      title: '受益人编号',
       dataIndex: 'invite_code',
       width: 150,
       render: (val, record) => {
@@ -193,7 +193,7 @@ class OrderListView extends PureComponent {
       }
     },
     {
-      title: '用户名称',
+      title: '受益人名称',
       dataIndex: 'syr_realname',
       width: 150,
       render: (val, record) => {
@@ -211,7 +211,7 @@ class OrderListView extends PureComponent {
     //   width: 150,
     // },
     {
-      title: '用户手机号',
+      title: '受益人手机号',
       dataIndex: 'syr_register_mobile',
       // width: 150,
       render: (val, record) => {
@@ -224,6 +224,34 @@ class OrderListView extends PureComponent {
       render: (val) => {
         return (<span>{moment(val).utc().zone(-8).format('YYYY-MM-DD HH:mm:ss')}</span>)
       }
+    },
+    {
+      title: '申请人编号',
+      dataIndex: 'user_invite_code',
+      render: (val) => {
+        return (<span>{val || '--'}</span>);
+      }
+    },
+    {
+      title: '申请人姓名',
+      dataIndex: 'realname',
+      render: (val) => {
+        return <span>{val || '--'}</span>
+      }
+    },
+    {
+      title: '申请人手机号',
+      dataIndex: 'register_mobile',
+      render: (val) => {
+        return <span>{val}</span>;
+      },
+    },
+    {
+      title: '申请人身份证',
+      dataIndex: 'sqr_id_no',
+      render: (val) => {
+        return <span>{val}</span>;
+      },
     },
     {
       title: '支付人用户编号',
@@ -254,6 +282,11 @@ class OrderListView extends PureComponent {
       fixed: 'right',
       render: (text, record) => {
         const checkIsPassed = () => {
+
+          if (+record.product_type === 3 && +record.deliver_status < 3) {
+            return true;
+          }
+
           if (+record.status > 1) {
             return true;
           } else if (+record.product_type === 3) {
@@ -290,7 +323,7 @@ class OrderListView extends PureComponent {
           <Divider type="vertical" />
           <a disabled={checkIsPassed()} onClick={this.handlePassOne(record)}>设为已通过</a>
           <Divider type="vertical" />
-          <a disabled={checkIsPassed()} onClick={this.handleRefuseOne(record)} style={ +record.status > 1 ? null : { color: 'red'}} >设为未通过</a>
+          <a disabled={checkIsPassed()} onClick={this.handleRefuseOne(record)} style={ checkIsPassed() ? null : { color: 'red'}} >设为未通过</a>
           {
             record.product_type === 3 ?
             (
@@ -601,8 +634,8 @@ class OrderListView extends PureComponent {
               <Description term="订单状态">{config.OrderStatus[+profile.status] || '--'}</Description>
               <Description term="订单类型">{config.ProductType[+profile.product_type] || '--'}</Description>
               <Description term="商品名称">{profile.product_name || '--'}</Description>
-              <Description term="用户编号">{profile.invite_code || '--'}</Description>
-              <Description term="用户名称">{profile.realname || '--'}</Description>
+              <Description term="受益人编号">{profile.invite_code || profile.user_invite_code}</Description>
+              <Description term="受益人名称">{profile.syr_realname || profile.realname}</Description>
               {
                 profile.product_type === 2 ? (
                   <Description term="实际贷款额度">{profile.loan_money || '--'}</Description>
@@ -735,7 +768,7 @@ class OrderListView extends PureComponent {
               size="small"
               data={data}
               columns={this.columns}
-              scroll={{ x: 1900 }}
+              scroll={{ x: 2500 }}
               onChange={this.handleTableChange}
             />
           </div>
