@@ -182,14 +182,14 @@ class UpdateForm extends PureComponent {
                   {getFieldDecorator('is_hot', {
                     initialValue: data.is_hot,
                     rules: [{required: true, type: 'boolean'}]
-                  })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
+                  })(<Switch checkedChildren={<Icon type="check" />} defaultChecked={data.is_hot} unCheckedChildren={<Icon type="close" />} />)}
                 </Form.Item>
 
                 <Form.Item {...formItemLayout} label="是否展示">
                   {getFieldDecorator('is_show', {
                     initialValue: data.is_show,
                     rules: [{required: true, type: 'boolean'}]
-                  })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
+                  })(<Switch checkedChildren={<Icon type="check" />} defaultChecked={data.is_show} unCheckedChildren={<Icon type="close" />} />)}
                 </Form.Item>
 
                 <Form.Item {...formItemLayout} label="广告主">
@@ -504,13 +504,13 @@ class UpdateForm extends PureComponent {
                 {getFieldDecorator('is_hot', {
                   initialValue: data.is_hot,
                   rules: [{required: true, type: 'boolean'}]
-                })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
+                })(<Switch checkedChildren={<Icon type="check" />} defaultChecked={data.is_hot} unCheckedChildren={<Icon type="close" />} />)}
               </Form.Item>
               <Form.Item {...formItemLayout} label="是否展示">
                 {getFieldDecorator('is_show', {
                   initialValue: data.is_show,
                   rules: [{required: true, type: 'boolean'}]
-                })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
+                })(<Switch checkedChildren={<Icon type="check" />} defaultChecked={data.is_show}  unCheckedChildren={<Icon type="close" />} />)}
               </Form.Item>
       
               <Form.Item {...formItemLayout} label="广告主">
@@ -526,7 +526,7 @@ class UpdateForm extends PureComponent {
                 {getFieldDecorator('is_in_shop', {
                   initialValue: data.is_in_shop,
                   rules: [{required: true, type: 'boolean'}]
-                })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
+                })(<Switch checkedChildren={<Icon type="check" />} defaultChecked={data.is_in_shop} unCheckedChildren={<Icon type="close" />} />)}
               </Form.Item>
       
               <Form.Item {...formItemLayout} label="奖金">

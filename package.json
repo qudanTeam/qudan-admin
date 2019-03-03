@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "start": "umi dev",
+    "start": "umi dev --port 8001",
     "build": "umi build",
     "test": "umi test",
     "lint": "eslint --ext .js src mock tests",
