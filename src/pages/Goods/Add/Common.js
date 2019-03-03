@@ -123,16 +123,16 @@ class CommonForm extends React.PureComponent {
           
           <Form.Item {...formItemLayout} label="是否热门">
             {getFieldDecorator('is_hot', {
-              initialValue: data.is_hot,
+              initialValue: !!data.is_hot,
               rules: [{required: true, type: 'boolean'}]
-            })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />)}
+            })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="是否展示">
             {getFieldDecorator('is_show', {
               initialValue: data.is_show,
               rules: [{required: true, type: 'boolean'}]
-            })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />)}
+            })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
           </Form.Item>
 
           <Form.Item {...formItemLayout} label="广告主">
@@ -150,7 +150,7 @@ class CommonForm extends React.PureComponent {
                 {getFieldDecorator('is_in_shop', {
                   initialValue: data.is_in_shop,
                   rules: [{required: true, type: 'boolean'}]
-                })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} defaultChecked />)}
+                })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
               </Form.Item>
             ) : null
           }
