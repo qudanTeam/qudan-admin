@@ -100,7 +100,6 @@ class BasicLayout extends React.Component {
   };
 
   getPageTitle = pathname => {
-    // const currentRouterDate = this
     return `趣单运营管理中心`;
   }
 

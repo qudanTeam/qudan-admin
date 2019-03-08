@@ -233,21 +233,21 @@ class OrderListView extends PureComponent {
     },
     {
       title: '申请人姓名',
-      dataIndex: 'realname',
+      dataIndex: 'name',
       render: (val) => {
         return <span>{val || '--'}</span>
       }
     },
     {
       title: '申请人手机号',
-      dataIndex: 'register_mobile',
+      dataIndex: 'mobile',
       render: (val) => {
         return <span>{val}</span>;
       },
     },
     {
       title: '申请人身份证',
-      dataIndex: 'sqr_id_no',
+      dataIndex: 'id_no',
       render: (val) => {
         return <span>{val}</span>;
       },
