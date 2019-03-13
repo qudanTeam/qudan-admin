@@ -18,6 +18,7 @@ export default {
   effects: {
     *fetch({ payload }, { call, put }) {
       const response = yield call(queryOrder, payload);
+      
       const data = response;
       yield put({
         type: 'save',
@@ -34,43 +35,61 @@ export default {
       });
     },
 
-    *passOne({ payload }, { call, put }) {
+    *passOne({ payload }, { call, put, select }) {
       const response = yield call(passOne, payload);
+
+      const { pagination } = yield select(_ => _.orders.data);
 
       if (response.id) {
         yield put({
           type: 'fetch',
+          payload: {
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+          },
         });
       }
     },
 
-    *returnDeposit({ payload }, { call, put }) {
+    *returnDeposit({ payload }, { call, put, select }) {
       const response = yield call(returnDeposit, payload);
-
+      const { pagination } = yield select(_ => _.orders.data);
       if (response.id) {
         yield put({
           type: 'fetch',
+          payload: {
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+          },
         });
       }
     },
     
-    *refuseOne({ payload }, { call, put }) {
+    *refuseOne({ payload }, { call, put, select }) {
       const response = yield call(refuseOne, payload);
-
+      const { pagination } = yield select(_ => _.orders.data);
       if (response.id) {
         yield put({
           type: 'fetch',
+          payload: {
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+          },
         });
       }
     },
 
-    *update({ payload }, { call, put }) {
+    *update({ payload }, { call, put, select }) {
       const response = yield call(updateOrder, payload);
 
-
+      const { pagination } = yield select(_ => _.orders.data);
       if (response.id) {
         yield put({
           type: 'fetch',
+          payload: {
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+          },
         });
       }
     }

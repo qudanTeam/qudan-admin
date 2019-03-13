@@ -513,8 +513,9 @@ class OrderListView extends PureComponent {
 
       const values = {
         ...fieldsValue,
-        page: 1,
-        pageSize: 15,
+        // ...this.state.formValues,
+        // page: 1,
+        // pageSize: 15,
       };
 
       if (values.filter_time && values.filter_time.length > 0) {
