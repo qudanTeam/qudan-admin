@@ -11,6 +11,7 @@ import StandardTable from '@/components/StandardTable';
 import { connect } from 'dva';
 import moment from 'moment';
 import config from '@/config';
+import { stringify } from 'qs';
 import DescriptionList from '@/components/DescriptionList';
 
 const { Option } = Select;
@@ -535,6 +536,35 @@ class OrderListView extends PureComponent {
     });
   }
 
+  handleExport = (e) => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    const { dispatch, form } = this.props;
+
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+
+      const values = {
+        ...fieldsValue,
+      };
+
+      if (values.filter_time && values.filter_time.length > 0) {
+        values.start_time = values.filter_time[0].format('YYYY-MM-DD HH:mm:ss');
+        values.end_time = values.filter_time[1].format('YYYY-MM-DD HH:mm:ss');
+        delete values.filter_time;
+      }
+
+      this.setState({
+        formValues: values,
+      });
+
+      window.open(`/apis/export/orders?${stringify(values)}`);
+      // window.location.
+    });
+  }
+
   componentDidMount() {
     const { dispatch } = this.props;
     this.setState({
@@ -737,9 +767,34 @@ class OrderListView extends PureComponent {
           </Col>
         </Row>
         <Row gutter={{ md: 0, lg: 24, xl: 48}}>
+          <Col md={8} sm={24}>
+            <FormItem label="申请人姓名">
+              {getFieldDecorator('sqr_name', {
+                initialValue: null,
+              })(
+                <Input placeholder="申请人姓名" />
+              )}
+            </FormItem>
+          </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="申请人身份证号">
+              {getFieldDecorator('sqr_id_no', {
+                initialValue: null,
+              })(
+                <Input placeholder="申请人身份证号" />
+              )}
+            </FormItem>
+          </Col>
+        </Row>
+        <Row gutter={{ md: 0, lg: 24, xl: 48}}>
           <Col md={8} sm={24}></Col>
           <Col md={8} sm={24}></Col>
           <Col md={8} sm={24}>
+            <span style={{ float: 'right', marginLeft: '10px', }} className={styles.submitButtons}>
+              <Button type="primary" onClick={this.handleExport}>
+                导出
+              </Button>
+            </span>
             <span style={{ float: 'right' }} className={styles.submitButtons}>
               <Button type="primary" htmlType="submit">
                 查询

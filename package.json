@@ -32,6 +32,7 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
+    "@blueprintjs/core": "^3.14.1",
     "braft-editor": "^2.2.0",
     "classnames": "^2.2.6",
     "es6-promise": "^4.2.6",

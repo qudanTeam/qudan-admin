@@ -106,12 +106,6 @@ export default class BaseMenu extends PureComponent {
     }
     return <Menu.Item key={item.path}>{this.getMenuItemPath(item)}</Menu.Item>;
   };
-
-  /**
-   * 判断是否是http链接.返回 Link 或 a
-   * Judge whether it is http link.return a or Link
-   * @memberof SiderMenu
-   */
   getMenuItemPath = item => {
     const { name } = item;
     const itemPath = this.conversionPath(item.path);

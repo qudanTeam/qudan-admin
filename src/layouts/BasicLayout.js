@@ -19,6 +19,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 const { Content } = Layout;
 
 // Conversion router to menu.
+// Menu: { name, locale, authority, path, component, children }
 function formatter(data, parentAuthority, parentName) {
   return data
     .map(item => {
