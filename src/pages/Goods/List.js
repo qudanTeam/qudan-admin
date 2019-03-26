@@ -180,14 +180,14 @@ class UpdateForm extends PureComponent {
 
                 <Form.Item {...formItemLayout} label="是否热门">
                   {getFieldDecorator('is_hot', {
-                    initialValue: data.is_hot,
+                    initialValue: data.is_hot ? true : false,
                     rules: [{required: true, type: 'boolean'}]
                   })(<Switch checkedChildren={<Icon type="check" />} defaultChecked={data.is_hot} unCheckedChildren={<Icon type="close" />} />)}
                 </Form.Item>
 
                 <Form.Item {...formItemLayout} label="是否展示">
                   {getFieldDecorator('is_show', {
-                    initialValue: data.is_show,
+                    initialValue: data.is_show ? true : false,
                     rules: [{required: true, type: 'boolean'}]
                   })(<Switch checkedChildren={<Icon type="check" />} defaultChecked={data.is_show} unCheckedChildren={<Icon type="close" />} />)}
                 </Form.Item>
@@ -524,7 +524,7 @@ class UpdateForm extends PureComponent {
       
               <Form.Item {...formItemLayout} label="是否上店铺可选">
                 {getFieldDecorator('is_in_shop', {
-                  initialValue: data.is_in_shop,
+                  initialValue: data.is_in_shop ? true : false,
                   rules: [{required: true, type: 'boolean'}]
                 })(<Switch checkedChildren={<Icon type="check" />} defaultChecked={data.is_in_shop} unCheckedChildren={<Icon type="close" />} />)}
               </Form.Item>

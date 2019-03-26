@@ -39,7 +39,7 @@ export default {
   },
   proxy: {
     "/apis": {
-      "target": "http://localhost:7001/",
+      "target": "http://msqudanbg.myhshop.top/api",
       "changeOrigin": true,
       "pathRewrite": { "^/apis" : "" }
     },
