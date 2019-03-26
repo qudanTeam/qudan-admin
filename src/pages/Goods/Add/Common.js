@@ -130,7 +130,7 @@ class CommonForm extends React.PureComponent {
 
           <Form.Item {...formItemLayout} label="是否展示">
             {getFieldDecorator('is_show', {
-              initialValue: data.is_show,
+              initialValue: !!data.is_show,
               rules: [{required: true, type: 'boolean'}]
             })(<Switch checkedChildren={<Icon type="check" />} unCheckedChildren={<Icon type="close" />} />)}
           </Form.Item>

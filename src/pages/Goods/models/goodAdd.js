@@ -5,9 +5,9 @@ export default {
   namespace: 'goodAdd',
   state: {
     productInfo: {
-      is_show: true,
-      is_hot: true,
-      is_in_shop: true,
+      is_show: false,
+      is_hot: false,
+      is_in_shop: false,
       how_settle: '无',
       product_type: 2,
     }
@@ -51,9 +51,10 @@ export default {
       return {
         ...state,
         productInfo: {
-          is_show: true,
-          is_hot: true,
-          is_in_shop: true,
+          is_show: false,
+          is_hot: false,
+          is_in_shop: false,
+          how_settle: '无',
           product_type: 2,
         },
       };
