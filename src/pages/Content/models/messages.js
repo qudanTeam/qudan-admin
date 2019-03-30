@@ -23,9 +23,8 @@ export default {
       });
     },
 
-    *create({ payload }, { call, put }) {
+    *create({ payload }, { call, put, select }) {
       const resp = yield call(createMessage, payload);
-
       if (resp.id) {
         message.success('创建成功');
         yield put({
@@ -38,16 +37,16 @@ export default {
       }
     },
 
-    *update({ payload }, { call, put }) {
+    *update({ payload }, { call, put, select }) {
       const resp = yield call(updateMessage, payload);
-
+      const { pagination } = yield select(_ => _.products.data);
       if (resp.reply) {
         message.success('修改成功');
         yield put({
           type: 'fetch',
           payload: {
-            page: 1,
-            pageSize: 15,
+            page: pagination.current || 1,
+            pageSize: pagination.pageSize || 15,
           },
         });
       }
@@ -69,15 +68,16 @@ export default {
       }
     },
 
-    *delete({ payload }, { call, put }) {
+    *delete({ payload }, { call, put, select }) {
       const { id } = payload;
+      const { pagination } = yield select(_ => _.products.data);
       yield call(deleteMessage, id);
       message.success('删除成功');
       yield put({
         type: 'fetch',
         payload: {
-          page: 1,
-          pageSize: 15,
+          page: pagination.current || 1,
+          pageSize: pagination.pageSize || 15,
         },
       });
     }

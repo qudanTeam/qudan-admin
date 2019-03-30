@@ -32,3 +32,9 @@ export async function onShelf(id) {
 export async function disableShelf(id) {
   return request(`${pathConfig.Products}/shelf/${id}/disable`, { method: "PUT" });
 }
+
+export async function deleteProduct(id) {
+  return request(`${pathConfig.Products}/${id}`, {
+    method: 'DELETE',
+  });
+}

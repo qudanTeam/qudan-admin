@@ -1,6 +1,6 @@
 import { requestDataToPageResult } from "@/utils/utils";
 import { message } from "antd";
-import { queryProducts, queryProductDetails, updateProduct, disableShelf, onShelf } from "@/services/products";
+import { queryProducts, queryProductDetails, updateProduct, disableShelf, onShelf, deleteProduct } from "@/services/products";
 
 
 export default {
@@ -32,8 +32,9 @@ export default {
       });
     },
 
-    *update({ payload }, { call, put}) {
+    *update({ payload }, { call, put, select }) {
       const resp = yield call(updateProduct, payload);
+      const { pagination } = yield select(_ => _.products.data);
       const { id } = resp;
 
       if (id) {
@@ -41,15 +42,16 @@ export default {
         yield put({
           type: 'fetch',
           payload: {
-            page: 1,
-            pageSize: 15,
+            page: pagination.current || 1,
+            pageSize: pagination.pageSize || 15,
           },
         });
       }
     },
 
-    *disableShelf({ payload }, { call, put }) {
+    *disableShelf({ payload }, { call, put, select }) {
       const resp = yield call(disableShelf, payload.id);
+      const { pagination } = yield select(_ => _.products.data);
       const { id } = resp;
 
       if (id) {
@@ -57,28 +59,45 @@ export default {
         yield put({
           type: 'fetch',
           payload: {
-            page: 1,
-            pageSize: 15,
+            page: pagination.current || 1,
+            pageSize: pagination.pageSize || 15,
           },
         });
       }
     },
 
-    *onShelf({ payload }, { call, put }) {
+    *onShelf({ payload }, { call, put, select }) {
       const resp = yield call(onShelf, payload.id);
       const { id } = resp;
+      const { pagination } = yield select(_ => _.products.data);
 
       if (id) {
         message.success('上架成功');
         yield put({
           type: 'fetch',
           payload: {
-            page: 1,
-            pageSize: 15,
+            page: pagination.current || 1,
+            pageSize: pagination.pageSize || 15,
           },
         });
       }
-    }
+    },
+
+    *delete({ payload }, { call, put, select }) {
+      const resp = yield call(deleteProduct, payload.id);
+      const { pagination } = yield select(_ => _.products.data);
+      if (resp) {
+        message.success('上架成功');
+        yield put({
+          type: 'fetch',
+          payload: {
+            page: pagination.current || 1,
+            pageSize: pagination.pageSize || 15,
+          },
+        });
+      }
+    },
+    
   },
 
   reducers: {

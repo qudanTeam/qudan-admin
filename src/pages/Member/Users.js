@@ -9,6 +9,7 @@ import StandardTable from '@/components/StandardTable';
 import DescriptionList from '@/components/DescriptionList';
 import config from './_config';
 import moment from 'moment';
+import { stringify } from 'qs';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import sysConfig from '@/config';
 
@@ -682,6 +683,30 @@ class UsersView extends PureComponent {
     
   }
 
+  handleExport = (e) => {
+
+    if (e) {
+      e.preventDefault();
+    }
+
+    const { form } = this.props;
+
+    form.validateFields((err, fieldsValue) => {
+      if (err) return;
+
+      const values = {
+        ...fieldsValue,
+        updatedAt: fieldsValue.updatedAt && fieldsValue.updatedAt.valueOf(),
+      };
+
+      this.setState({
+        formValues: values,
+      });
+
+      window.open(`/apis/export/users?${stringify(values)}`);
+    });
+  }
+
   showRealnameAuth = (id) => (e) => {
     e.preventDefault();
     this.toggleRealNameAuthDrawer();
@@ -849,6 +874,9 @@ class UsersView extends PureComponent {
               <Button type="primary" htmlType="submit">
                 查询
               </Button>
+              <Button style={{ marginLeft: 8 }} type="success" onClick={this.handleExport}>
+                导出
+              </Button>
               <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
                 重置
               </Button>
@@ -933,6 +961,9 @@ class UsersView extends PureComponent {
           <div style={{ float: 'right', marginBottom: 24 }}>
             <Button type="primary" htmlType="submit">
               查询
+            </Button>
+            <Button style={{ marginLeft: 8 }} type="success" onClick={this.handleExport}>
+              导出
             </Button>
             <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>
               重置

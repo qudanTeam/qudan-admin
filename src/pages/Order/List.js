@@ -785,6 +785,15 @@ class OrderListView extends PureComponent {
               )}
             </FormItem>
           </Col>
+          <Col md={8} sm={24}>
+            <FormItem label="申请人手机号">
+              {getFieldDecorator('sqr_phone', {
+                initialValue: null,
+              })(
+                <Input placeholder="申请人手机号" />
+              )}
+            </FormItem>
+          </Col>
         </Row>
         <Row gutter={{ md: 0, lg: 24, xl: 48}}>
           <Col md={8} sm={24}></Col>

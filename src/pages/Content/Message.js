@@ -288,6 +288,8 @@ class MessageView extends PureComponent {
           <a onClick={this.pushMessage(record.id)}>推送</a>
           <Divider type="vertical" />
           <a onClick={this.prepareUpdate(record)}>编辑</a>
+          <Divider type="vertical" />
+          <a onClick={this.deleteOne(record)}>删除</a>
         </Fragment>
       ),
     },
@@ -300,6 +302,21 @@ class MessageView extends PureComponent {
       payload: {
         page: pagination.current,
         pageSize: pagination.pageSize,
+      },
+    });
+  }
+
+  deleteOne = record => e => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    const { id } = record;
+
+    this.props.dispatch({
+      type: 'messages/delete',
+      payload: {
+        id,
       },
     });
   }

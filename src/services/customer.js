@@ -12,3 +12,17 @@ export const createCustomer = async params => {
     body: params,
   });
 }
+
+export const updateCustomer = async params => {
+  const { id, ...restParams } = params;
+  return request(`${pathConfig.Advistors}/${id}`, {
+    method: 'PUT',
+    body: restParams,
+  });
+}
+
+export const deleteCustomer = async id => {
+  return request(`${pathConfig.Advistors}/${id}`, {
+    method: 'DELETE',
+  });
+}

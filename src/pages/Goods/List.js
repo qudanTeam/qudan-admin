@@ -1250,6 +1250,7 @@ class ListView extends PureComponent {
     createFormVisible: false,
     updateFormVisible: false,
     details: {},
+    activeKey: 'all',
   }
 
   columns = [
@@ -1336,6 +1337,8 @@ class ListView extends PureComponent {
           <a onClick={this.prepareUpdate(record)}>编辑</a>
           <Divider type="vertical" />
           <a onClick={+record.is_shelf === 0 ? this.handleOnShelf(record.id) : this.handleDisableShelf(record.id)}>{+record.is_shelf === 0 ? '上架' : '下架'}</a>
+          <Divider type="vertical" />
+          <a onClick={this.deleteOne(record)}>删除</a>
         </Fragment>
       ),
     },
@@ -1391,6 +1394,21 @@ class ListView extends PureComponent {
     this.toggleUpdateForm();
   }
 
+  deleteOne = record => e => {
+    if (e) {
+      e.preventDefault();
+    }
+
+    const { id } = record;
+
+    this.props.dispatch({
+      type: 'products/delete',
+      payload: {
+        id,
+      },
+    });
+  }
+
   toggleCreateForm = () => {
     this.setState({
       createFormVisible: !this.state.createFormVisible,
@@ -1430,6 +1448,7 @@ class ListView extends PureComponent {
     dispatch({
       type: 'products/fetch',
       payload: {
+        product_type: this.getActiveProductType(),
         category_type: 2,
         page: pagination.current,
         pageSize: pagination.pageSize,
@@ -1451,6 +1470,7 @@ class ListView extends PureComponent {
         ...fieldsValue,
         page: 1,
         pageSize: 15,
+        product_type: this.getActiveProductType(),
       };
 
       if (values.filter_time && values.filter_time.length > 0) {
@@ -1490,7 +1510,7 @@ class ListView extends PureComponent {
     return (
       <Form onSubmit={this.handleSearch} layout="inline">
         <Row gutter={{ md: 0, lg: 24, xl: 48}}>
-          <Col md={8} sm={24}>
+          {/* <Col md={8} sm={24}>
             <FormItem label="商品类型">
               {getFieldDecorator('product_type', {
                 initialValue: null,
@@ -1503,7 +1523,7 @@ class ListView extends PureComponent {
               </Select>
               )}
             </FormItem>
-          </Col>
+          </Col> */}
           <Col md={8} sm={24}>
             <FormItem label="商品ID">
               {getFieldDecorator('product_id')(
@@ -1524,6 +1544,49 @@ class ListView extends PureComponent {
     );
   }
 
+  getActiveProductType = () => {
+    const key = this.state.activeKey;
+    let product_type = undefined;
+    if (key === 'credit_card') {
+      product_type = 1
+    } else if (key === 'loan') {
+      product_type = 2
+    } else if (key === 'pos') {
+      product_type = 3
+    } else if (key === 'all') {
+      product_type = undefined;
+    }
+    return product_type;
+  }
+
+  handleTabChange = (key) => {
+    const { dispatch } = this.props;
+
+    this.setState({
+      activeKey: key,
+    });
+
+    let product_type = undefined;
+    if (key === 'credit_card') {
+      product_type = 1
+    } else if (key === 'loan') {
+      product_type = 2
+    } else if (key === 'pos') {
+      product_type = 3
+    } else if (key === 'all') {
+      product_type = undefined;
+    }
+
+    dispatch({
+      type: 'products/fetch',
+      payload: {
+        page: 1,
+        pageSize: 15,
+        product_type,
+      },
+    });
+
+  }
 
   render() {
     const { 
@@ -1534,8 +1597,30 @@ class ListView extends PureComponent {
       loading,
       loadingDetails,
     } = this.props
+
+    const tabList = [{
+      key: 'all',
+      tab: '全部',
+    }, {
+      key: 'credit_card',
+      tab: '信用卡',
+    }, {
+      key: 'loan',
+      tab: '贷款',
+    }, {
+      key: 'pos',
+      tab: 'POS机',
+    }];
+
+    
+
     return (
-      <PageHeaderWrapper title="商品列表">
+      <PageHeaderWrapper 
+        title="商品列表"
+        tabList={tabList}
+        onTabChange={this.handleTabChange}
+        tabDefaultActiveKey="all"
+      >
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderQueryForm()}</div>
