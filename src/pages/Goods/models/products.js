@@ -87,7 +87,7 @@ export default {
       const resp = yield call(deleteProduct, payload.id);
       const { pagination } = yield select(_ => _.products.data);
       if (resp) {
-        message.success('上架成功');
+        message.success('删除成功');
         yield put({
           type: 'fetch',
           payload: {
