@@ -16,7 +16,7 @@ const plugins = [
       baseNavigator: true, // default true, when it is true, will use `navigator.language` overwrite default
     },
     dynamicImport: true,
-    title: '趣单管理平台',
+    title: '趣单生活管理',
     dll: false,
     routes: {
       exclude: [],

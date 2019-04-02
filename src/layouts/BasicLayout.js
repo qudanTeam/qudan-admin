@@ -101,7 +101,7 @@ class BasicLayout extends React.Component {
   };
 
   getPageTitle = pathname => {
-    return `趣单生活管理平台`;
+    return `趣单生活管理`;
   }
 
   getLayoutStyle = () => {

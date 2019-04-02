@@ -30,7 +30,7 @@ t
         <div className={`${styles.logo} ${styles.left}`} key="logo" id="logo">
           <Link to="/">
             <img src={logo} alt="logo" />
-            <h1>趣单生活管理平台</h1>
+            <h1>趣单生活管理</h1>
           </Link>
         </div>
         {/* <Icon 
